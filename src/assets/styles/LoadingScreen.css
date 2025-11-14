@@ -1,0 +1,47 @@
+/* src/assets/styles/LoadingScreen.css */
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0d0d1e; /* Fondo oscuro espacial */
+  z-index: 9999;
+  overflow: hidden; /* Importante para que la animación no desborde */
+}
+
+.supernova-container {
+  position: relative; /* Para que los elementos internos puedan posicionarse absolutamente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px; /* Tamaño del área central donde ocurren las cosas */
+  height: 300px;
+}
+
+.loading-text {
+  color: #a0a0ff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.5em;
+  opacity: 1; /* Visible desde el inicio */
+  position: absolute; /* Para centrarlo sin afectar el layout de la animación */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Ajuste para centrar el texto respecto a sí mismo */
+  z-index: 10; /* Asegura que el texto esté por encima de la animación si hay superposición */
+  white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+}
+
+/* Animación para que el texto se desvanezca */
+@keyframes fadeOutText {
+  0% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0;  } /* Se desvanece y sube ligeramente */
+}
+
+.loading-text.fade-out {
+    animation: fadeOutText 0.2s ease-out forwards; /* Duración de 0.5s para el desvanecimiento */
+}

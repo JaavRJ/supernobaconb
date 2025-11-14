@@ -1,0 +1,99 @@
+/* src/assets/styles/HomePage.css */
+
+:root {
+  --bg: #0b0b0f;
+  --fg: #f2f2f5;
+  --accent: #a47cff;
+  --accent-hover: #c7a9ff;
+  --card-bg: #141418;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Contenedor principal */
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* Header */
+.home-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.home-title {
+  font-size: 2.7rem;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.home-subtitle {
+  color: #c6c6c6;
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+/* Tarjeta */
+.home-card {
+  background: var(--card-bg);
+  padding: 25px;
+  width: 340px;
+  max-width: 90%;
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(180, 120, 255, 0.25);
+  text-align: center;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Imagen */
+.home-cover {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+/* Texto */
+.home-description {
+  font-size: 0.95rem;
+  color: #d6d6d6;
+  margin-bottom: 25px;
+}
+
+/* Botón */
+.home-button {
+  background: var(--accent);
+  color: black;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.25s;
+  width: 100%;
+}
+
+.home-button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* Animación */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
