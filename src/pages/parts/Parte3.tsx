@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import "../assets/styles/Partes.css";
-import Text1 from "../components/texts/Text1";
-import Photo from "../components/Photos";
+import "../../assets/styles/Partes.css";
+import Text1 from "../../components/texts/Text11";
+import Photo from "../../components/Photos";
 
 export default function HomePage() {
   const imgUrls = [

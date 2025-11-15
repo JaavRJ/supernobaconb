@@ -70,7 +70,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onAnimationEnd }) => {
           
           />
           <div ref={loadingTextRef} className="hold-text">
-          <p >Hold</p></div></>
+          <p >Hold the Star</p></div></>
           
         )}
       </div>

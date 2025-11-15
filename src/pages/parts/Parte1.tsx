@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import "../assets/styles/Partes.css";
-import Text1 from "../components/texts/Text1";
-import Photo from "../components/Photos";
+import "../../assets/styles/Partes.css";
+import Text11 from "../../components/texts/Text11";
+import Text12 from "../../components/texts/Text12";
+import Photo from "../../components/Photos";
 
 export default function HomePage() {
   const imgUrls = [
@@ -67,9 +68,12 @@ export default function HomePage() {
         <div className="side-text-right">PARTE 1</div>
 
         <div className="main-title">
-          BRILLO DE UNA <br /> ESTRELLA MUERTA
+          PARTE 1: <br />NEBULOSA
         </div>
-
+        {/* TEXTO 1*/}
+        <div className="row">
+          <Text11 />
+        </div>
         {/* FILA 1 */}
         <div className="row">
           {photosData.current.slice(0, 4).map((photo, idx) => (
@@ -83,10 +87,11 @@ export default function HomePage() {
             />
           ))}
         </div>
-        {/* TEXTO */}
+         {/* TEXTO */}
         <div className="row">
-          <Text1 />
+          <Text12 />
         </div>
+       
 
         {/* FILA 3 */}
         <div className="row">

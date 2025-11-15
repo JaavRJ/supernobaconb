@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import EpisodeController, { Episode } from "../components/controllers/EpisodeControllers";
 
 import BeforePage from "./BeforePage";
-import Parte1 from "./Parte1";
-import Parte2 from "./Parte2";
-import Parte3 from "./Parte3";
-import Parte4 from "./Parte4";
-import Parte5 from "./Parte5";
+import Parte1 from "./parts/Parte1";
+import Parte2 from "./parts/Parte2";
+import Parte3 from "./parts/Parte3";
+import Parte4 from "./parts/Parte4";
+import Parte5 from "./parts/Parte5";
 
 export default function HomePage() {
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
@@ -25,7 +25,7 @@ export default function HomePage() {
         boxShadow: "0 8px 20px rgba(59, 59, 59, 0.3), 0 0 15px rgba(53, 53, 53, 0.4)",
         display: "inline-flex",  // se adapta al contenido
         justifyContent: "center",
-        alignItems: "flex-start",
+        alignItems: "center",
         color: "#fff",
         fontWeight: "bold",
         height: "40px",
@@ -35,7 +35,7 @@ export default function HomePage() {
         animation: "float 3s ease-in-out infinite alternate",
         }}>
   <EpisodeController
-    initialRelease={new Date("2025-11-15T14:43:00")}
+    initialRelease={new Date("2025-12-02T00:00:00")}
     onEpisodeChange={(ep) => setCurrentEpisode(ep)}
     onTimeLeftChange={(t) => setTimeLeft(t)}
   />
@@ -44,7 +44,7 @@ export default function HomePage() {
 
       {/* Mostrar BeforePage mientras aún no se libera ningún episodio */}
       {currentEpisode === null && timeLeft !== null && (
-        <BeforePage timeLeft={timeLeft} />
+        <BeforePage/>
       )}
 
       {/* Mostrar páginas por episodio */}

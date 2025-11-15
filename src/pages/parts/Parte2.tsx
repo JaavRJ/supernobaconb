@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import "../assets/styles/Partes.css";
-import Text1 from "../components/texts/Text1";
-import Photo from "../components/Photos";
+import "../../assets/styles/Partes.css";
+import Text1 from "../../components/texts/Text11";
+import Photo from "../../components/Photos";
 
 export default function HomePage() {
   const imgUrls = [
@@ -19,7 +19,7 @@ export default function HomePage() {
     imgUrls.map((src) => ({
       src,
       rotation: Math.random() * 20 - 10, // -10 a +10 grados
-      scale: 0.75 + Math.random() * 0.4,  // 0.9 a 1.1
+      scale: 0.75 + Math.random() * 0.1,  // 0.9 a 1.1
     }))
   );
 
@@ -64,15 +64,18 @@ export default function HomePage() {
 
       <div className="horizontal-scroll">
         <div className="side-text">SUPERNOBA</div>
-        <div className="side-text-right">PARTE 1</div>
+        <div className="side-text-right">PARTE 2</div>
 
         <div className="main-title">
-          BRILLO DE UNA <br /> ESTRELLA MUERTA
+          PARTE 1: <br />GIGANTE ROJA
         </div>
-
+        {/* TEXTO */}
+        <div className="row">
+          <Text1 />
+        </div>
         {/* FILA 1 */}
         <div className="row">
-          {photosData.current.slice(0, 2).map((photo, idx) => (
+          {photosData.current.slice(0, 4).map((photo, idx) => (
             <Photo
               key={idx}
               src={photo.src}
@@ -83,25 +86,7 @@ export default function HomePage() {
             />
           ))}
         </div>
-
-        {/* FILA 2 */}
-        <div className="row">
-          {photosData.current.slice(2, 4).map((photo, idx) => (
-            <Photo
-              key={idx + 2}
-              src={photo.src}
-              alt={`${idx + 3}`}
-              style={{
-                transform: `rotate(${photo.rotation}deg) scale(${photo.scale})`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* TEXTO */}
-        <div className="row">
-          <Text1 />
-        </div>
+       
 
         {/* FILA 3 */}
         <div className="row">
@@ -109,7 +94,7 @@ export default function HomePage() {
             src={photosData.current[4].src}
             alt="5"
             style={{
-              transform: `rotate(${photosData.current[4].rotation}deg) scale(${photosData.current[4].scale})`,
+              transform: `rotate(${photosData.current[4].rotation}deg) scale(${.7})`,
             }}
           />
         </div>

@@ -1,43 +1,98 @@
-import { useEffect, useRef } from "react";
-import Timer from "../components/Cronometer";
+import React, { useEffect, useRef } from "react";
+import "../assets/styles/Partes.css";
+import TextBefore1 from "../components/texts/TextBefore1";
+import TextBefore2 from "../components/texts/TextBefore2";
+import TextBefore3 from "../components/texts/TextBefore3";
+import TextBefore4 from "../components/texts/TextBefore4";
+import Photo from "../components/Photos";
 
-interface BeforeProps {
-  timeLeft: number;
-}
+export default function BeforePage() {
+  const imgUrls = [
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
+  ];
 
-export default function BeforePage({ timeLeft }: BeforeProps) {
-  const photosRef = useRef<HTMLImageElement[]>([]);
+  const starsRef = useRef<HTMLDivElement>(null);
+
+  // Generar datos de fotos con rotación y escala aleatoria solo una vez
+  const photosData = useRef(
+    imgUrls.map((src) => ({
+      src,
+      rotation: Math.random() * 20 - 10, // -10 a +10 grados
+      scale: 0.75 + Math.random() * 0.1,  // 0.9 a 1.1
+    }))
+  );
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
+    // Scroll horizontal con la rueda
+    const handleWheel = (e: WheelEvent) => {
+      window.scrollBy({
+        left: e.deltaY * 5,
+        behavior: "smooth",
+      });
+    };
+    window.addEventListener("wheel", handleWheel, { passive: false });
 
-    photosRef.current.forEach(img => img && observer.observe(img));
-    return () => observer.disconnect();
+    // Generar estrellas
+    const container = starsRef.current;
+    if (container) {
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+
+        star.style.top = `${Math.random() * 100}vh`;
+        star.style.left = `${Math.random() * 100}vw`;
+
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+
+        star.style.animationDuration = `${1.5 + Math.random() * 2}s`;
+
+        container.appendChild(star);
+      }
+    }
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+    };
   }, []);
 
   return (
-    <div className="horizontal-scroll">
-      {/* CRONÓMETRO FIJO */}
-      <div style={{ position: "fixed", top: "20px", left: "50%", transform: "translateX(-50%)", color: "white" }}>
-      </div>
+    <>
+      <div className="stars-container" ref={starsRef}></div>
 
-      <div className="side-text">PRE-LANZAMIENTO</div>
-      <div className="side-text-right">BEFORE</div>
+      <div className="horizontal-scroll">
+        <div className="side-text">SUPERNOBA</div>
+        <div className="side-text-right"></div>
 
-      <h1 className="main-title">EL VIAJE<br />COMIENZA PRONTO</h1>
+        <div className="main-title">
+          BRILLO DE UNA <br /> ESTRELLA MUERTA
+        </div>
 
-      <div className="column">
-      </div>
+        {/* TEXTO */}
+        <div className="row">
+          <TextBefore1 />
+        </div>
+         <div className="row">
+          <TextBefore2 />
+        </div>
+         <div className="row">
+          <TextBefore3 />
+        </div>
+         <div className="row">
+          <TextBefore4 />
+        </div>
+        
+        <div className="row">
+          <Photo
+            src={photosData.current[0].src}
+            alt="0"
+            style={{
+              transform: `rotate(${photosData.current[0].rotation}deg) scale(${.7})`,
+            }}
+          />
+        </div>        </div>
 
-    </div>
+    </>
   );
 }

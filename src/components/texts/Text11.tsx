@@ -1,4 +1,4 @@
-import TextImages from "../../components/TextImages"
+import TextImages from "../TextImages"
 
 export default function Text1() {
   return (
