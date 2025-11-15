@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import '../assets/styles/LoadingScreen.css';
 // Importamos nuestra NUEVA animación de partículas de supernova GSAP
-import SupernovaParticleBurst from './animations/SupernovaParticleBurst'; // <-- Asegúrate de que esta ruta sea correcta
+//import SupernovaParticleBurst from './animations/SupernovaParticleBurst'; // <-- Asegúrate de que esta ruta sea correcta
 import SupernovaBurstCanvas from './animations/SupernovaBurstCanvas'; // <-- Asegúrate de que esta ruta sea correcta
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -10,10 +10,9 @@ interface LoadingScreenProps {
   onAnimationEnd: () => void;
 }
 
-// Duraciones para una mejor sincronización
-const textVisibleDuration = 2000; // El texto "Cargando..." estará visible por 2 segundos.
-const textFadeOutDuration = 500;  // El texto tardará 0.5 segundos en desvanecerse (debe coincidir con CSS).
-const delayBeforeAnimation = 200; // Pequeño retardo después de que el texto desaparece antes de que inicie la animación GSAP.
+const textVisibleDuration = 2000; 
+const textFadeOutDuration = 500;  
+const delayBeforeAnimation = 200; 
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onAnimationEnd }) => {
   const loadingTextRef = useRef<HTMLParagraphElement>(null);

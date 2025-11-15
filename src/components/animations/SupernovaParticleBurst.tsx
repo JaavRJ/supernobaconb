@@ -87,7 +87,8 @@ const SupernovaParticleBurst: React.FC<SupernovaParticleBurstProps> = ({
     return () => {
     tl.kill(); 
   };  
-}, []);
+}, [duration, onComplete, size]);
+
 
   // Animación de partículas una vez que nacen
   useEffect(() => {
@@ -115,7 +116,7 @@ const SupernovaParticleBurst: React.FC<SupernovaParticleBurstProps> = ({
         }
       );
     });
-  }, [particles]);
+  }, [duration, particles]);
 
   return (
     <div
@@ -128,6 +129,7 @@ const SupernovaParticleBurst: React.FC<SupernovaParticleBurstProps> = ({
     >
       {/* Núcleo */}
       <div
+      
         ref={coreRef}
         style={{
           position: "absolute",
