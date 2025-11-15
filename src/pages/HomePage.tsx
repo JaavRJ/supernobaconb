@@ -1,71 +1,92 @@
 import React, { useEffect, useRef } from "react";
 import "../assets/styles/HomePage.css";
-import Text1 from "../components/texts/Text1"
+import Text1 from "../components/texts/Text1";
+import Photo from "../components/Photos";
 
-// IMPORTA TUS IMÁGENES
-import img1 from "../assets/images/IMG_20251113_152021.png";
-import img2 from "../assets/images/IMG_20251113_154559.png";
-import img3 from "../assets/images/IMG_20251113_154613.png";
-import img5 from "../assets/images/IMG_20251113_154642.png";
-import img4 from "../assets/images/IMG_20251113_154901.png";
 
 export default function HomePage() {
 
-  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const img1 = "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_152021_xzy1ze.png";
+  const img2 = "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154559_ky1mqh.png";
+  const img3 = "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png";
+  const img4 = "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png";
+  const img5 = "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png";
 
-  // Animar imágenes cuando son visibles en pantalla
+  const starsRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
+  const handleWheel = (e: WheelEvent) => {
+    // Mover horizontal usando vertical
+    window.scrollBy({
+      left: e.deltaY * 5,  // Scroll vertical → horizontal
+      behavior: "smooth"
+    });
+  };
 
-    imagesRef.current.forEach(img => observer.observe(img));
-  }, []);
+  window.addEventListener("wheel", handleWheel, { passive: false });
 
+   /* ====== GENERAR ESTRELLAS ====== */
+    const container = starsRef.current;
+    if (container) {
+
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+
+        star.style.top = `${Math.random() * 100}vh`;
+        star.style.left = `${Math.random() * 100}vw`;
+
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+
+        star.style.animationDuration = `${1.5 + Math.random() * 2}s`;
+
+        container.appendChild(star);
+      }
+    }
+  return () => {
+    window.removeEventListener("wheel", handleWheel);
+  };
+
+  
+}, []);
+
+  
   return (
     <>
-      {/* Texto fijo en los costados */}
-      <div className="side-text">SUPERNOBA</div>
-      <div className="side-text-right">PARTE 1</div>
+      <div className="stars-container" ref={starsRef}></div>
 
-      {/* Scroll horizontal principal */}
       <div className="horizontal-scroll">
+    <div className="side-text">SUPERNOBA</div>
+      <div className="side-text-right">PARTE 1</div>
 
         <div className="main-title">
           BRILLO DE UNA <br /> ESTRELLA MUERTA
         </div>
 
-        {/* Columna 1 */}
-        <div className="column">
-          <img ref={el => { if (el) imagesRef.current.push(el);}} src={img1} alt="1" className="photo" />
-          <img ref={el => { if (el) imagesRef.current.push(el);}} src={img2} alt="2" className="photo" />
+        {/* FILA 1 */}
+        <div className="row">
+          <Photo src={img1} alt="1" />
+          <Photo src={img2} alt="2" />
         </div>
 
-        {/* Columna 2 */}
-        <div className="column">
-          <img ref={el => { if (el) imagesRef.current.push(el);}} src={img3} alt="3" className="photo" />
-          <img ref={el => { if (el) imagesRef.current.push(el);}} src={img4} alt="4" className="photo" />
-        </div>
-        
-        {/* Columna 3 */}
-        <div className="column">
-          <Text1></Text1>
+
+        {/* FILA 3 */}
+        <div className="row">
+          <Photo src={img3} alt="3" />
+          <Photo src={img4} alt="4" />
         </div>
 
-        {/* Columna 4 */}
-        <div className="column">
-          <img ref={el => { if (el) imagesRef.current.push(el);}} src={img5} alt="5" className="photo" />
+        {/* TEXTO */}
+        <div className="row">
+          <Text1 />
         </div>
 
-        
-
+        {/* FILA 4 */}
+        <div className="row">
+          <Photo src={img5} alt="5" />
+        </div>
       </div>
     </>
   );

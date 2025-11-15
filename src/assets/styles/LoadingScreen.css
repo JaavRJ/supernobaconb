@@ -62,7 +62,7 @@
     animation: fadeOutText 0.2s ease-out forwards; /* Duración de 0.5s para el desvanecimiento */
 }
 
-html, body, #root {
+body{
   overflow-x: scroll;
   overflow-y: hidden;
 }
@@ -79,12 +79,12 @@ html, body, #root {
 
 /* La barrita que se mueve */
 ::-webkit-scrollbar-thumb {
-  background: #3a3a57; 
+  background: #252532; 
   border-radius: 10px;
   border: 2px solid #000000; /* borde para integrarse al fondo */
 }
 
 /* Cuando el usuario pasa el mouse */
 ::-webkit-scrollbar-thumb:hover {
-  background: #5a5a88;
+  background: #44444a;
 }

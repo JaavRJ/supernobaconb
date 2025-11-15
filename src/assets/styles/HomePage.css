@@ -29,14 +29,14 @@ body {
 /* Columna */
 .column {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 80px; /* más separación */
   position: relative;
 }
 
 /* FOTOS TIPO COLLAGE */
 .photo {
-  width: 400px;         /* tamaño más grande */
+  width: 70%;         /* tamaño más grande */
   height: auto;
   object-fit: cover;
 
@@ -61,24 +61,6 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* ROTACIONES IRREGULARES (look collage)
--------------------------------------------------- */
-.column:nth-child(2) .photo:nth-child(1) { transform: rotate(-3deg); }
-.column:nth-child(2) .photo:nth-child(2) { transform: rotate(2deg); }
-
-.column:nth-child(3) .photo:nth-child(1) { transform: rotate(1.5deg); }
-.column:nth-child(3) .photo:nth-child(2) { transform: rotate(-4deg); }
-
-.column:nth-child(4) .photo:nth-child(1) { transform: rotate(3deg); }
-.column:nth-child(4) .photo:nth-child(2) { transform: rotate(3deg); }
-
-.column:nth-child(5) .photo:nth-child(1) { transform: rotate(-2deg); }
-
-/* Cuando se vuelven visibles, quitar rotación */
-.photo.visible {
-  transform: translateY(0) scale(1) rotate(0deg);
-}
-
 /* Textos laterales */
 .side-text {
   position: fixed;
@@ -100,4 +82,97 @@ body {
   letter-spacing: 2px;
   font-weight: 500;
   color: #FFF; /* tu color */
+}
+
+/* FILAS HORIZONTALES */
+.row {
+  display: flex;
+  flex-direction: row; /* ya no columnas */
+  gap: 80px;
+  align-items: center;
+}
+
+/* La animación ya la tienes */
+.photo {
+  width: 70%;
+  opacity: 0;
+  transform: translateY(40px) scale(0.96);
+  transition: all 1s ease;
+}
+
+.photo.visible {
+  opacity: 1;
+  transform: rotate(0deg) scale(1) translateY(0);
+}
+
+@media (max-width: 800px) {
+  
+    .main-title {
+      font-size: 30px;
+      margin-right: 20px;
+
+    }
+
+    .side-text {
+      transform: none;
+      position: fixed;
+      top: 2%;
+      left: 2%;
+      font-size: 22px;
+      letter-spacing: 2px;
+      font-weight: 500;
+      color: #FFF;
+      font-size: 1.2rem;
+    }
+
+  .side-text-right {
+    left: 90%;
+    top: 1%;
+    transform: none;
+    position: fixed;
+    
+  }
+
+  .horizontal-scroll {
+    padding-left: 10px;
+    align-items: center;
+    gap: 100px; /* más aire entre columnas */
+  }
+}
+
+@media (max-width: 800px) {
+  .horizontal-scroll img {
+    max-height: 70vh;  /* MUCHO más pequeñas */
+  }
+
+  
+}
+
+
+.stars-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* Estrella individual */
+.star {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: twinkle 2s infinite ease-in-out alternate;
+}
+
+/* Animación del brillo */
+@keyframes twinkle {
+  0% { opacity: 0.2; transform: scale(1); }
+  100% { opacity: 0.8; transform: scale(1.4); }
 }
