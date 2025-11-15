@@ -9,9 +9,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #0d0d1e; /* Fondo oscuro espacial */
+  background-color: #000000; /* Fondo oscuro espacial */
   z-index: 9999;
   overflow: hidden; /* Importante para que la animación no desborde */
+  font-family: 'Georgia', serif;
+
 }
 
 .supernova-container {
@@ -24,8 +26,8 @@
 }
 
 .loading-text {
-  color: #a0a0ff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #dedede;
+  font-family: 'Georgia', serif;
   font-size: 1.5em;
   opacity: 1; /* Visible desde el inicio */
   position: absolute; /* Para centrarlo sin afectar el layout de la animación */
@@ -36,6 +38,20 @@
   white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
 }
 
+.hold-text {
+  color: #dedede;
+  font-family: 'Georgia', serif;
+  font-size: 1.5em;
+  opacity: 1; /* Visible desde el inicio */
+  position: absolute; /* Para centrarlo sin afectar el layout de la animación */
+  top: 120%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Ajuste para centrar el texto respecto a sí mismo */
+  z-index: 10; /* Asegura que el texto esté por encima de la animación si hay superposición */
+  white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+}
+
+
 /* Animación para que el texto se desvanezca */
 @keyframes fadeOutText {
   0% { opacity: 1; transform: translate(-50%, -50%); }
@@ -44,4 +60,31 @@
 
 .loading-text.fade-out {
     animation: fadeOutText 0.2s ease-out forwards; /* Duración de 0.5s para el desvanecimiento */
+}
+
+html, body, #root {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+/* Scrollbar GENERAL — funciona para todo el body o contenedores con overflow */
+::-webkit-scrollbar {
+  height: 10px; /* altura de la barra horizontal */
+}
+
+/* Fondo del track (la parte por donde se mueve la barrita) */
+::-webkit-scrollbar-track {
+  background: #000000;  /* mismo fondo que tu página */
+}
+
+/* La barrita que se mueve */
+::-webkit-scrollbar-thumb {
+  background: #3a3a57; 
+  border-radius: 10px;
+  border: 2px solid #000000; /* borde para integrarse al fondo */
+}
+
+/* Cuando el usuario pasa el mouse */
+::-webkit-scrollbar-thumb:hover {
+  background: #5a5a88;
 }

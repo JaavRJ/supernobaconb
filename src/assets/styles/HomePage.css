@@ -1,99 +1,103 @@
-/* src/assets/styles/HomePage.css */
-
-:root {
-  --bg: #0b0b0f;
-  --fg: #f2f2f5;
-  --accent: #a47cff;
-  --accent-hover: #c7a9ff;
-  --card-bg: #141418;
-}
-
+/* Evitar scroll vertical */
 body {
   margin: 0;
-  font-family: "Inter", Arial, sans-serif;
-  background: var(--bg);
-  color: var(--fg);
+  overflow-x: scroll;
+  overflow-y: hidden;
+  background: #000000; /* tu color */
+  font-family: 'Georgia', serif;
 }
 
-/* Contenedor principal */
-.home-container {
-  min-height: 100vh;
+/* Contenedor horizontal */
+.horizontal-scroll {
+  display: flex;
+  height: 100vh;
+  width: max-content;
+  padding-left: 150px;
+  align-items: center;
+  gap: 200px; /* más aire entre columnas */
+}
+
+/* Título */
+.main-title {
+  font-size: 80px;
+  font-weight: bold;
+  text-align: left;
+  margin-right: 200px;
+  color: #FFF; /* tu color */
+}
+
+/* Columna */
+.column {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 40px 20px;
+  gap: 80px; /* más separación */
+  position: relative;
 }
 
-/* Header */
-.home-header {
-  text-align: center;
-  margin-bottom: 40px;
+/* FOTOS TIPO COLLAGE */
+.photo {
+  width: 400px;         /* tamaño más grande */
+  height: auto;
+  object-fit: cover;
+
+  padding: 6px;
+  border-radius: 8px;
+
+  /* Borde tenue como el tuyo pero más elegante */
+  /*border: 2px solid rgba(255, 255, 255, 0.336);
+
+  /* Sombra suave tipo polaroid 
+  box-shadow: 0px 12px 30px rgba(239, 239, 239, 0.078);
+
+  /* Animación inicial */
+  opacity: 0;
+  transform: translateY(40px) scale(0.96);
+  transition: all 1s ease;
 }
 
-.home-title {
-  font-size: 2.7rem;
-  margin: 0;
-  letter-spacing: 1px;
+/* Cuando entran al viewport */
+.photo.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
-.home-subtitle {
-  color: #c6c6c6;
-  font-size: 1.2rem;
-  margin-top: 10px;
+/* ROTACIONES IRREGULARES (look collage)
+-------------------------------------------------- */
+.column:nth-child(2) .photo:nth-child(1) { transform: rotate(-3deg); }
+.column:nth-child(2) .photo:nth-child(2) { transform: rotate(2deg); }
+
+.column:nth-child(3) .photo:nth-child(1) { transform: rotate(1.5deg); }
+.column:nth-child(3) .photo:nth-child(2) { transform: rotate(-4deg); }
+
+.column:nth-child(4) .photo:nth-child(1) { transform: rotate(3deg); }
+.column:nth-child(4) .photo:nth-child(2) { transform: rotate(3deg); }
+
+.column:nth-child(5) .photo:nth-child(1) { transform: rotate(-2deg); }
+
+/* Cuando se vuelven visibles, quitar rotación */
+.photo.visible {
+  transform: translateY(0) scale(1) rotate(0deg);
 }
 
-/* Tarjeta */
-.home-card {
-  background: var(--card-bg);
-  padding: 25px;
-  width: 340px;
-  max-width: 90%;
-  border-radius: 20px;
-  box-shadow: 0 0 25px rgba(180, 120, 255, 0.25);
-  text-align: center;
-  animation: fadeInUp 0.6s ease forwards;
+/* Textos laterales */
+.side-text {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  font-size: 22px;
+  letter-spacing: 2px;
+  font-weight: 500;
+  color: #FFF; /* tu color */
 }
 
-/* Imagen */
-.home-cover {
-  width: 100%;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-/* Texto */
-.home-description {
-  font-size: 0.95rem;
-  color: #d6d6d6;
-  margin-bottom: 25px;
-}
-
-/* Botón */
-.home-button {
-  background: var(--accent);
-  color: black;
-  border: none;
-  padding: 12px 20px;
-  font-size: 1rem;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.25s;
-  width: 100%;
-}
-
-.home-button:hover {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
-}
-
-/* Animación */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.side-text-right {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-size: 22px;
+  letter-spacing: 2px;
+  font-weight: 500;
+  color: #FFF; /* tu color */
 }

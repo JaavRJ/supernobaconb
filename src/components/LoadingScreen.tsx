@@ -62,11 +62,16 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onAnimationEnd }) => {
         )}
         {/* Mostramos la animación GSAP si showGsapAnimation es true */}
         {showGsapAnimation && (
+          <>
           <SupernovaBurstCanvas
             size={1000} // Puedes ajustar el tamaño del lienzo de la animación aquí para que se vea más grande
             //duration={3} // Duración total de la animación de explosión
             onComplete={handleGsapAnimationComplete} // Pasamos el callback
+          
           />
+          <div ref={loadingTextRef} className="hold-text">
+          <p >Hold</p></div></>
+          
         )}
       </div>
     </div>

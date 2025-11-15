@@ -23,9 +23,12 @@ const SupernovaBurstCanvas: React.FC<Props> = ({ size = 1000, onComplete }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d")!;
+    
+
     if (!ctx) return;
 
     // PARTÍCULAS
@@ -53,15 +56,15 @@ const SupernovaBurstCanvas: React.FC<Props> = ({ size = 1000, onComplete }) => {
     }
 
     let frame = 0;
-    const flashDuration = 50;
-    const particleDelay = 70;
+    const flashDuration = 30;
+    const particleDelay = 35;
 
     let offsetX = 0;
     let offsetY = 0;
     let intensity = 0;      // intensidad actual
     let pressStartTime: number | null = null;    function animate() {
       ctx.clearRect(0, 0, size, size);
-      ctx.fillStyle = "#0d0d1e";
+      ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, size, size);
 
       /* ────────────────────────────────────────────────
@@ -218,8 +221,10 @@ const SupernovaBurstCanvas: React.FC<Props> = ({ size = 1000, onComplete }) => {
       style={{
         display: "block",
         margin: "0 auto",
-        background: "#0d0d1e",
+        background: "transparent", // pintamos fondo con ctx.fillRect; mantener transparente evita capas adicionales
         cursor: "pointer",
+        border: "none",         // quitar borde
+        outline: "none",  
       }}
     ></canvas>
   );
