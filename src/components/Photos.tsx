@@ -3,16 +3,12 @@ import React, { useEffect, useRef } from "react";
 interface PhotoProps {
   src: string;
   alt?: string;
+  style?: React.CSSProperties;
+
 }
 
-export default function Photo({ src, alt }: PhotoProps) {
+export default function Photo({ src, alt, style }: PhotoProps) {
   const imgRef = useRef<HTMLImageElement | null>(null);
-
-  // Crear rotación aleatoria entre -4° y +4°
-  const randomRotate = Math.random() * 8 - 4;
-
-  // Crear tamaño escalado entre 0.85 y 1.15
-  const randomScale = 0.75 + Math.random() * 0.30;
 
   // Intersection Observer
   useEffect(() => {
@@ -38,9 +34,7 @@ export default function Photo({ src, alt }: PhotoProps) {
       src={src}
       alt={alt}
       className="photo"
-      style={{
-        transform: `rotate(${randomRotate}deg) scale(${randomScale}) translateY(40px)`,  
-      }}
+      style={style}
     />
   );
 }
