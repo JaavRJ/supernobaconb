@@ -1,7 +1,8 @@
-import TextImages from "../TextImages"
+import TextImages from "../TextImagesPrueba"
 
 export default function Text1() {
   return (
+    
     <TextImages>
 {`1. nebulosa
 nacimiento de la idea 

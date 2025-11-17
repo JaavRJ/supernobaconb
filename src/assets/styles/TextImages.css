@@ -11,3 +11,24 @@
   color: rgb(255, 255, 255);
   white-space: pre-line;
 }
+
+.caveat {
+  font-family: "Caveat", cursive;
+  font-optical-sizing: auto;
+  font-weight: 50px;
+  font-style: normal;
+}
+
+.medievalsharp-regular {
+  font-family: "MedievalSharp", serif;
+  font-size: 20px;
+  line-height: 1.35;
+
+  width: fit-content;
+
+  margin: 40px auto 0 40px;
+  padding: 0;
+
+  color: rgb(255, 255, 255);
+  white-space: pre-line;
+}
