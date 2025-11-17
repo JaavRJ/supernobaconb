@@ -65,10 +65,8 @@ body {
 /* FILAS HORIZONTALES */
 .row {
   display: flex;
-  flex-direction: row; /* ya no columnas */
   gap: 50px;
   align-items: center;
-  
 }
 
 .photo {

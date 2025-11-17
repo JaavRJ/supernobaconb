@@ -1,32 +1,23 @@
+
 import React, { useEffect, useRef } from "react";
 import "../assets/styles/Partes.css";
-import TextBefore1 from "../components/texts/TextBefore1";
-import TextBefore2 from "../components/texts/TextBefore2";
-import TextBefore3 from "../components/texts/TextBefore3";
-import TextBefore4 from "../components/texts/TextBefore4";
-import Photo from "../components/Photos";
-import FontTester from "../components/pruebas/FontsPrueba";
+// import TextBefore1 from "../components/texts/TextBefore1"; // Ya no se usa
+// import TextBefore2 from "../components/texts/TextBefore2"; // Ya no se usa
+// import TextBefore3 from "../components/texts/TextBefore3"; // Ya no se usa
+// import TextBefore4 from "../components/texts/TextBefore4"; // Ya no se usa
+// import Photo from "../components/Photos"; // Ya no se usa aquí
 import FontEstrella from "../components/pruebas/FontEstrella";
-import TextImages from "../components/TextImages"
+// import TextImages from "../components/TextImages"; // Ya no se usa
 
+// --- ¡IMPORTA TU NUEVO COMPONENTE! ---
+import GaleriaPartes from "../components/GalleryPartes"; // Ajusta la ruta
 
 export default function BeforePage() {
-    
-  const imgUrls = [
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
-  ];
+  // --- TODA TU LÓGICA DE 'imgUrls' y 'photosData' SE FUE A 'GaleriaPartes' ---
 
   const starsRef = useRef<HTMLDivElement>(null);
 
-  // Generar datos de fotos con rotación y escala aleatoria solo una vez
-  const photosData = useRef(
-    imgUrls.map((src) => ({
-      src,
-      rotation: Math.random() * 20 - 10, // -10 a +10 grados
-      scale: 0.75 + Math.random() * 0.1,  // 0.9 a 1.1
-    }))
-  );
-
+  // --- TU LÓGICA DE 'useEffect' SE QUEDA EXACTAMENTE IGUAL ---
   useEffect(() => {
     // Scroll horizontal con la rueda
     const handleWheel = (e: WheelEvent) => {
@@ -37,22 +28,18 @@ export default function BeforePage() {
     };
     window.addEventListener("wheel", handleWheel, { passive: false });
 
-    // Generar estrellas
+    // Generar estrellas (se queda igual)
     const container = starsRef.current;
-    if (container) {
+    if (container && container.children.length === 0) { // Añadí una comprobación para no duplicar
       for (let i = 0; i < 100; i++) {
         const star = document.createElement("div");
         star.className = "star";
-
         star.style.top = `${Math.random() * 100}vh`;
         star.style.left = `${Math.random() * 100}vw`;
-
         const size = Math.random() * 2 + 1;
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
-
         star.style.animationDuration = `${1.5 + Math.random() * 2}s`;
-
         container.appendChild(star);
       }
     }
@@ -70,38 +57,27 @@ export default function BeforePage() {
         <div className="side-text">SUPERNOBA</div>
         <div className="side-text-right"></div>
 
-        <FontEstrella/>
-    
+        {/* Esta es tu primera "pantalla" en el scroll */}
+        <FontEstrella />
 
-        {/* TEXTO */}
+        {/* --- ESTA ES LA SECCIÓN IMPORTANTE --- */}
+        {/*
+          Aquí reemplazamos tus 5 'row' antiguos 
+          por UNO SOLO que contiene la galería.
+        */}
         <div className="row">
-        <TextImages>
-        {`1. nebulosa
-        nacimiento de la idea 
-        del arte`}
-        </TextImages>        </div>
-         <div className="row">
-          <TextBefore2 />
-        </div>
-         <div className="row">
-          <TextBefore3 />
-        </div>
-         <div className="row">
-          <TextBefore4 />
+          <GaleriaPartes />
         </div>
         
-        <div className="row">
-          <Photo
-            src={photosData.current[0].src}
-            alt="0"
-            style={{
-              transform: `rotate(${photosData.current[0].rotation}deg) scale(${.7})`,
-            }}
-          />
-        </div>   
-              
-        </div>
-           
+        {/* Si quieres más contenido en tu scroll horizontal,
+          puedes añadir más 'row' aquí.
+          Ejemplo:
+          <div className="row">
+             <h2>Otra sección...</h2>
+          </div>
+        */}
+
+      </div>
     </>
   );
 }

@@ -68,7 +68,7 @@ export default function BeforePage() {
             <FontEstrella/>
         <div className="row">
         </div>
-        <div className="row">
+        <div className="row"> 
             <FontTester/>
         </div>
 

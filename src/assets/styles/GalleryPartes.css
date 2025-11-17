@@ -1,0 +1,88 @@
+
+/* src/components/GaleriaPartes.css */
+
+/* Contenedor principal de 2 columnas */
+.galeria-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Ocupa todo el 'row' */
+  padding: 0 5vw;
+  width: 800px;
+  gap: 5%;
+}
+
+/* Columna izquierda: Menú */
+.galeria-menu {
+  flex: 1; /* Ocupa 1 parte */
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  /* Alinea los textos como en tu imagen original */
+  align-items: center; 
+}
+
+.item-menu {
+  display: flex;
+  flex-direction: column;
+  font-family: "Times New Roman", serif;
+  font-size: 20px;
+  line-height: 1.35;
+  color: white;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  text-align: center;
+}
+
+.item-menu:hover {
+  opacity: 0.8;
+}
+
+.item-menu.activo {
+  opacity: 1;
+}
+
+/* Columna derecha: Visor */
+.galeria-visor {
+  flex: 1.5; /* Ocupa 1.5 partes (más grande) */
+  height: 80vh; /* Ajusta la altura del visor */
+  position: relative; /* FUNDAMENTAL */
+}
+
+.contenedor-foto {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Lógica de fundido */
+  opacity: 0;
+  transition: opacity 0.7s ease-in-out;
+}
+
+@media (max-width: 800px) {
+
+    .galeria-contenedor {
+    width: 500px;
+    }
+
+    .item-menu {
+    font-size: 15px;
+    }
+}
+
+
+
+.contenedor-foto.visible {
+  opacity: 1;
+}
+
+/* Asumimos que tu <Photo> renderiza un <img> 
+   que ya tiene el estilo de borde inclinado
+*/
