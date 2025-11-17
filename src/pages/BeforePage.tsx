@@ -7,6 +7,8 @@ import TextBefore4 from "../components/texts/TextBefore4";
 import Photo from "../components/Photos";
 import FontTester from "../components/pruebas/FontsPrueba";
 import FontEstrella from "../components/pruebas/FontEstrella";
+import TextImages from "../components/TextImages"
+
 
 export default function BeforePage() {
     
@@ -68,15 +70,16 @@ export default function BeforePage() {
         <div className="side-text">SUPERNOBA</div>
         <div className="side-text-right"></div>
 
-        <div className="main-title">
-          BRILLO DE UNA <br /> ESTRELLA MUERTA
-        </div>
+        <FontEstrella/>
     
 
         {/* TEXTO */}
         <div className="row">
-          <TextBefore1 />
-        </div>
+        <TextImages>
+        {`1. nebulosa
+        nacimiento de la idea 
+        del arte`}
+        </TextImages>        </div>
          <div className="row">
           <TextBefore2 />
         </div>

@@ -24,6 +24,10 @@ body {
   text-align: left;
   margin-right: 200px;
   color: #FFF; /* tu color */
+
+  font-family: 'Gergia', serif; /* Tu elección de fuente */
+  letter-spacing: 0.05em;
+  
 }
 
 /* Columna */

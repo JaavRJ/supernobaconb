@@ -65,11 +65,8 @@ export default function BeforePage() {
         <div className="side-text">SUPERNOBA</div>
         <div className="side-text-right"></div>
 
-        <div className="main-title">
-          BRILLO DE UNA <br /> ESTRELLA MUERTA
-        </div>
-        <div className="row">
             <FontEstrella/>
+        <div className="row">
         </div>
         <div className="row">
             <FontTester/>
