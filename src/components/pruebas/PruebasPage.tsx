@@ -1,12 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import "../assets/styles/Partes.css";
-import TextBefore1 from "../components/texts/TextBefore1";
-import TextBefore2 from "../components/texts/TextBefore2";
-import TextBefore3 from "../components/texts/TextBefore3";
-import TextBefore4 from "../components/texts/TextBefore4";
-import Photo from "../components/Photos";
-import FontTester from "../components/pruebas/FontsPrueba";
-import FontEstrella from "../components/pruebas/FontEstrella";
+import "../../assets/styles/Partes.css";
+import TextBefore1 from "../texts/TextBefore1";
+import Photo from "../../components/Photos";
+import FontTester from "../../components/pruebas/FontsPrueba";
+import FontEstrella from "../../components/pruebas/FontEstrella";
 
 export default function BeforePage() {
     
@@ -71,31 +68,18 @@ export default function BeforePage() {
         <div className="main-title">
           BRILLO DE UNA <br /> ESTRELLA MUERTA
         </div>
-    
+        <div className="row">
+            <FontEstrella/>
+        </div>
+        <div className="row">
+            <FontTester/>
+        </div>
 
         {/* TEXTO */}
         <div className="row">
           <TextBefore1 />
         </div>
-         <div className="row">
-          <TextBefore2 />
-        </div>
-         <div className="row">
-          <TextBefore3 />
-        </div>
-         <div className="row">
-          <TextBefore4 />
-        </div>
-        
-        <div className="row">
-          <Photo
-            src={photosData.current[0].src}
-            alt="0"
-            style={{
-              transform: `rotate(${photosData.current[0].rotation}deg) scale(${.7})`,
-            }}
-          />
-        </div>   
+
               
         </div>
            

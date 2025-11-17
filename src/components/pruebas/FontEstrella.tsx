@@ -9,6 +9,7 @@ const TituloContenedor = styled.h1`
   color: #E0E0E0;
   line-height: 1.3;
   letter-spacing: 0.05em;
+  text-align: left;
 `;
 
 // --- OWrapper (¡Cambio clave!) ---
@@ -61,7 +62,7 @@ const TituloEstelar: React.FC = () => {
         <LetraO>O</LetraO> 
         <EstrellaImagen src="/logo192.png" alt="Estrella de Brillo" />
       </OWrapper>
-      {' '}DE UNA ESTRELLA MUERTA
+      {' ' }DE UNA<br />  ESTRELLA MUERTA
     </TituloContenedor>
   );
 };

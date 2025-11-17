@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "./App.css";
 import HomeRoute from "./pages/HomeRoute";   // <-- aquí
+import PruebasPage from "./components/pruebas/PruebasPage";   // <-- aquí
 import Cuadratico from "./pages/cifrados/Cuadratico";
 import PuzzleStars from "./pages/cifrados/PuzzleStars";
 
@@ -13,6 +14,7 @@ function App() {
 
         {/* Página principal con loading */}
         <Route path="/" element={<HomeRoute />} />
+        <Route path="/pruebas" element={<PruebasPage />} />
 
         {/* Página de puzzles */}
         <Route path="/0618am" element={<Cuadratico />} />
