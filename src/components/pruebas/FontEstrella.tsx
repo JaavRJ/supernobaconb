@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// --- Título Contenedor (¡AHORA ES RESPONSIVE!) ---
+// --- Título Contenedor ---
 const TituloContenedor = styled.h1`
   font-family: 'Uncial Antiqua', cursive; 
   font-size: 4.5rem; /* Tamaño base (para pantallas > 800px) */
@@ -11,17 +11,14 @@ const TituloContenedor = styled.h1`
   text-align: left;
   letter-spacing: 0.05em;
   
-  /* --- ¡AQUÍ ESTÁ LA LÓGICA RESPONSIVE! --- */
   @media (max-width: 800px) {
-    font-size: 30px;      /* Tu tamaño de fuente para móvil */
-    margin-right: 20px;   /* Tu margen para móvil */
-    /* Podríamos querer centrarlo en móvil, por ejemplo: */
+    font-size: 30px;     
+    margin-right: 20px;  
     /* text-align: ; */ 
   }
 `;
 
 // --- OWrapper (SIN CAMBIOS) ---
-// (Se ajusta automáticamente porque 1.4em depende del font-size de TituloContenedor)
 const OWrapper = styled.span`
   position: relative;
   display: inline-block;
@@ -32,8 +29,7 @@ const OWrapper = styled.span`
   margin: 0 -0.1em; 
 `;
 
-// --- EstrellaImagen (Tus cambios respetados) ---
-// (SIN CAMBIOS, se ajusta automáticamente porque 80% depende de OWrapper)
+// --- EstrellaImagen  ---
 const EstrellaImagen = styled.img`
   position: absolute;
   top: 51%; /* Tu ajuste */
@@ -53,8 +49,7 @@ const EstrellaImagen = styled.img`
     drop-shadow(0 0 1px black);
 `;
 
-// --- Letra 'O' (Tus cambios respetados) ---
-// (SIN CAMBIOS, se ajusta automáticamente)
+// --- Letra 'O'  ---
 const LetraO = styled.span`
   position: relative;
   z-index: 1;
@@ -62,7 +57,6 @@ const LetraO = styled.span`
   vertical-align: middle;
 `;
 
-// --- El Componente Final ---
 
 const TituloEstelar: React.FC = () => {
   return (
