@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const TituloContenedor = styled.h1`
   font-family: 'Gergia', serif; /* Tu elección de fuente */
   font-size: 3.5rem; /* Tu elección de tamaño */
-  font-weight: 400;
+  font-weight: bold;
   color: #E0E0E0;
   line-height: 1.3;
   letter-spacing: 0.05em;
@@ -37,15 +37,15 @@ const EstrellaImagen = styled.img`
   object-fit: contain;
   
   z-index: 2; 
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 1)) 
-          drop-shadow(0 0 10px rgba(193, 193, 193, 1));
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 1)) 
+          drop-shadow(0 0 10px rgba(22, 237, 229, 1));
 `;
 
 // --- Letra 'O' (¡Cambio clave!) ---
 const LetraO = styled.span`
   position: relative;
   z-index: 1;
-  opacity: 0.8;
+  opacity: 0.9;
   
   /* --- ¡CAMBIO CLAVE AQUÍ! --- */
   /* Asegura que la 'O' también se alinee bien dentro de su Wrapper */

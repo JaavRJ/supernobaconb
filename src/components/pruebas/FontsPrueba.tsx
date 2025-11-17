@@ -26,7 +26,7 @@ const FontLabel = styled.p`
 
 // --- Título base para todas las fuentes (tamaño) ---
 const BaseTitle = styled.h1`
-  font-size: 2.5rem; /* Tamaño de fuente base para probar */
+  font-size: 2.0rem; /* Tamaño de fuente base para probar */
   font-weight: 400; /* La mayoría de estas fuentes solo tienen peso 400 */
   color: #EFEFEF;
   margin: 0.5rem 0;
@@ -49,7 +49,6 @@ const TitleAkronim = styled(BaseTitle)`
 
 const TitleCinzel = styled(BaseTitle)`
   font-family: 'Cinzel Decorative', cursive;
-  font-size: 2.5rem; /* Esta es un poco más grande */
 `;
 
 const TitleKranky = styled(BaseTitle)`
@@ -58,17 +57,14 @@ const TitleKranky = styled(BaseTitle)`
 
 const TitleIMFell = styled(BaseTitle)`
   font-family: 'IM Fell DW Pica', serif;
-  font-size: 2.5rem; /* Ligeramente más pequeña */
 `;
 
 const TitleCormorant = styled(BaseTitle)`
   font-family: 'Cormorant Garamond', cursive;
-  font-size: 2.5rem; /* Esta necesita ser más grande */
 `;
 
 const TitleGreat = styled(BaseTitle)`
   font-family: 'Great Vibes', cursive;
-  font-size: 2.5rem; /* Esta también es ancha */
 `;
 
 const TitleMedieval = styled(BaseTitle)`
@@ -79,8 +75,11 @@ const TitleMedieval = styled(BaseTitle)`
 // --- El Componente Testeador ---
 
 const FontTester: React.FC = () => {
-  const title = "Brillo de una Estrella Muerta";
-
+const title = (
+  <>
+    1. nebulosa  <br /> nacimiento de la idea  <br />del arte
+  </>
+);
   return (
     <TestWrapper>
 
