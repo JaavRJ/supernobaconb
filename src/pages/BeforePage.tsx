@@ -5,8 +5,11 @@ import TextBefore2 from "../components/texts/TextBefore2";
 import TextBefore3 from "../components/texts/TextBefore3";
 import TextBefore4 from "../components/texts/TextBefore4";
 import Photo from "../components/Photos";
+import FontTester from "../components/pruebas/FontsPrueba";
+import FontEstrella from "../components/pruebas/FontEstrella";
 
 export default function BeforePage() {
+    
   const imgUrls = [
     "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
   ];
@@ -68,6 +71,12 @@ export default function BeforePage() {
         <div className="main-title">
           BRILLO DE UNA <br /> ESTRELLA MUERTA
         </div>
+        <div className="row">
+            <FontEstrella/>
+        </div>
+        <div className="row">
+            <FontTester/>
+        </div>
 
         {/* TEXTO */}
         <div className="row">
@@ -91,8 +100,10 @@ export default function BeforePage() {
               transform: `rotate(${photosData.current[0].rotation}deg) scale(${.7})`,
             }}
           />
-        </div>        </div>
-
+        </div>   
+              
+        </div>
+           
     </>
   );
 }
