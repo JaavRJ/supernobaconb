@@ -1,0 +1,49 @@
+.quad-puzzle {
+  color: #eee;
+  font-family: Georgia, serif;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.quad-puzzle h2 { margin: 0 0 16px 0; color: #fff; letter-spacing: 1px; }
+
+.panel { display: flex; gap: 24px; align-items: flex-start; }
+.left { flex: 1; min-width: 420px; }
+.right { width: 380px; }
+
+.instruction { color: #bfbfbf; font-size: 14px; }
+
+.clues { margin: 12px 0; }
+.clue { display:flex; gap:12px; padding:8px 6px; background: rgba(255,255,255,0.02); border-radius:8px; margin-bottom:8px; }
+.clue .label { font-size: 13px; color: #e6e6e6; }
+
+.encoded { margin-top: 8px; }
+.encoded-list { display:flex; flex-wrap: wrap; gap:8px; max-height: 220px; overflow:auto; padding:6px; }
+.encoded-item { background: rgba(255,255,255,0.02); padding:8px; border-radius:6px; min-width:72px; text-align:center; }
+.encoded-item small { color:#bbb; display:block; margin-bottom:6px; font-size:12px; }
+.encoded-item .num { font-family: monospace; font-size: 14px; color:#fff; }
+
+.inputs label { display:block; margin-bottom:10px; font-size:13px; color:#ddd; }
+.inputs input { width:100%; padding:8px 10px; margin-top:6px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color:#fff; }
+
+.buttons { display:flex; gap:10px; margin-top:12px; }
+.btn { padding:10px 12px; border-radius:8px; border: none; cursor:pointer; }
+.btn.primary { background: #2b6cff; color: #fff; }
+.btn.alt { background: rgba(255,255,255,0.04); color: #ddd; }
+
+.feedback { margin-top:10px; color:#ffdca3; font-weight:600; }
+
+.preview-box { margin-top:18px; background: rgba(255,255,255,0.02); padding:12px; border-radius:8px; min-height:80px; }
+.preview-box .cover { color:#999; font-size:14px; }
+.preview-box .content { font-size:15px; color:#fff; white-space:pre-wrap; word-break:break-word; }
+
+/* responsive */
+@media (max-width: 900px) {
+  .panel { flex-direction: column; }
+  .right { width: 100%; }
+  .left { min-width: 0; }
+}
