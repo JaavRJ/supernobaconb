@@ -1,6 +1,6 @@
 // src/components/GaleriaPartes.tsx
 import React, { useState, useRef } from "react";
-import Photo from "./Photos"; // Ajusta la ruta a tu componente Photo
+import Photo from "./PhotosMenu"; // Ajusta la ruta a tu componente Photo
 import "../assets/styles/GalleryPartes.css"; // Crearemos este archivo CSS en el paso 2
 // --- Datos para las 4 partes ---
 const partesData = [
@@ -12,7 +12,7 @@ const partesData = [
   {
     id: "gigante",
     textos: ["2. gigante roja", "crecimiento de la idea", "del amor"],
-    imgSrc: "URL_DE_TU_IMAGEN_2_AQUI", // <--- REEMPLAZA ESTO
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png", // <--- REEMPLAZA ESTO
   },
   {
     id: "supernova",
