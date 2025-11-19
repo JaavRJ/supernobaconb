@@ -1,0 +1,29 @@
+.floating-bubble {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 20px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #151414ff, #141414ff);
+  box-shadow: 0 8px 20px rgba(59, 59, 59, 0.3), 0 0 15px rgba(53, 53, 53, 0.4);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-weight: bold;
+  height: 40px;
+  font-size: 14px;
+  text-align: center;
+  z-index: 9999;
+  animation: float 3s ease-in-out infinite alternate;
+}
+
+@media (max-width: 800px) {
+  .floating-bubble {
+    bottom: 35px;
+    right: 10px;
+    padding: 10px 16px;
+    font-size: 5px;
+    height: 26px;
+  }
+}

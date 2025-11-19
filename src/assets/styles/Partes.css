@@ -83,7 +83,7 @@ body {
 
 
 .photomenu {
-  width: 100%;
+  width: 110%;
   height: auto;
   object-fit: cover;
   border-style: solid;
@@ -197,3 +197,33 @@ body {
 }
 
 
+.main-footer {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  color: #fff;
+  font-size: 12px;
+  opacity: 0.8;
+  z-index: 9999;
+  font-family: "Georgia", serif;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 12px;
+}
+
+.footer-links a {
+  display: inline-flex;
+  transition: opacity 0.2s ease;
+}
+
+.footer-links a:hover {
+  opacity: 0.6;
+}

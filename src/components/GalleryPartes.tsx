@@ -7,22 +7,22 @@ const partesData = [
   {
     id: "nebulosa",
     textos: ["1. nebulosa", "nacimiento de la idea", "del arte"],
-    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png", // Tu imagen original
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763505974/supernoba/IMG_20251118_111352_m7qf2r.png", // Tu imagen original
   },
   {
     id: "gigante",
     textos: ["2. gigante roja", "crecimiento de la idea", "del amor"],
-    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png", // <--- REEMPLAZA ESTO
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png", // <--- REEMPLAZA ESTO
   },
   {
     id: "supernova",
     textos: ["3. supernova", "muerte de la idea", "del soñar"],
-    imgSrc: "URL_DE_TU_IMAGEN_3_AQUI", // <--- REEMPLAZA ESTO
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png", // <--- REEMPLAZA ESTO
   },
   {
     id: "enana",
     textos: ["4. enana blanca", "sacrificio de la idea", "del recuerdo"],
-    imgSrc: "URL_DE_TU_IMAGEN_4_AQUI", // <--- REEMPLAZA ESTO
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png", // <--- REEMPLAZA ESTO
   },
 ];
 // ---------------------------------
