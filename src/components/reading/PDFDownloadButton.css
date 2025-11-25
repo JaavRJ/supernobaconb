@@ -1,0 +1,69 @@
+/* PDF Download Button */
+.pdf-download-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: var(--bg-primary);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    z-index: 9997;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.pdf-download-btn span {
+    font-family: var(--font-ui);
+}
+
+.pdf-download-btn:hover:not(:disabled) {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.pdf-download-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.pdf-download-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@media (max-width: 800px) {
+    .pdf-download-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 0.6rem;
+    }
+
+    .pdf-download-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}

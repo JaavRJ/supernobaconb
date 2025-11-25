@@ -1,0 +1,44 @@
+/* Reading Time Indicator */
+.reading-time-indicator {
+    position: fixed;
+    top: 80px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    z-index: 9996;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all var(--transition-fast);
+}
+
+.reading-time-indicator:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.reading-time-indicator svg {
+    color: var(--accent);
+    stroke: var(--accent) !important;
+}
+
+@media (max-width: 800px) {
+    .reading-time-indicator {
+        top: 70px;
+        right: 20px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .reading-time-indicator svg {
+        width: 14px;
+        height: 14px;
+    }
+}

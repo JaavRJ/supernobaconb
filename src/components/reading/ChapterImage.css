@@ -1,0 +1,25 @@
+/* Chapter Image Styles */
+.chapter-image-container {
+    margin: 40px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.chapter-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: filter 0.3s ease;
+}
+
+.chapter-image-container:hover .chapter-image {
+    filter: brightness(1.1) saturate(1.2);
+}
+
+@media (max-width: 800px) {
+    .chapter-image-container {
+        margin: 30px 0;
+    }
+}

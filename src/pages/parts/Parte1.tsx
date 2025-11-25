@@ -1,109 +1,102 @@
 import React, { useEffect, useRef } from "react";
 import "../../assets/styles/Partes.css";
-import Text11 from "../../components/texts/Text11";
-import Text12 from "../../components/texts/Text12";
-import Photo from "../../components/Photos";
+import PartLayout from "../../components/navigation/PartLayout";
+import Chapter from "../../components/reading/Chapter";
+import ChapterText1_1 from "../../components/texts/ChapterText1_1";
+import ChapterText1_3 from "../../components/texts/ChapterText1_3";
+import ChapterText1_4 from "../../components/texts/ChapterText1_4";
+import ChapterText2_1 from "../../components/texts/ChapterText2_1";
 
-export default function HomePage() {
-  const imgUrls = [
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_152021_xzy1ze.png",
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154559_ky1mqh.png",
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png",
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png",
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
-  ];
+export default function Parte1() {
+    const starsRef = useRef<HTMLDivElement>(null);
 
-  const starsRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        // Scroll horizontal con la rueda
+        const handleWheel = (e: WheelEvent) => {
+            window.scrollBy({
+                left: e.deltaY * 5,
+                behavior: "smooth",
+            });
+        };
+        window.addEventListener("wheel", handleWheel, { passive: false });
 
-  // Generar datos de fotos con rotación y escala aleatoria solo una vez
-  const photosData = useRef(
-    imgUrls.map((src) => ({
-      src,
-      rotation: Math.random() * 20 - 10, // -10 a +10 grados
-      scale: 0.75 + Math.random() * 0.1,  // 0.9 a 1.1
-    }))
-  );
+        // Generar estrellas
+        const container = starsRef.current;
+        if (container) {
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement("div");
+                star.className = "star";
 
-  useEffect(() => {
-    // Scroll horizontal con la rueda
-    const handleWheel = (e: WheelEvent) => {
-      window.scrollBy({
-        left: e.deltaY * 5,
-        behavior: "smooth",
-      });
-    };
-    window.addEventListener("wheel", handleWheel, { passive: false });
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.left = `${Math.random() * 100}vw`;
 
-    // Generar estrellas
-    const container = starsRef.current;
-    if (container) {
-      for (let i = 0; i < 100; i++) {
-        const star = document.createElement("div");
-        star.className = "star";
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
 
-        star.style.top = `${Math.random() * 100}vh`;
-        star.style.left = `${Math.random() * 100}vw`;
+                star.style.animationDuration = `${1.5 + Math.random() * 2}s`;
 
-        const size = Math.random() * 2 + 1;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
+                container.appendChild(star);
+            }
+        }
 
-        star.style.animationDuration = `${1.5 + Math.random() * 2}s`;
+        return () => {
+            window.removeEventListener("wheel", handleWheel);
+        };
+    }, []);
 
-        container.appendChild(star);
-      }
-    }
+    return (
+        <PartLayout
+            partNumber={1}
+            partTitle="Parte 1: Nebulosa"
+            contentId="parte1-content"
+        >
+            <div className="stars-container" ref={starsRef}></div>
 
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
+            <div className="horizontal-scroll">
+                <div className="side-text">SUPERNOBA</div>
+                <div className="side-text-right">PARTE 1</div>
 
-  return (
-    <>
-      <div className="stars-container" ref={starsRef}></div>
+                <div className="main-title">
+                    PARTE 1: <br />NEBULOSA
+                </div>
 
-      <div className="horizontal-scroll">
-        <div className="side-text">SUPERNOBA</div>
-        <div className="side-text-right">PARTE 1</div>
+                {/* Capítulo i */}
+                <Chapter
+                    number="i"
+                    title="Título del Capítulo 1"
+                    imageSrc="https://via.placeholder.com/800x600?text=Capitulo+i"
+                    imageAlt="Capítulo i"
+                    content={<ChapterText1_1 />}
+                />
 
-        <div className="main-title">
-          PARTE 1: <br />NEBULOSA
-        </div>
-        {/* TEXTO 1*/}
-        <div className="row">
-          <Text11 />
-        </div>
-        {/* FILA 1 */}
-        <div className="row">
-          {photosData.current.slice(0, 4).map((photo, idx) => (
-            <Photo
-              key={idx}
-              src={photo.src}
-              alt={`${idx + 1}`}
-              style={{
-                transform: `rotate(${photo.rotation}deg) scale(${photo.scale})`,
-              }}
-            />
-          ))}
-        </div>
-         {/* TEXTO */}
-        <div className="row">
-          <Text12 />
-        </div>
-       
+                {/* Capítulo ii */}
+                <Chapter
+                    number="ii"
+                    title="Título del Capítulo 2"
+                    imageSrc="https://via.placeholder.com/800x600?text=Capitulo+ii"
+                    imageAlt="Capítulo ii"
+                    content={<ChapterText2_1 />}
+                />
 
-        {/* FILA 3 */}
-        <div className="row">
-          <Photo
-            src={photosData.current[4].src}
-            alt="5"
-            style={{
-              transform: `rotate(${photosData.current[4].rotation}deg) scale(${.7})`,
-            }}
-          />
-        </div>
-      </div>
-    </>
-  );
+                {/* Capítulo iii */}
+                <Chapter
+                    number="iii"
+                    title="Título del Capítulo 3"
+                    imageSrc="https://via.placeholder.com/800x600?text=Capitulo+iii"
+                    imageAlt="Capítulo iii"
+                    content={<ChapterText1_3 />}
+                />
+
+                {/* Capítulo iv */}
+                <Chapter
+                    number="iv"
+                    title="Título del Capítulo 4"
+                    imageSrc="https://via.placeholder.com/800x600?text=Capitulo+iv"
+                    imageAlt="Capítulo iv"
+                    content={<ChapterText1_4 />}
+                />
+            </div>
+        </PartLayout>
+    );
 }

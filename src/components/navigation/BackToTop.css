@@ -1,0 +1,49 @@
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9996;
+    transition: all var(--transition-fast);
+    opacity: 0.7;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.back-to-top:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.back-to-top:active {
+    transform: scale(0.95);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 0.7;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 800px) {
+    .back-to-top {
+        width: 40px;
+        height: 40px;
+        bottom: 80px;
+        left: 10px;
+    }
+}

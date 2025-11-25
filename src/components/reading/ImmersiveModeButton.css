@@ -1,0 +1,88 @@
+/* Immersive Mode Button */
+.immersive-mode-btn {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    z-index: 9997;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.immersive-mode-btn span {
+    font-family: var(--font-ui);
+}
+
+.immersive-mode-btn svg {
+    stroke: var(--accent) !important;
+}
+
+.immersive-mode-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    background: var(--accent);
+    color: var(--bg-primary);
+}
+
+.immersive-mode-btn:hover svg {
+    stroke: var(--bg-primary) !important;
+}
+
+.immersive-mode-btn:active {
+    transform: scale(0.95);
+}
+
+/* Immersive Mode Styles */
+body.immersive-mode .hamburger-trigger,
+body.immersive-mode .settings-trigger,
+body.immersive-mode .scroll-progress,
+body.immersive-mode .navigation-controls,
+body.immersive-mode .back-to-top,
+body.immersive-mode .scroll-hint,
+body.immersive-mode .reading-time-indicator,
+body.immersive-mode .pdf-download-btn,
+body.immersive-mode .side-text,
+body.immersive-mode .side-text-right,
+body.immersive-mode .main-title {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+body.immersive-mode .immersive-mode-btn {
+    opacity: 0.3;
+}
+
+body.immersive-mode .immersive-mode-btn:hover {
+    opacity: 1;
+}
+
+@media (max-width: 800px) {
+    .immersive-mode-btn {
+        bottom: 80px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 0.6rem;
+    }
+
+    .immersive-mode-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
