@@ -15,13 +15,12 @@ export default function HomePage() {
       {/* BURBUJA FLOTANTE MEJORADA */}
       <div className="floating-bubble">
         <EpisodeController
-          initialRelease={new Date("2025-11-02T00:00:00")}
+          initialRelease={new Date("2025-12-02T00:00:00")}
           onEpisodeChange={(ep) => setCurrentEpisode(ep)}
           onTimeLeftChange={(t) => setTimeLeft(t)}
         />
       </div>
       <Footer />
-      <ReadingSettings />
       <NavigationSystem currentEpisode={currentEpisode} />
 
       {/* SIEMPRE mostrar BeforePage en la ruta "/" */}

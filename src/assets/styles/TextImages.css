@@ -12,6 +12,12 @@
   white-space: pre-line;
 }
 
+@media (max-width: 800px) {
+  .poem-block {
+    font-size: 16px;
+  }
+}
+
 .caveat {
   font-family: "Caveat", cursive;
   font-optical-sizing: auto;

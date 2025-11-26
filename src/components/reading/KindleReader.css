@@ -109,7 +109,7 @@
 .kindle-content {
     flex: 1;
     overflow: hidden;
-    padding: 60px 80px;
+    padding: 40px 60px;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -149,89 +149,6 @@
 
 .kindle-loading {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: #999;
-}
-
-/* Footer */
-.kindle-footer {
-    padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.95);
-    border-top: 1px solid #d4cfc4;
-    flex-shrink: 0;
-}
-
-.kindle-progress-bar {
-    height: 4px;
-    background: #e0ddd4;
-    border-radius: 2px;
-    margin-bottom: 10px;
-    overflow: hidden;
-}
-
-.kindle-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #8b7355, #a0826d);
-    transition: width 0.3s ease;
-    border-radius: 2px;
-}
-
-.kindle-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    font-size: 0.85rem;
-    color: #666;
-    font-family: var(--font-ui);
-}
-
-.chapter-navigation {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-}
-
-.chapter-nav-btn {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: #555;
-    transition: all 0.2s;
-    font-family: var(--font-ui);
-}
-
-.chapter-nav-btn:hover:not(:disabled) {
-    background: #f5f5f5;
-    border-color: #999;
-    transform: translateY(-1px);
-}
-
-.chapter-nav-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-.chapter-indicator {
-    font-weight: 600;
-    color: #333;
-    padding: 0 8px;
-}
-
-.page-info {
-    display: flex;
-    justify-content: space-between;
-}
-
-/* Highlights */
-.kindle-page mark {
-    padding: 2px 0;
-    border-radius: 2px;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -252,10 +169,115 @@
     background: rgba(33, 150, 243, 0.4);
 }
 
+/* Footer */
+.kindle-footer {
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid #d4cfc4;
+    padding: 16px 24px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Footer Page Navigation */
+.footer-page-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.page-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #d4cfc4;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #5a5a5a;
+    font-size: 0.9rem;
+    font-family: var(--font-ui);
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.page-nav-btn:hover:not(:disabled) {
+    background: #f8f8f8;
+    border-color: #999;
+    color: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #fafafa;
+}
+
+.page-nav-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Progress Bar */
+.kindle-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.kindle-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #66BB6A);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.kindle-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+}
+
+/* Footer Info */
+.kindle-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Page Info */
+.page-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #888;
+    font-family: var(--font-ui);
+}
+
+.page-info span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 /* Responsive */
 @media (max-width: 800px) {
     .kindle-content {
-        padding: 40px 24px;
+        padding: 20px 10px;
     }
 
     .kindle-page {
@@ -277,6 +299,40 @@
     .kindle-header button svg {
         width: 20px;
         height: 20px;
+    }
+
+    /* Footer Responsive Optimized */
+    .kindle-footer {
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .footer-page-nav {
+        flex-direction: row;
+        /* Keep in row to save vertical space */
+        gap: 12px;
+    }
+
+    .page-nav-btn {
+        width: auto;
+        flex: 1;
+        justify-content: center;
+        padding: 8px;
+        font-size: 0;
+        /* Hide text */
+    }
+
+    .page-nav-btn svg {
+        width: 24px;
+        height: 24px;
+        margin: 0;
+    }
+
+    .page-info {
+        flex-direction: row;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        gap: 4px;
     }
 }
 

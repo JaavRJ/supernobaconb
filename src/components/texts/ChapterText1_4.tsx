@@ -1,11 +1,12 @@
 import React from "react";
+import TextImages from "../TextImages"
 
-export default function ChapterText1_3() {
+export default function ChapterText1_4() {
     return (
-        <div className="chapter-text">
-            <p>
-                {/* PLACEHOLDER: Agrega aquí el contenido del capítulo iii */}
-            </p>
-        </div>
+        <TextImages>
+            {`(iv. enséñame a cantar)
+son tantas cosas que siento que la 
+escritura no alcanza para contenerlas.`}
+        </TextImages>
     );
 }

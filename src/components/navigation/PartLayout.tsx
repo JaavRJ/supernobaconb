@@ -56,7 +56,6 @@ export default function PartLayout({
     return (
         <div style={{ position: 'relative' }}>
             <Footer />
-            <ReadingSettings />
             <NavigationSystem currentEpisode={partNumber} />
             <PDFDownloadButton
                 contentId={contentId}

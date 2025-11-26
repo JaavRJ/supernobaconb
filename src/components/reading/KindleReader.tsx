@@ -34,12 +34,43 @@ export default function KindleReader({
     const [pages, setPages] = useState<string[]>([]);
     const [selectedText, setSelectedText] = useState('');
     const [selectionPosition, setSelectionPosition] = useState({ x: 0, y: 0 });
-    const [fontSize, setFontSize] = useState(18);
+    const [fontSize, setFontSize] = useState(14);
     const [showSettings, setShowSettings] = useState(false);
     const [showQuotes, setShowQuotes] = useState(false);
 
     const contentRef = useRef<HTMLDivElement>(null);
     const currentChapter = chapters[currentChapterIndex];
+
+    // Re-paginar al cambiar el tamaño de la ventana
+    useEffect(() => {
+        const handleResize = () => {
+            if (contentRef.current && currentChapter) {
+                const highlights = getHighlights(partNumber, currentChapterIndex);
+                const paginatedPages = paginateContent(
+                    currentChapter.content,
+                    contentRef.current,
+                    fontSize,
+                    highlights
+                );
+                setPages(paginatedPages);
+                // Ajustar página actual si se sale del rango
+                setCurrentPage(prev => Math.min(prev, paginatedPages.length - 1));
+            }
+        };
+
+        // Debounce para evitar demasiados cálculos
+        let timeoutId: NodeJS.Timeout;
+        const debouncedResize = () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(handleResize, 100);
+        };
+
+        window.addEventListener('resize', debouncedResize);
+        return () => {
+            window.removeEventListener('resize', debouncedResize);
+            clearTimeout(timeoutId);
+        };
+    }, [currentChapter, fontSize, partNumber, currentChapterIndex]);
 
     // Paginar contenido cuando cambia el capítulo o el tamaño de fuente
     useEffect(() => {
@@ -204,7 +235,7 @@ export default function KindleReader({
                 </button>
 
                 <div className="kindle-title">
-                    {partTitle} — Capítulo {currentChapter.number}: {currentChapter.title}
+                    {partTitle}
                 </div>
 
                 <button
@@ -257,24 +288,7 @@ export default function KindleReader({
                             <button onClick={() => setFontSize(Math.min(24, fontSize + 2))}>A+</button>
                         </div>
                     </div>
-                    <div className="setting-group">
-                        <label>Capítulo:</label>
-                        <div className="chapter-nav-controls">
-                            <button
-                                onClick={prevChapter}
-                                disabled={currentChapterIndex === 0}
-                            >
-                                ← Anterior
-                            </button>
-                            <span>Cap. {currentChapter.number}</span>
-                            <button
-                                onClick={nextChapter}
-                                disabled={currentChapterIndex === chapters.length - 1}
-                            >
-                                Siguiente →
-                            </button>
-                        </div>
-                    </div>
+
                 </div>
             )}
 
@@ -293,6 +307,26 @@ export default function KindleReader({
 
             {/* Footer */}
             <div className="kindle-footer">
+                <div className="footer-page-nav">
+                    <button
+                        onClick={prevPage}
+                        disabled={currentPage === 0}
+                        className="page-nav-btn"
+                    >
+                        <ChevronLeft size={18} />
+                        Página anterior
+                    </button>
+
+                    <button
+                        onClick={nextPage}
+                        disabled={currentPage === totalPages - 1}
+                        className="page-nav-btn"
+                    >
+                        Página siguiente
+                        <ChevronRight size={18} />
+                    </button>
+                </div>
+
                 <div className="kindle-progress-bar">
                     <div
                         className="kindle-progress-fill"
@@ -300,25 +334,6 @@ export default function KindleReader({
                     />
                 </div>
                 <div className="kindle-info">
-                    <div className="chapter-navigation">
-                        <button
-                            onClick={prevChapter}
-                            disabled={currentChapterIndex === 0}
-                            className="chapter-nav-btn"
-                        >
-                            ← Cap. Anterior
-                        </button>
-                        <span className="chapter-indicator">
-                            Capítulo {currentGlobalChapter} de {totalChaptersUpToPart}
-                        </span>
-                        <button
-                            onClick={nextChapter}
-                            disabled={currentChapterIndex === chapters.length - 1}
-                            className="chapter-nav-btn"
-                        >
-                            Cap. Siguiente →
-                        </button>
-                    </div>
                     <div className="page-info">
                         <span>Página {currentPage + 1} de {totalPages}</span>
                         <span>{Math.round(progress)}% · {estimatedMinutes} min restantes</span>
@@ -361,17 +376,45 @@ function paginateContent(
     const pages: string[] = [];
     const tempDiv = document.createElement('div');
 
-    // Copy styles from container
+    // Get container computed styles
     const containerStyle = window.getComputedStyle(container);
-    tempDiv.style.width = containerStyle.width;
-    tempDiv.style.height = containerStyle.height;
-    tempDiv.style.padding = containerStyle.padding;
+
+    // Calculate available dimensions using clientWidth/Height for better accuracy
+    // clientWidth includes padding but excludes borders/scrollbars
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+
+    const paddingLeft = parseFloat(containerStyle.paddingLeft);
+    const paddingRight = parseFloat(containerStyle.paddingRight);
+    const paddingTop = parseFloat(containerStyle.paddingTop);
+    const paddingBottom = parseFloat(containerStyle.paddingBottom);
+
+    // Available space for content
+    const availableWidth = containerWidth - paddingLeft - paddingRight;
+    const availableHeight = containerHeight - paddingTop - paddingBottom;
+
+    // Apply styles to match .kindle-page exactly
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.visibility = 'hidden';
+    tempDiv.style.boxSizing = 'border-box';
+
+    // Width logic: match .kindle-page constraints (max-width: 700px)
+    // It takes the full available width up to 700px
+    tempDiv.style.width = `${Math.min(availableWidth, 700)}px`;
+
+    // Height logic: use available height minus safety margin
+    // Increased safety margin for mobile responsive stability
+    tempDiv.style.height = `${availableHeight - 40}px`;
+
+    // Typography matching .kindle-page
     tempDiv.style.fontSize = `${fontSize}px`;
     tempDiv.style.lineHeight = '1.8';
     tempDiv.style.fontFamily = containerStyle.fontFamily;
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.visibility = 'hidden';
-    tempDiv.style.overflow = 'hidden';
+    tempDiv.style.textAlign = 'justify';
+    tempDiv.style.color = '#2a2a2a';
+
+    // Reset padding on tempDiv
+    tempDiv.style.padding = '0';
 
     document.body.appendChild(tempDiv);
 
@@ -383,7 +426,7 @@ function paginateContent(
         tempDiv.innerHTML = testContent;
 
         if (tempDiv.scrollHeight > tempDiv.clientHeight && currentPageContent) {
-            // Current page is full, apply highlights and save it
+            // Current page is full
             const highlightedContent = applyHighlightsToHTML(currentPageContent, highlights);
             pages.push(highlightedContent);
             currentPageContent = `<p>${paragraph.trim()}</p>`;
@@ -392,7 +435,7 @@ function paginateContent(
         }
     }
 
-    // Add last page if there's content
+    // Add last page
     if (currentPageContent) {
         const highlightedContent = applyHighlightsToHTML(currentPageContent, highlights);
         pages.push(highlightedContent);

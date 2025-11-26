@@ -10,6 +10,7 @@ import Parte1 from "./pages/parts/Parte1";
 import Parte2 from "./pages/parts/Parte2";
 import Parte3 from "./pages/parts/Parte3";
 import Parte4 from "./pages/parts/Parte4";
+import ProtectedRoute from "./components/navigation/ProtectedRoute";
 
 function App() {
   return (
@@ -19,12 +20,42 @@ function App() {
         {/* Página principal - SIEMPRE muestra BeforePage */}
         <Route path="/" element={<HomeRoute />} />
 
-        {/* Rutas para cada parte */}
-        <Route path="/parte1" element={<Parte1 />} />
-        <Route path="/parte2" element={<Parte2 />} />
-        <Route path="/parte3" element={<Parte3 />} />
-        <Route path="/parte4" element={<Parte4 />} />
-        <Route path="/pruebas" element={<PruebasPage />} />
+        {/* Rutas protegidas para cada parte */}
+        <Route
+          path="/parte1"
+          element={
+            <ProtectedRoute partNumber={1}>
+              <Parte1 />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/parte2"
+          element={
+            <ProtectedRoute partNumber={2}>
+              <Parte2 />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/parte3"
+          element={
+            <ProtectedRoute partNumber={3}>
+              <Parte3 />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/parte4"
+          element={
+            <ProtectedRoute partNumber={4}>
+              <Parte4 />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta de pruebas - siempre accesible */}
+        <Route path="/pruebas" element={<Parte1 />} />
 
         {/* Página de puzzles */}
         <Route path="/0618am" element={<Cuadratico />} />

@@ -3,13 +3,31 @@ import "../../assets/styles/Partes.css";
 import PartLayout from "../../components/navigation/PartLayout";
 import Chapter from "../../components/reading/Chapter";
 import ChapterText1_1 from "../../components/texts/ChapterText1_1";
+import ChapterText1_2 from "../../components/texts/ChapterText1_2";
 import ChapterText1_3 from "../../components/texts/ChapterText1_3";
 import ChapterText1_4 from "../../components/texts/ChapterText1_4";
-import ChapterText2_1 from "../../components/texts/ChapterText2_1";
+import ChapterText1_5 from "../../components/texts/ChapterText1_5";
+import Photo from "../../components/Photos";
+
+const imgUrls = [
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_152021_xzy1ze.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154559_ky1mqh.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
+];
+
 
 export default function Parte1() {
     const starsRef = useRef<HTMLDivElement>(null);
-
+    // Generar datos de fotos con rotación y escala aleatoria solo una vez
+    const photosData = useRef(
+        imgUrls.map((src) => ({
+            src,
+            rotation: Math.random() * 20 - 10, // -10 a +10 grados
+            scale: 0.75 + Math.random() * 0.1,  // 0.9 a 1.1
+        }))
+    );
     useEffect(() => {
         // Scroll horizontal con la rueda
         const handleWheel = (e: WheelEvent) => {
@@ -61,41 +79,85 @@ export default function Parte1() {
                     PARTE 1: <br />NEBULOSA
                 </div>
 
-                {/* Capítulo i */}
-                <Chapter
-                    number="i"
-                    title="Título del Capítulo 1"
-                    imageSrc="https://via.placeholder.com/800x600?text=Capitulo+i"
-                    imageAlt="Capítulo i"
-                    content={<ChapterText1_1 />}
-                />
+                {/* TEXTO 1 */}
+                <div className="row">
+                    <ChapterText1_1 />
+                </div>
 
-                {/* Capítulo ii */}
-                <Chapter
-                    number="ii"
-                    title="Título del Capítulo 2"
-                    imageSrc="https://via.placeholder.com/800x600?text=Capitulo+ii"
-                    imageAlt="Capítulo ii"
-                    content={<ChapterText2_1 />}
-                />
+                {/* IMAGEN 1 */}
+                <div className="row">
+                    <Photo
+                        src={photosData.current[0].src}
+                        alt="Foto 1"
+                        style={{
+                            transform: `rotate(${photosData.current[0].rotation}deg) scale(${photosData.current[0].scale})`,
+                        }}
+                    />
+                </div>
 
-                {/* Capítulo iii */}
-                <Chapter
-                    number="iii"
-                    title="Título del Capítulo 3"
-                    imageSrc="https://via.placeholder.com/800x600?text=Capitulo+iii"
-                    imageAlt="Capítulo iii"
-                    content={<ChapterText1_3 />}
-                />
+                {/* TEXTO 2 */}
+                <div className="row">
+                    <ChapterText1_2 />
+                </div>
 
-                {/* Capítulo iv */}
-                <Chapter
-                    number="iv"
-                    title="Título del Capítulo 4"
-                    imageSrc="https://via.placeholder.com/800x600?text=Capitulo+iv"
-                    imageAlt="Capítulo iv"
-                    content={<ChapterText1_4 />}
-                />
+                {/* IMAGEN 2 */}
+                <div className="row">
+                    <Photo
+                        src={photosData.current[1].src}
+                        alt="Foto 2"
+                        style={{
+                            transform: `rotate(${photosData.current[1].rotation}deg) scale(${photosData.current[1].scale})`,
+                        }}
+                    />
+                </div>
+
+                {/* TEXTO 3 */}
+                <div className="row">
+                    <ChapterText1_3 />
+                </div>
+
+                {/* IMAGEN 3 */}
+                <div className="row">
+                    <Photo
+                        src={photosData.current[2].src}
+                        alt="Foto 3"
+                        style={{
+                            transform: `rotate(${photosData.current[2].rotation}deg) scale(${photosData.current[2].scale})`,
+                        }}
+                    />
+                </div>
+
+                {/* TEXTO 4 */}
+                <div className="row">
+                    <ChapterText1_4 />
+                </div>
+
+                {/* IMAGEN 4 */}
+                <div className="row">
+                    <Photo
+                        src={photosData.current[3].src}
+                        alt="Foto 4"
+                        style={{
+                            transform: `rotate(${photosData.current[3].rotation}deg) scale(${photosData.current[3].scale})`,
+                        }}
+                    />
+                </div>
+
+                {/* TEXTO 5 */}
+                <div className="row">
+                    <ChapterText1_5 />
+                </div>
+
+                {/* IMAGEN 5 */}
+                <div className="row">
+                    <Photo
+                        src={photosData.current[4].src}
+                        alt="Foto 5"
+                        style={{
+                            transform: `rotate(${photosData.current[4].rotation}deg) scale(${0.7})`,
+                        }}
+                    />
+                </div>
             </div>
         </PartLayout>
     );

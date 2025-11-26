@@ -1,11 +1,13 @@
 import React from "react";
+import TextImages from "../TextImages"
 
 export default function ChapterText1_1() {
     return (
-        <div className="chapter-text">
-            <p>
-                {/* PLACEHOLDER: Agrega aquí el contenido del capítulo i */}
-            </p>
-        </div>
+        <TextImages>
+            {`(i. cielo estrellado)
+pero ser parte de las brillantes 
+significaba aceptar todo de ellas. 
+Soledad, lejanía y calor. `}
+        </TextImages>
     );
 }

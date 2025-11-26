@@ -60,12 +60,7 @@ export default function NavigationSystem({ currentEpisode = null }: NavigationSy
     return (
         <>
             <ScrollProgress />
-            <NavigationControls
-                onNext={scrollToNext}
-                onPrevious={scrollToPrevious}
-                canGoNext={canGoNext}
-                canGoPrevious={canGoPrevious}
-            />
+
             <ScrollHint />
             <BackToTop />
             <HamburgerMenu currentEpisode={currentEpisode} />
