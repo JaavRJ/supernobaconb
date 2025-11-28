@@ -1,105 +1,10 @@
 import { getPublicationDate, getPartInfo } from '../config/publicationDates';
 
-// Declare gapi for TypeScript
-declare global {
-    interface Window {
-        gapi: any;
-    }
-}
-
-// Google Calendar API configuration
-const CALENDAR_API_KEY = '350896100728-3vrg5n95ol7v4f5asgtsbphdnuh7kimv.apps.googleusercontent.com'; // Reemplazar con tu API key
-const CALENDAR_ID = 'primary'; // Calendario principal del usuario
-
-// Load Google API
-export const loadGoogleAPI = (): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        if (typeof window.gapi !== 'undefined') {
-            resolve();
-            return;
-        }
-
-        const script = document.createElement('script');
-        script.src = 'https://apis.google.com/js/api.js';
-        script.onload = () => {
-            window.gapi.load('client', () => {
-                window.gapi.client.init({
-                    apiKey: CALENDAR_API_KEY,
-                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-                }).then(resolve).catch(reject);
-            });
-        };
-        script.onerror = reject;
-        document.body.appendChild(script);
-    });
-};
-
-// Add event to Google Calendar
-export const addToGoogleCalendar = async (
-    partNumber: number,
-    accessToken: string
-): Promise<void> => {
-    const publicationDate = getPublicationDate(partNumber);
-    const partInfo = getPartInfo(partNumber);
-
-    if (!publicationDate || !partInfo) {
-        throw new Error('Información de la parte no disponible');
-    }
-
-    // Create event date (publication date at 10:00 AM)
-    const eventDate = new Date(publicationDate);
-    eventDate.setHours(10, 0, 0, 0);
-
-    const endDate = new Date(eventDate);
-    endDate.setHours(11, 0, 0, 0);
-
-    const event = {
-        summary: partInfo.title,
-        description: partInfo.description,
-        start: {
-            dateTime: eventDate.toISOString(),
-            timeZone: 'America/Mexico_City', // Cambia según tu zona horaria
-        },
-        end: {
-            dateTime: endDate.toISOString(),
-            timeZone: 'America/Mexico_City',
-        },
-        reminders: {
-            useDefault: false,
-            overrides: [
-                { method: 'email', minutes: 60 }, // 1 hora antes
-                { method: 'popup', minutes: 60 }, // 1 hora antes
-            ],
-        },
-    };
-
-    try {
-        const response = await fetch(
-            `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events`,
-            {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(event),
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error('Error al crear evento en calendario');
-        }
-
-        const data = await response.json();
-        console.log('✅ Evento creado en calendario:', data.htmlLink);
-        return data;
-    } catch (error) {
-        console.error('❌ Error al agregar a calendario:', error);
-        throw error;
-    }
-};
-
-// Generate Google Calendar link (fallback method - no API needed)
+/**
+ * Genera un enlace "mágico" de Google Calendar.
+ * No requiere API Keys, ni autenticación, ni verificación de Google.
+ * Configurado para crear el evento y repetirlo semanalmente por 3 semanas.
+ */
 export const generateCalendarLink = (partNumber: number): string => {
     const publicationDate = getPublicationDate(partNumber);
     const partInfo = getPartInfo(partNumber);
@@ -108,37 +13,52 @@ export const generateCalendarLink = (partNumber: number): string => {
         return '';
     }
 
-    // Format date for Google Calendar URL
+    // Configurar fecha de inicio del evento (10:00 AM)
     const eventDate = new Date(publicationDate);
-    eventDate.setHours(10, 0, 0, 0);
+    eventDate.setHours(0, 0, 0, 0);
 
+    // Configurar fecha de fin del evento (11:00 AM)
     const endDate = new Date(eventDate);
-    endDate.setHours(11, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
 
+    // Función auxiliar para formatear fechas al estándar de Google (YYYYMMDDTHHMMSSZ)
+    // Elimina guiones, dos puntos y milisegundos.
     const formatDate = (date: Date) => {
         return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
     };
 
+    // Construcción de los parámetros del enlace
     const params = new URLSearchParams({
         action: 'TEMPLATE',
-        text: partInfo.title,
-        details: partInfo.description,
+        // Título del evento
+        text: `Estreno: ${partInfo.title} - Brillo de una estrella muerta`,
+        // Descripción con recordatorio de que es recurrente
+        details: `${partInfo.description}\n\nNota: Este recordatorio se ha configurado automáticamente para avisarte de esta parte y las de las próximas 2 semanas.`,
+        // Fechas de inicio y fin
         dates: `${formatDate(eventDate)}/${formatDate(endDate)}`,
+        // Zona horaria
         ctz: 'America/Mexico_City',
+        // LA REGLA DE RECURRENCIA:
+        // FREQ=WEEKLY: Se repite cada semana
+        // COUNT=3: Se repite un total de 3 veces (El estreno + 2 semanas más)
+        recur: 'RRULE:FREQ=WEEKLY;COUNT=3'
     });
 
     return `https://calendar.google.com/calendar/render?${params.toString()}`;
 };
 
-// Request calendar permission and add event
-export const requestCalendarPermission = async (partNumber: number): Promise<void> => {
-    try {
-        // For now, we'll use the simple link method
-        // To use the API method, you need to implement OAuth2 flow
-        const link = generateCalendarLink(partNumber);
+/**
+ * Abre el calendario en una nueva pestaña.
+ * Esta es la única función que necesitas llamar desde tu botón en React.
+ */
+export const requestCalendarPermission = (partNumber: number): void => {
+    const link = generateCalendarLink(partNumber);
+    if (link) {
         window.open(link, '_blank');
-    } catch (error) {
-        console.error('❌ Error al abrir calendario:', error);
-        throw error;
+    } else {
+        console.error('❌ No se pudo generar el enlace del calendario (faltan datos de fecha o info).');
     }
 };
+
+// Nota: He eliminado 'requestCalendarPermissionForAll' porque con la regla de recurrencia
+// ya no es necesario agregar evento por evento. Un solo clic hace todo el trabajo.

@@ -1,8 +1,8 @@
 // Fechas de publicación estimadas para cada parte
 export const PUBLICATION_DATES = {
-    parte2: '2025-12-09',  // Cambia estas fechas según tu plan
-    parte3: '2026-12-16',
-    parte4: '2026-12-23',
+    parte2: '2025-12-10',  // Cambia estas fechas según tu plan
+    parte3: '2026-12-17',
+    parte4: '2026-12-24',
     // Agrega más partes según necesites
 };
 
