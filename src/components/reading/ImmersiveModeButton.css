@@ -1,8 +1,16 @@
 /* Immersive Mode Button */
-.immersive-mode-btn {
+.immersive-mode-wrapper {
     position: fixed;
     bottom: 100px;
     right: 30px;
+    z-index: 9997;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
+.immersive-mode-btn {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -19,9 +27,47 @@
     gap: 4px;
     font-size: 0.65rem;
     font-weight: 600;
-    z-index: 9997;
     transition: all var(--transition-fast);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    pointer-events: auto;
+}
+
+.immersive-tooltip {
+    color: var(--text-primary);
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-family: var(--font-ui);
+    pointer-events: none;
+    opacity: 0.8;
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.immersive-arrow-icon {
+    color: var(--text-primary);
+    margin: 0 10px;
+    opacity: 0.8;
+    animation: bounceRight 2s infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes bounceRight {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+}
+
+.immersive-mode-wrapper:hover .immersive-tooltip,
+.immersive-mode-wrapper:hover .immersive-arrow-icon {
+    opacity: 1;
 }
 
 .immersive-mode-btn span {
@@ -64,18 +110,21 @@ body.immersive-mode .main-title {
     transition: opacity 0.3s ease;
 }
 
-body.immersive-mode .immersive-mode-btn {
+body.immersive-mode .immersive-mode-wrapper {
     opacity: 0.3;
 }
 
-body.immersive-mode .immersive-mode-btn:hover {
+body.immersive-mode .immersive-mode-wrapper:hover {
     opacity: 1;
 }
 
 @media (max-width: 800px) {
-    .immersive-mode-btn {
+    .immersive-mode-wrapper {
         bottom: 80px;
         right: 20px;
+    }
+
+    .immersive-mode-btn {
         width: 50px;
         height: 50px;
         font-size: 0.6rem;
@@ -84,5 +133,9 @@ body.immersive-mode .immersive-mode-btn:hover {
     .immersive-mode-btn svg {
         width: 18px;
         height: 18px;
+    }
+
+    .immersive-tooltip {
+        font-size: 0.7rem;
     }
 }

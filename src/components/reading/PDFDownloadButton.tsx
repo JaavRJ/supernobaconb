@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download } from 'lucide-react';
+import { Download, ArrowRight } from 'lucide-react';
 import { usePDFGenerator } from '../../hooks/usePDFGenerator';
 import './PDFDownloadButton.css';
 
@@ -30,15 +30,18 @@ export default function PDFDownloadButton({
     };
 
     return (
-        <button
-            className="pdf-download-btn"
-            onClick={handleDownload}
-            disabled={isGenerating}
-            title={`Descargar ${partTitle} como PDF`}
-            aria-label={`Descargar ${partTitle} como PDF`}
-        >
-            <Download size={20} />
-            <span>{isGenerating ? 'Generando...' : 'PDF'}</span>
-        </button>
+        <div className="pdf-download-wrapper">
+            <span className="pdf-tooltip">Descarga la parte en pdf</span>
+            <ArrowRight className="pdf-arrow-icon" size={24} />
+            <button
+                className="pdf-download-btn"
+                onClick={handleDownload}
+                disabled={isGenerating}
+                aria-label={`Descargar ${partTitle} como PDF`}
+            >
+                <Download size={20} />
+                <span>{isGenerating ? 'Generando...' : 'PDF'}</span>
+            </button>
+        </div>
     );
 }

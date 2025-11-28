@@ -3,10 +3,16 @@ import { ChevronLeft, ChevronRight, X, Menu, Settings, Star } from 'lucide-react
 import TextSelectionMenu from './TextSelectionMenu';
 import BookmarkButton from './BookmarkButton';
 import SavedQuotes from './SavedQuotes';
+import AuthorNoteTooltip from './AuthorNoteTooltip';
+import AuthorNoteModal from './AuthorNoteModal';
+import ReactionBar from './ReactionBar';
+import NewsletterModal from '../newsletter/NewsletterModal';
 import { getHighlights, applyHighlightsToHTML } from '../../utils/highlightManager';
+import { getAuthorNotes, applyAuthorNotesToHTML, type AuthorNote } from '../../data/authorNotes';
 import { ALL_PARTS } from '../../data/sampleChapters';
 import './KindleReader.css';
 import './ChapterNavControls.css';
+import './AuthorNoteTrigger.css';
 
 interface Chapter {
     number: string;
@@ -37,6 +43,9 @@ export default function KindleReader({
     const [fontSize, setFontSize] = useState(14);
     const [showSettings, setShowSettings] = useState(false);
     const [showQuotes, setShowQuotes] = useState(false);
+    const [activeNote, setActiveNote] = useState<AuthorNote | null>(null);
+    const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+    const [showNewsletter, setShowNewsletter] = useState(false);
 
     const contentRef = useRef<HTMLDivElement>(null);
     const currentChapter = chapters[currentChapterIndex];
@@ -50,7 +59,9 @@ export default function KindleReader({
                     currentChapter.content,
                     contentRef.current,
                     fontSize,
-                    highlights
+                    highlights,
+                    partNumber,
+                    currentChapterIndex
                 );
                 setPages(paginatedPages);
                 // Ajustar página actual si se sale del rango
@@ -82,7 +93,9 @@ export default function KindleReader({
                 currentChapter.content,
                 contentRef.current,
                 fontSize,
-                highlights
+                highlights,
+                partNumber,
+                currentChapterIndex
             );
             setPages(paginatedPages);
             setCurrentPage(0);
@@ -150,20 +163,73 @@ export default function KindleReader({
                 nextPage();
             }
             if (e.key === 'Escape') {
-                onClose();
+                // Close active note first, then close reader
+                if (activeNote) {
+                    setActiveNote(null);
+                } else {
+                    onClose();
+                }
             }
         };
 
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [currentPage, pages.length]);
+    }, [currentPage, pages.length, activeNote]);
+
+    // Handle author note clicks
+    useEffect(() => {
+        const handleAuthorNoteClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            const trigger = target.closest('.author-note-trigger');
+
+            if (trigger) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const noteId = trigger.getAttribute('data-note-id');
+                const noteType = trigger.getAttribute('data-note-type') as 'tooltip' | 'modal';
+
+                if (noteId) {
+                    // Get all notes for current chapter
+                    const notes = getAuthorNotes(partNumber, currentChapterIndex);
+                    const note = notes.find(n => n.id === noteId);
+
+                    if (note) {
+                        setActiveNote(note);
+
+                        // Set tooltip position if it's a tooltip type
+                        if (noteType === 'tooltip') {
+                            const rect = trigger.getBoundingClientRect();
+                            setTooltipPosition({
+                                x: rect.left + rect.width / 2,
+                                y: rect.bottom + 10
+                            });
+                        }
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('click', handleAuthorNoteClick);
+        return () => document.removeEventListener('click', handleAuthorNoteClick);
+    }, [partNumber, currentChapterIndex]);
 
     const nextPage = useCallback(() => {
-        if (currentPage < pages.length - 1) {
+        // Check if we're on the second-to-last page of the last chapter
+        const isLastChapter = currentChapterIndex === chapters.length - 1;
+        const isPenultimatePage = currentPage === pages.length - 2;
+
+        if (isLastChapter && isPenultimatePage) {
+            // Show newsletter modal before advancing to last page
+            console.log('✅ Último capítulo, penúltima página - Mostrando modal');
+            setShowNewsletter(true);
+            setCurrentPage(prev => prev + 1);
+            setSelectedText('');
+        } else if (currentPage < pages.length - 1) {
             setCurrentPage(prev => prev + 1);
             setSelectedText('');
         }
-    }, [currentPage, pages.length]);
+    }, [currentPage, pages.length, currentChapterIndex, chapters.length]);
 
     const prevPage = useCallback(() => {
         if (currentPage > 0) {
@@ -327,6 +393,12 @@ export default function KindleReader({
                     </button>
                 </div>
 
+                {/* Reaction Bar */}
+                <ReactionBar
+                    partNumber={partNumber}
+                    chapterIndex={currentChapterIndex}
+                />
+
                 <div className="kindle-progress-bar">
                     <div
                         className="kindle-progress-fill"
@@ -362,6 +434,32 @@ export default function KindleReader({
                     onClose={() => setShowQuotes(false)}
                 />
             )}
+
+            {/* Author Note Tooltip */}
+            {activeNote && activeNote.type === 'tooltip' && (
+                <AuthorNoteTooltip
+                    note={activeNote}
+                    position={tooltipPosition}
+                    onClose={() => setActiveNote(null)}
+                />
+            )}
+
+            {/* Author Note Modal */}
+            {activeNote && activeNote.type === 'modal' && (
+                <AuthorNoteModal
+                    note={activeNote}
+                    onClose={() => setActiveNote(null)}
+                />
+            )}
+
+            {/* Newsletter Modal */}
+            {showNewsletter && (
+                <NewsletterModal
+                    partNumber={partNumber}
+                    partTitle={partTitle}
+                    onClose={() => setShowNewsletter(false)}
+                />
+            )}
         </div>
     );
 }
@@ -371,7 +469,9 @@ function paginateContent(
     content: string,
     container: HTMLElement,
     fontSize: number,
-    highlights: any[] = []
+    highlights: any[] = [],
+    partNumber: number,
+    chapterIndex: number
 ): string[] {
     const pages: string[] = [];
     const tempDiv = document.createElement('div');
@@ -418,7 +518,11 @@ function paginateContent(
 
     document.body.appendChild(tempDiv);
 
-    const paragraphs = content.split('\n\n').filter(p => p.trim());
+    // Apply author notes to content before pagination
+    const notes = getAuthorNotes(partNumber, chapterIndex);
+    const contentWithNotes = applyAuthorNotesToHTML(content, notes);
+
+    const paragraphs = contentWithNotes.split('\n\n').filter(p => p.trim());
     let currentPageContent = '';
 
     for (const paragraph of paragraphs) {

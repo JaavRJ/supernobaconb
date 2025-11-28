@@ -1,0 +1,21 @@
+/* Author Note Triggers */
+.kindle-page .author-note-trigger {
+    color: #6977f3;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    border-bottom: 1px dotted #6977f3;
+    transition: all 0.2s ease;
+}
+
+.kindle-page .author-note-trigger:hover {
+    color: #6977f3;
+    border-bottom-color: #6977f3;
+    background: rgba(105, 119, 243, 0.1);
+}
+
+.kindle-page .author-note-trigger .note-icon {
+    font-size: 0.7em;
+    margin-left: 2px;
+    vertical-align: super;
+}

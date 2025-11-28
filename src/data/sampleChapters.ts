@@ -62,7 +62,7 @@ Esa palabra giraba junto con los asientos.
 
 <p>Pero ser parte de las brillantes entonces también significaría aceptar todo de ellas. Soledad, lejanía y calor. </p>
 
-<p>La soledad no le terminaba de convencer, le gustaba el cariño que le entregaban sus papás y la atención de sus amigos. ¿La lejanía le daba miedo, que pasaba si en algún momento necesitaba de ayuda y no había nadie para escucharlo? Estar apartados también lo alejado de quien más lo quería. El calor, en cambio, no le parecía tan aterrador, ¿a quién no le gustaba sentirse abrigado por alguien? ¿Él podía abrigar a todos, cierto?</p>
+<p>La soledad no le terminaba de convencer, le gustaba el cariño que le entregaban sus papás y la atención de sus amigos. ¿La lejanía le daba miedo, que pasaba si en algún momento necesitaba de ayuda y no había nadie para escucharlo? Estar apartados también lo tendría alejado de quien más lo quería. El calor, en cambio, no le parecía tan aterrador, ¿a quién no le gustaba sentirse abrigado por alguien? ¿Él podía abrigar a todos, cierto?</p>
 
 <p>Idealizo su vida y creo una idea. Su idea primaria, podía ser una estrella y si lograba ser la mejor de ellas entonces junto a él nacería una verdadera. Su propia estrella a la que cuidaría y alimentaria para que ambos se amen y ninguno sufra las cosas malas de existir. La estrella nunca estaría sola, él no se sentiría con miedo. El estaría junto a ella y ella lo protegería. El recibiría su calor y nunca más sufriría frio.</p>
 

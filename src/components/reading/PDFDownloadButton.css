@@ -1,8 +1,16 @@
 /* PDF Download Button */
-.pdf-download-btn {
+.pdf-download-wrapper {
     position: fixed;
     bottom: 30px;
     right: 30px;
+    z-index: 9997;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
+.pdf-download-btn {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -17,9 +25,35 @@
     gap: 4px;
     font-size: 0.7rem;
     font-weight: 600;
-    z-index: 9997;
     transition: all var(--transition-fast);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    pointer-events: auto;
+}
+
+.pdf-tooltip {
+    color: var(--text-primary);
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-family: var(--font-ui);
+    pointer-events: none;
+    opacity: 0.8;
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.pdf-arrow-icon {
+    color: var(--text-primary);
+    margin: 0 10px;
+    opacity: 0.8;
+    animation: bounceRight 2s infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.pdf-download-wrapper:hover .pdf-tooltip,
+.pdf-download-wrapper:hover .pdf-arrow-icon {
+    opacity: 1;
 }
 
 .pdf-download-btn span {
@@ -54,9 +88,12 @@
 }
 
 @media (max-width: 800px) {
-    .pdf-download-btn {
+    .pdf-download-wrapper {
         bottom: 20px;
         right: 20px;
+    }
+
+    .pdf-download-btn {
         width: 50px;
         height: 50px;
         font-size: 0.6rem;
@@ -66,4 +103,9 @@
         width: 18px;
         height: 18px;
     }
+
+    .pdf-tooltip {
+        font-size: 0.7rem;
+    }
+
 }

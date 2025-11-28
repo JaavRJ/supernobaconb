@@ -1,5 +1,4 @@
 // Configuración de partes habilitadas
-// Cambia estos valores a true cuando quieras habilitar cada parte
 
 export const PARTS_CONFIG = {
     parte1: false,  // Cambiar a true para habilitar Parte 1
