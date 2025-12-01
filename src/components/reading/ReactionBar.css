@@ -1,40 +1,41 @@
-/* Reaction Bar */
+/* Reaction Bar - Versión Compacta */
 .reaction-bar {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 12px 0;
+    gap: 8px;
+    padding: 6px 0;
     border-top: 1px solid #e0e0e0;
-    margin-top: 8px;
+    margin-top: 4px;
 }
 
 .reaction-label {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: #666;
     font-weight: 500;
     font-family: var(--font-ui);
+    white-space: nowrap;
 }
 
 .reaction-loading {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     color: #999;
     font-style: italic;
 }
 
 .reactions-container {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     flex: 1;
 }
 
 .reaction-btn {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
+    gap: 3px;
+    padding: 4px 8px;
     background: #f5f5f5;
-    border: 2px solid transparent;
-    border-radius: 20px;
+    border: 1.5px solid transparent;
+    border-radius: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: var(--font-ui);
@@ -42,15 +43,15 @@
 
 .reaction-btn:hover {
     background: #e8e8e8;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .reaction-btn.active {
     background: #6977f3;
     border-color: #6977f3;
     color: white;
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
 
 .reaction-btn.active:hover {
@@ -59,14 +60,14 @@
 }
 
 .reaction-emoji {
-    font-size: 1.2rem;
+    font-size: 0.95rem;
     line-height: 1;
 }
 
 .reaction-count {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    min-width: 20px;
+    min-width: 16px;
     text-align: center;
 }
 
@@ -77,23 +78,29 @@
 /* Responsive */
 @media (max-width: 600px) {
     .reaction-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .reactions-container {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .reaction-btn {
-        flex: 1;
-        justify-content: center;
-        padding: 10px 8px;
+        gap: 6px;
+        padding: 4px 0;
     }
 
     .reaction-label {
+        font-size: 0.7rem;
+    }
+
+    .reactions-container {
+        gap: 3px;
+    }
+
+    .reaction-btn {
+        padding: 3px 6px;
+        gap: 2px;
+    }
+
+    .reaction-emoji {
         font-size: 0.85rem;
+    }
+
+    .reaction-count {
+        font-size: 0.65rem;
+        min-width: 14px;
     }
 }
