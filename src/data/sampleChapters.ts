@@ -287,66 +287,69 @@ Afinando, <strong>Brillo</strong>.</em></p>
 
 <p><strong>Jamás Escuchare un Siempre</strong></p>
 
-<p>”Que el sonido era la incesante repetición de las palabras siempre, jamás, siempre, jamás. Siempre, estar en el infierno; jamás estar en el cielo; siempre estar privado de la presencia de Dios; jamás, gozar de su visión beatífica.”
+<p><p>”Que el sonido era la incesante repetición de las palabras siempre, jamás, siempre, jamás. Siempre, estar en el infierno; jamás estar en el cielo; siempre estar privado de la presencia de Dios; jamás, gozar de su visión beatífica.”
 —James Joyce</p>
 
-<p>Joyce, en Retrato de un artista adolescente, dedicó más de un capítulo entero a su miedo a morir quemado en el infierno, a no ser digno de la gracia divina. Morir y quedar condenado a una eternidad de sufrimiento. A no alcanzar jamás el cielo, a no ser recibido en la visión beatífica.</p>
+<p>Joyce dedicó páginas enteras a su terror de la eternidad. Al fuego que no se apaga. A la condena que no termina. A ese infierno donde el “siempre” es una promesa cruel y el “jamás” una puerta cerrada.</p>
 
-<p>Se equivoca al otorgar a ese par de palabras —siempre y jamás— un eco tan absoluto, un poder tan largo. Porque esos conceptos tienden a lo infinito, se pierden en el horizonte y se alejan de la mano de cualquiera. Le quitan al hombre la posibilidad de soñar.
-Si siempre algo será de una manera, ¿qué sentido tiene desear lo contrario? ¿Qué valor tendría soñar con algo distinto si nunca se podrá ver con los propios ojos?</p>
+<p>Pero tal vez se equivocó al concederles tanto poder. “Siempre” y “jamás” no son destinos, son espejismos que asustan porque parecen infinitos.</p>
 
-<p>Aunque como yo vivieran millones de años, la amplitud de esas palabras seguiría siendo mayor que cualquier conciencia efímera. Tal vez para eso estoy aquí: para no obsesionarme con lo que no tiene límite. Si jamás podré ver el fin, ¿para qué pensar en él? ¿Para qué perseguir momentos infinitos si no me ofrecen una salida, si no me permiten desbordarme hasta alcanzar un final desde donde mirar hacia atrás?</p>
+<p>Ninguna vida alcanza para entender lo eterno o ningún corazón puede sostener un para siempre. Y sin embargo, nos aferramos a esas palabras como si fueran refugio.</p>
 
-<p>El fuego de Joyce es eterno, no se extingue por más que llores sobre él. La sangre hierve en las venas, el corazón en el pecho se abrasa y estalla. Pero... ¿y si no lo fuera? ¿Y si existiera un modo de apagarlo? Entonces el sufrimiento dejaría de ser infinito. El jamás perdería su filo y el siempre quedaría reducido a un lapso, a una duración cualquiera.</p>
+<p>Quizá por eso estoy aquí, pensé. Para aprender a no perseguir horizontes que no se tocan.</p>
 
-<p>Son palabras demasiado grandes, inalcanzables. Y quizá por eso decido no creer en ellas.</p>
+<p>Noel estaba sentado a mi lado, en el banco de madera que crujía con cada cambio de peso. El circo ardía delante de nosotros: luces, gritos, llamas danzantes. Nadie nos veía. A nadie le importaba. Era un espectáculo hecho para distraer, pero nosotros no estábamos allí para distraernos.</p>
 
-<p>¿Qué más necesito para evitar que las palabras dejen de derretirse ante mí?</p>
+<p>—¿Por qué miras tanto esa ventana? —preguntó Noel sin mirarme.</p>
 
-<p>—¿Por qué no apartas la vista de esa ventana? —preguntó Noel, sin esperar respuesta, mientras los sonidos del espectáculo flotaban a su alrededor.</p>
+<p>—Creí ver una figura —respondí—. Una mujer, tal vez.</p>
 
-<p>—Creí ver una figura —dijo Brillo, con una mueca que parecía esconder desaire—. Una mujer, tal vez.</p>
+<p>Él siguió la dirección de mi mirada: la ventana que reflejaba las llamaradas del escenario. Solo había humo y el eco del movimiento. Nada más.</p>
 
-<p>Noel miró el fuego que bailaba en el escenario y luego volvió a Brillo.
-—A veces me dan miedo estas cosas pequeñas, ¿sabes? —dijo, más para sí que para él—. No el fuego, no los gritos, sino que todo se vea siempre igual. Como si nada pudiera cambiar y, al mismo tiempo, nada dejara de verme directamente.</p>
+<p>—A veces me asusta esto —confesó Noel—. No el fuego… sino que todo parezca reflejarse. Como si nada cambiara nunca. Como si me estuviera mirando fijo.</p>
 
-<p>Brillo inclinó la cabeza.
-—¿A qué te refieres con verte directo?
-—No lo sé…— Noel encogió su cuerpo y habló entre sus rodillas—. Ese sentimiento de que tendrás que pagar por todo lo que haces, aunque no sepas por qué.
-—Un tipo de castigo —dijo Brillo—. Pero hay muchos castigos, ¿no? ¿Por qué piensas en que te castigarán?</p>
+<p>Lo observé. Sus hombros tensos. El temblor leve en su voz.</p>
 
-<p>—No tengo idea, no creo saber si llegare a tener idea—Noel buscaba las palabras, tartamudeaba un poco—. Joyce… decía algo sobre el fuego y la eternidad. Yo… nunca entendí bien si hablaba de castigo o de miedo.</p>
+<p>—¿Te refieres a sentir que hay un castigo esperándote? —pregunté.</p>
 
-<p>—Tal vez las palabras sean fuego —respondió Brillo, pensativo—. Se repiten en tu cabeza hasta quemarte, incluso cuando no hay nada alrededor. Lo puedes ver como castigo si quieres.</p>
+<p>Noel asintió.</p>
 
-<p>Hubo un silencio. El público aplaudía, pero parecía tan lejano, tan ajeno a lo que ellos sentían.</p>
+<p>—Como si fuera a pagar por algo, aunque no sé qué.</p>
 
-<p>—Es curioso —dijo Noel, bajando la voz—. Normalmente no me gustan estos tipos de espectáculos. En la forma en que todo lo que amaste parece haberse ido para jamás volver.</p>
+<p>—Págame las palomitas—dije—. Eso o un castigo eterno basado en no entender lo suficiente.</p>
 
-<p>Brillo sintió un nudo en la garganta.
-—El fuego no solo te castiga físicamente, también quémalo poco que te queda. Recuerdos que creías eternos. —Se quedó mirando la ventana otra vez, como si buscara una respuesta allí—. Te prometen un siempre y de pronto es un jamás.</p>
+<p>Noel soltó una risa amarga.</p>
 
-<p>Noel se acercó un poco, aunque sin tocarlo.
-—No creo que nadie tenga todas las respuestas. Ni yo, ni Joyce… ni tú. Solo… nos aferramos a lo que podemos. ¿O enserio crees que puedes buscar un por qué para todo? Deja de sentir tanto, algunas cosas como esas no tienen fin, siempre van a existir.</p>
+<p>—¿Tú crees en eso? ¿En el fuego que nunca se apaga?</p>
 
-<p>—Por eso escribo —susurró Brillo—. Para que esas palabras infinitas no tengan todo el poder. Para que el eco se rompa y, al menos por un rato, pueda callarlas.</p>
+<p>—No. Creo en otro tipo de fuego —respondí—. El que repite palabras en tu cabeza. El que no necesita llamas para quemarte.</p>
 
-<p>El viento movió las hojas y por un instante todo pareció más ligero. Ambos respiraron hondo, sin necesidad de seguir hablando, sabiendo que no había certezas, solo compañía compartida en la incertidumbre.</p>
+<p>Nos quedamos en silencio. El público aplaudía una última acrobacia. El viento arrastró polvo y un olor dulce a maíz tostado.</p>
 
-<p>Las personas continuaban, pero para ellos ya no existía más que el eco de sus propias palabras y pensamientos. Brillo permanecía sentado, observando la ventana que ya no mostraba ninguna figura. Solo el reflejo del fuego, la sombra de Noel y su propio rostro desdoblándose en los cristales.</p>
+<p>—A mí me asusta lo contrario —dijo Noel, más bajo—. Que todo lo que amé ya no exista. Que jamás vuelva.</p>
 
-<p>Pensó en los “siempre” y los “jamás” que Joyce repetía, y en cómo, al final, nada de eso había cambiado. Lo que era eterno para otros —el amor prometido, la lealtad, la fe— no era más que un fragmento de tiempo imperfectamente recordado. Cada instante de vida parecía escapar entre los dedos y los absolutos desaparecían al contacto con la experiencia concreta, con lo que se podía tocar, ver o perder.</p>
+<p>Sentí cómo su “jamás” se rompía dentro de mis costillas.</p>
 
-<p>Se dio cuenta de que el verdadero infierno no era un lugar de llamas ni de condenas, sino de eternidad, la memoria que no se perdona y el hueco que dejan las ausencias. Las palabras podían arder más que cualquier fuego, repetirse hasta vaciar el espíritu, marcar los contornos de un sufrimiento que nadie más podía comprender. Y sin embargo, había belleza en esa fragilidad, en la imposibilidad de los compromisos absolutos.</p>
+<p>—El fuego no solo quema —dije—. También se lleva recuerdos que creías eternos. Y los “jamás” que caen sin avisar.</p>
 
-<p>Recordó amores que prometieron un siempre que se rompió demasiado pronto, amistades que se desvanecieron como humo, momentos que creyó eternos y que desaparecieron entre silencios y despedidas. Entendió que la vida no estaba hecha para los “siempre”, sino para los instantes que se filtran entre ellos, para lo efímero que se sostiene mientras dura, para lo que se siente y se deja ir.</p>
+<p>La ventana ya no tenía ninguna figura. Solo el reflejo de Noel y el mío, distorsionados por el cristal. Pensé en todas las veces que alguien me juró un “siempre”.</p>
 
-<p>Brillo respiró hondo. Tal vez esa era la única forma de no arder: aceptar que todo es temporal, que cada alegría y cada pérdida son un compás en la infinita del tiempo. Incluso la ausencia, incluso el jamás, tenían un lugar en ese circo. Aprendió que, aunque nunca pudiera aferrarse a nada para siempre, podía vivir el instante con la intensidad suficiente para no recordar todo con perfección, que le bastara con el sentimiento que le generara.</p>
+<p>En la velocidad con que los “nunca” se incrustaron en mi cuerpo. En cómo la eternidad, para Joyce, era fuego… y para mí, memoria.</p>
 
-<p>El sol ya había bajado, las luces del escenario proyectaban sombras largas que se movían como olas. La brisa traía consigo fragmentos de risa, de voces y de música que se mezclaban con los olores viejos del pasto y el polvo del circo. Brillo cerró los ojos por un instante y dejó que todo eso lo atravesara: la luz, el aire, la memoria, la certeza de la nada y la belleza de lo que existe, aunque no dure.</p>
+<p>Respiré hondo.</p>
 
-<p>Se levantó del banco. Cada paso dejaba una huella en el polvo, cada movimiento era un recordatorio de que estaba vivo, aunque todo fuese pasajero. La eternidad no estaba en lo prometido, sino en la percepción de lo que ocurre mientras ocurre. Y en ese instante, comprendió que no necesitaba respuestas ni absolutos. Solo podía existir, respirar y dejar que el mundo le siguiera hablando de siempres que jamás escuchará.</p>
+<p><p>Se levantó del banco. Cada paso dejaba una huella en el polvo, cada movimiento era un recordatorio de que estaba vivo, aunque todo fuese pasajero. La eternidad no estaba en lo prometido, sino en la percepción de lo que ocurre mientras ocurre. Y en ese instante, comprendió que no necesitaba respuestas ni absolutos. Solo podía existir, respirar y dejar que el mundo le siguiera hablando de siempres que jamás escuchará.</p>
+</p>
 
+<p>Las eternidades son para las estrellas y para nosotros los fragmentos.</p>
+<p>El sol ya se había escondido. Las antorchas proyectaban sombras largas que parecían olas. La brisa nocturna traía sonidos mezclados, restos de conversaciones, de risas, de algo que parecía música y luego dejaba de serlo.</p>
+<p>Cerré los ojos. Sentí pasar el viento a través de mí. No necesitaba entenderlo todo. No necesitaba sostener nada para siempre. Solo existía el ahora con un presente imperfecto, pero vivo.</p>
+<p>Abrí los ojos. Me levanté del banco. El polvo se levantaba bajo mis pasos. El circo seguía, pero ya no importaba.</p>
+<p>Mientras caminaba, pensé en Joyce, en Noel, en Alice. En todos los siempres que no se cumplieron, en los jamases que llegaron sin pedir permiso.</p>
+<p>Y sonreí, apenas.</p>
+<p>Porque entendí, al fin, que la eternidad no es una duración. Es una sensación. Un instante tan intenso que parece no acabarse nunca. El resto es humo.</p>
+<p>Seguí caminando. El mundo seguía moviéndose, sin promesas, sin amenazas.</p>
+<p>Y por primera vez, supe que podía escuchar todas las palabras del mundo… excepto un siempre.</p>
 <br><br><br><br><br><br>
 
 <p style="text-align: left;"> <em>Para Alice:</em></p>

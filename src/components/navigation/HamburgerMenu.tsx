@@ -47,7 +47,7 @@ export default function HamburgerMenu({ currentEpisode = null }: HamburgerMenuPr
                     <div className="hamburger-backdrop" onClick={toggleMenu} />
                     <nav className="hamburger-menu">
                         <div className="hamburger-header">
-                            <h2 className="font-ui">Supernova</h2>
+                            <h2 className="font-ui">supernoba</h2>
                         </div>
 
                         <div className="hamburger-content">

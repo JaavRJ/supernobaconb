@@ -50,7 +50,7 @@ export default function Parte4() {
       <div className="stars-container" ref={starsRef}></div>
 
       <div className="horizontal-scroll">
-        <div className="side-text">SUPERNOVA</div>
+        <div className="side-text">SUPERNOBA</div>
         <div className="side-text-right">PARTE 4</div>
 
         <div className="main-title">

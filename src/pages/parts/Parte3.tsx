@@ -44,17 +44,17 @@ export default function Parte3() {
   return (
     <PartLayout
       partNumber={3}
-      partTitle="Parte 3: Supernova"
+      partTitle="Parte 3: Supernoba"
       contentId="parte3-content"
     >
       <div className="stars-container" ref={starsRef}></div>
 
       <div className="horizontal-scroll">
-        <div className="side-text">SUPERNOVA</div>
+        <div className="side-text">SUPERNOBA</div>
         <div className="side-text-right">PARTE 3</div>
 
         <div className="main-title">
-          PARTE 3: <br />SUPERNOVA
+          PARTE 3: <br />SUPERNOBA
         </div>
 
         {/* Capítulo i */}

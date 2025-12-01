@@ -18,36 +18,54 @@ export const PART_1_NOTES: AuthorNote[] = [
         chapterIndex: 0,
         triggerText: 'Cielo Estrellado',
         noteTitle: 'Cielo Estrellado',
-        noteContent: 'Hola, que tal la página? Durante el libro se encontraran con estas notas y puedes hacer click en ellas para obtener más información. Los tqm.',
+        noteContent: 'Hola, ¿qué tal? A lo largo del libro encontrarás estas notas, y podrás hacer clic en ellas para obtener más información. Los quiero mucho.',
         type: 'tooltip'
     },
     {
         id: 'p1c1n2',
         partNumber: 1,
         chapterIndex: 0,
-        triggerText: 'Soledad, lejanía y calor.',
-        noteTitle: 'p1c1n2',
-        noteContent: 'Hola, nadia tqm',
+        triggerText: 'Para Brillo',
+        noteTitle: 'Cartas',
+        noteContent: 'A lo largo de todo el libro, al final de cada capítulo se incluyen fragmentos de cartas.',
+        type: 'modal'
+    },
+    {
+        id: 'p1c5n1',
+        partNumber: 1,
+        chapterIndex: 0,
+        triggerText: 'James Joyce',
+        noteTitle: 'Retrato de un artista adolescente   ',
+        noteContent: 'Este libro, Retrato de un artista adolescente, me costó muchísimo terminarlo, pero me abrió mucho la perspectiva sobre cómo construir la psicología de un personaje.',
         type: 'tooltip'
     },
     {
-        id: 'p1c1n3',
+        id: 'p1c3n1',
         partNumber: 1,
         chapterIndex: 0,
-        triggerText: 'Para Brillo',
-        noteTitle: 'p1c1n3',
-        noteContent: 'Durante todo el libro al final de cada capítulo se encuentran fragmentos de cartas.',
-        type: 'modal'
+        triggerText: 'guardapelo',
+        noteTitle: 'Guardapelos',
+        noteContent: 'Cuando lo imagino, siempre pienso en el de Harry Potter, pero en general son muy bellos. Si quieren regalar algo diferente, pueden dar uno de ellos.',
+        type: 'tooltip'
     },
     {
         id: 'p1c2n1',
         partNumber: 1,
-        chapterIndex: 1,
-        triggerText: 'efecto de perspectiva general',
-        noteTitle: 'p1c2n1',
-        noteContent: 'El "Overview Effect" es un fenómeno cognitivo reportado por astronautas al ver la Tierra desde el espacio. Experimentan un cambio profundo en su percepción de la humanidad, viendo las fronteras como artificiales y sintiendo una conexión profunda con toda la vida en el planeta.',
-        type: 'modal'
-    }
+        chapterIndex: 0,
+        triggerText: 'recién mojada',
+        noteTitle: 'Preticor',
+        noteContent: 'El olor a tierra mojada sí tiene nombre: se llama petricor. PD. Hay un artista muy bueno llamado Lio Petricor.',
+        type: 'tooltip'
+    },
+    {
+        id: 'p1c4n1',
+        partNumber: 1,
+        chapterIndex: 0,
+        triggerText: 'sino bajo la tierra',
+        noteTitle: 'Rios',
+        noteContent: 'Hay un río llamado río Hamza que se extiende a 4 km de profundidad bajo el Amazonas. Se podría decir que es un río subterráneo.',
+        type: 'tooltip'
+    },
 ];
 
 // Notas para Parte 2: Gigante Roja

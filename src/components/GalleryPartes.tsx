@@ -15,8 +15,8 @@ const partesData = [
     imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png", // <--- REEMPLAZA ESTO
   },
   {
-    id: "supernova",
-    textos: ["3. supernova", "muerte de la idea", "del soñar"],
+    id: "supernoba",
+    textos: ["3. supernoba", "muerte de la idea", "del soñar"],
     imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png", // <--- REEMPLAZA ESTO
   },
   {
