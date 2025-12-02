@@ -58,8 +58,7 @@ export default function PartLayout({
             <Footer />
             <NavigationSystem currentEpisode={partNumber} />
             <PDFDownloadButton
-                contentId={contentId}
-                filename={`supernova-parte-${partNumber}`}
+                partNumber={partNumber}
                 partTitle={partTitle}
             />
             <ReadingTimeIndicator contentId={contentId} />

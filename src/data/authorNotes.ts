@@ -13,7 +13,7 @@ export interface AuthorNote {
 // Notas para Parte 1: Nebulosa
 export const PART_1_NOTES: AuthorNote[] = [
     {
-        id: 'p1c1n1',
+        id: '1',
         partNumber: 1,
         chapterIndex: 0,
         triggerText: 'Cielo Estrellado',
@@ -22,7 +22,7 @@ export const PART_1_NOTES: AuthorNote[] = [
         type: 'tooltip'
     },
     {
-        id: 'p1c1n2',
+        id: '2',
         partNumber: 1,
         chapterIndex: 0,
         triggerText: 'Para Brillo',
@@ -31,7 +31,7 @@ export const PART_1_NOTES: AuthorNote[] = [
         type: 'modal'
     },
     {
-        id: 'p1c5n1',
+        id: '6',
         partNumber: 1,
         chapterIndex: 0,
         triggerText: 'James Joyce',
@@ -40,7 +40,7 @@ export const PART_1_NOTES: AuthorNote[] = [
         type: 'tooltip'
     },
     {
-        id: 'p1c3n1',
+        id: '3',
         partNumber: 1,
         chapterIndex: 0,
         triggerText: 'guardapelo',
@@ -49,7 +49,7 @@ export const PART_1_NOTES: AuthorNote[] = [
         type: 'tooltip'
     },
     {
-        id: 'p1c2n1',
+        id: '4',
         partNumber: 1,
         chapterIndex: 0,
         triggerText: 'recién mojada',
@@ -58,7 +58,7 @@ export const PART_1_NOTES: AuthorNote[] = [
         type: 'tooltip'
     },
     {
-        id: 'p1c4n1',
+        id: '5',
         partNumber: 1,
         chapterIndex: 0,
         triggerText: 'sino bajo la tierra',

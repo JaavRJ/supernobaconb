@@ -1,0 +1,254 @@
+/* Instagram Quote Card - Diseño Minimalista */
+.instagram-quote-card {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.quote-card-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 100px 80px;
+}
+
+/* Contenedor del texto de la cita */
+.quote-text-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    max-width: 100%;
+    padding: 0 40px;
+}
+
+.quote-text {
+    font-size: 56px;
+    line-height: 1.5;
+    font-weight: 400;
+    margin: 0;
+    max-width: 100%;
+    word-wrap: break-word;
+    font-style: italic;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.quote-mark {
+    display: none;
+}
+
+.quote-mark.opening,
+.quote-mark.closing {
+    display: none;
+}
+
+/* Metadatos - Simplificados */
+.quote-metadata {
+    display: none;
+}
+
+.quote-source,
+.separator,
+.part-title,
+.chapter-title,
+.quote-page {
+    display: none;
+}
+
+/* Footer con branding */
+.quote-branding {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
+    border: none;
+    margin: 0;
+}
+
+.brand-icon {
+    display: none;
+}
+
+.brand-text {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin-bottom: 8px;
+}
+
+.brand-url {
+    font-size: 24px;
+    font-weight: 400;
+    opacity: 0.7;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin-bottom: 12px;
+}
+
+.brand-instagram {
+    font-size: 26px;
+    font-weight: 500;
+    opacity: 0.8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Decoración de fondo */
+.quote-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ============================================
+   COLORES DE FONDO MINIMALISTAS
+   ============================================ */
+
+/* Blanco */
+.theme-white {
+    background: #FFFFFF;
+    color: #1a1a1a;
+}
+
+.theme-white .brand-text,
+.theme-white .brand-url,
+.theme-white .brand-instagram {
+    color: #1a1a1a;
+}
+
+/* Negro */
+.theme-black {
+    background: #1a1a1a;
+    color: #FFFFFF;
+}
+
+.theme-black .brand-text,
+.theme-black .brand-url,
+.theme-black .brand-instagram {
+    color: #FFFFFF;
+}
+
+/* Beige */
+.theme-beige {
+    background: #F5F1E8;
+    color: #2a2a2a;
+}
+
+.theme-beige .brand-text,
+.theme-beige .brand-url,
+.theme-beige .brand-instagram {
+    color: #2a2a2a;
+}
+
+/* Azul Suave */
+.theme-blue {
+    background: #E8F4F8;
+    color: #1a3a4a;
+}
+
+.theme-blue .brand-text,
+.theme-blue .brand-url,
+.theme-blue .brand-instagram {
+    color: #1a3a4a;
+}
+
+/* Rosa Suave */
+.theme-pink {
+    background: #FFE5EC;
+    color: #4a1a2a;
+}
+
+.theme-pink .brand-text,
+.theme-pink .brand-url,
+.theme-pink .brand-instagram {
+    color: #4a1a2a;
+}
+
+/* Verde Menta */
+.theme-mint {
+    background: #E8F8F5;
+    color: #1a4a3a;
+}
+
+.theme-mint .brand-text,
+.theme-mint .brand-url,
+.theme-mint .brand-instagram {
+    color: #1a4a3a;
+}
+
+/* Lavanda */
+.theme-lavender {
+    background: #F0E8F8;
+    color: #3a1a4a;
+}
+
+.theme-lavender .brand-text,
+.theme-lavender .brand-url,
+.theme-lavender .brand-instagram {
+    color: #3a1a4a;
+}
+
+/* Melocotón */
+.theme-peach {
+    background: #FFE8D8;
+    color: #4a2a1a;
+}
+
+.theme-peach .brand-text,
+.theme-peach .brand-url,
+.theme-peach .brand-instagram {
+    color: #4a2a1a;
+}
+
+/* Gris Claro */
+.theme-gray {
+    background: #F5F5F5;
+    color: #2a2a2a;
+}
+
+.theme-gray .brand-text,
+.theme-gray .brand-url,
+.theme-gray .brand-instagram {
+    color: #2a2a2a;
+}
+
+/* Crema */
+.theme-cream {
+    background: #FFF8E7;
+    color: #3a3a2a;
+}
+
+.theme-cream .brand-text,
+.theme-cream .brand-url,
+.theme-cream .brand-instagram {
+    color: #3a3a2a;
+}
+
+/* Mantener temas antiguos para compatibilidad pero ocultos */
+.theme-gradient,
+.theme-dark,
+.theme-light,
+.theme-colorful {
+    display: none;
+}

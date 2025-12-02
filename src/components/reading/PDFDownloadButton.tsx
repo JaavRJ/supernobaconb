@@ -1,31 +1,45 @@
 import React, { useState } from 'react';
 import { Download, ArrowRight } from 'lucide-react';
-import { usePDFGenerator } from '../../hooks/usePDFGenerator';
+import { getPDFUrl, getPDFFilename } from '../../data/pdfLinks';
 import './PDFDownloadButton.css';
 
 interface PDFDownloadButtonProps {
-    contentId: string;
-    filename: string;
+    partNumber: number;
     partTitle: string;
 }
 
 export default function PDFDownloadButton({
-    contentId,
-    filename,
+    partNumber,
     partTitle
 }: PDFDownloadButtonProps) {
-    const [isGenerating, setIsGenerating] = useState(false);
-    const { generatePDF } = usePDFGenerator();
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const handleDownload = async () => {
-        setIsGenerating(true);
+        const pdfUrl = getPDFUrl(partNumber);
+
+        if (!pdfUrl || pdfUrl.startsWith('TU_URL_AQUI')) {
+            alert('⚠️ La URL del PDF no está configurada. Por favor, actualiza el archivo pdfLinks.ts con la URL correcta.');
+            return;
+        }
+
+        setIsDownloading(true);
         try {
-            await generatePDF(contentId, filename);
+            // Crear un enlace temporal para descargar el PDF
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = getPDFFilename(partNumber);
+            link.target = '_blank'; // Abrir en nueva pestaña como fallback
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            console.log(`✅ Descargando PDF de la Parte ${partNumber}`);
         } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('Error al generar el PDF. Por favor, intenta de nuevo.');
+            console.error('Error al descargar el PDF:', error);
+            alert('Error al descargar el PDF. Por favor, intenta de nuevo.');
         } finally {
-            setIsGenerating(false);
+            // Pequeño delay para mostrar el estado de descarga
+            setTimeout(() => setIsDownloading(false), 1000);
         }
     };
 
@@ -36,11 +50,11 @@ export default function PDFDownloadButton({
             <button
                 className="pdf-download-btn"
                 onClick={handleDownload}
-                disabled={isGenerating}
+                disabled={isDownloading}
                 aria-label={`Descargar ${partTitle} como PDF`}
             >
                 <Download size={20} />
-                <span>{isGenerating ? 'Generando...' : 'PDF'}</span>
+                <span>{isDownloading ? 'Descargando...' : 'PDF'}</span>
             </button>
         </div>
     );

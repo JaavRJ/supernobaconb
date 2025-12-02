@@ -5,9 +5,9 @@ import './HamburgerMenu.css';
 
 const partes = [
     { id: 1, title: 'Parte 1: Nebulosa', path: '/parte1' },
-    { id: 2, title: 'Parte 2', path: '/parte2' },
-    { id: 3, title: 'Parte 3', path: '/parte3' },
-    { id: 4, title: 'Parte 4', path: '/parte4' },
+    { id: 2, title: 'Parte 2: Gigante roja', path: '/parte2' },
+    { id: 3, title: 'Parte 3: Supernoba', path: '/parte3' },
+    { id: 4, title: 'Parte 4: Enana blanca', path: '/parte4' },
 ];
 
 interface HamburgerMenuProps {

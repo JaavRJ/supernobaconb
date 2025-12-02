@@ -83,7 +83,7 @@ export default function BeforePage({ currentEpisode = null }: BeforePageProps) {
                 La Parte {currentEpisode} ya está lista para leer
               </p>
               <a
-                href="/pruebas"
+                href={`/parte${currentEpisode}`}
                 style={{
                   display: 'inline-block',
                   padding: '15px 40px',

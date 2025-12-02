@@ -110,7 +110,7 @@ export default function NewsletterModal({ partNumber, partTitle, onClose }: News
             setCalendarAdded(true);
             setUserEmail(user.email || '');
 
-            console.log('✅ Suscrito y agregado al calendario');
+            console.log('Suscrito y agregado al calendario');
         } catch (err: any) {
             setError(err.message || 'Error en la suscripción');
             console.error('❌ Error:', err);
@@ -127,7 +127,7 @@ export default function NewsletterModal({ partNumber, partTitle, onClose }: News
                 </button>
 
                 <div className="newsletter-header">
-                    <div className="celebration-icon">🎉</div>
+                    <div className="celebration-icon"></div>
                     <h2>¡Completaste {partTitle}!</h2>
                     <p>¿Quieres saber cuándo salga la siguiente parte?</p>
                 </div>
