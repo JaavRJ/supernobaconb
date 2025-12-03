@@ -5,12 +5,38 @@ import {
     onAuthStateChanged as firebaseOnAuthStateChanged,
     User
 } from 'firebase/auth';
+import { migrateLocalDataToFirebase } from './migrationService';
+import { initializeUserProfile } from './userDataService';
 
 // Sign in with Google
 export const signInWithGoogle = async (): Promise<User> => {
     try {
         const result = await signInWithPopup(auth, googleProvider);
         console.log('✅ Usuario autenticado:', result.user.email);
+
+        // Initialize user profile
+        await initializeUserProfile();
+
+        // Attempt to migrate local data to Firebase
+        try {
+            const migrationResult = await migrateLocalDataToFirebase();
+            if (migrationResult.success) {
+                const totalMigrated =
+                    migrationResult.highlightsMigrated +
+                    migrationResult.quotesMigrated +
+                    migrationResult.bookmarksMigrated +
+                    migrationResult.progressMigrated;
+
+                if (totalMigrated > 0) {
+                    console.log(`✅ Migración completada: ${totalMigrated} items migrados a Firebase`);
+                }
+            } else {
+                console.warn('⚠️ Migración completada con errores:', migrationResult.errors);
+            }
+        } catch (migrationError) {
+            console.error('❌ Error durante la migración (datos siguen en localStorage):', migrationError);
+        }
+
         return result.user;
     } catch (error: any) {
         console.error('❌ Error en autenticación:', error);

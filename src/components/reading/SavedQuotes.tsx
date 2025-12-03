@@ -34,14 +34,14 @@ export default function SavedQuotes({ partNumber, onClose }: SavedQuotesProps) {
         loadQuotes();
     }, [partNumber]);
 
-    const loadQuotes = () => {
-        const allQuotes = getQuotes(partNumber);
+    const loadQuotes = async () => {
+        const allQuotes = await getQuotes(partNumber);
         setQuotes(allQuotes);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         if (window.confirm('¿Eliminar esta cita?')) {
-            deleteQuote(id);
+            await deleteQuote(id);
             loadQuotes();
         }
     };

@@ -7,22 +7,22 @@ const partesData = [
   {
     id: "nebulosa",
     textos: ["1. nebulosa", "nacimiento de la idea", "del arte"],
-    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763505974/supernoba/IMG_20251118_111352_m7qf2r.png", // Tu imagen original
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763505974/supernoba/IMG_20251118_111352_m7qf2r.png", // Tu imagen original
   },
   {
     id: "gigante",
     textos: ["2. gigante roja", "crecimiento de la idea", "del amor"],
-    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png", // <--- REEMPLAZA ESTO
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png", // <--- REEMPLAZA ESTO
   },
   {
     id: "supernoba",
     textos: ["3. supernoba", "muerte de la idea", "del soñar"],
-    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png", // <--- REEMPLAZA ESTO
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png", // <--- REEMPLAZA ESTO
   },
   {
     id: "enana",
     textos: ["4. enana blanca", "sacrificio de la idea", "del recuerdo"],
-    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png", // <--- REEMPLAZA ESTO
+    imgSrc: "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png", // <--- REEMPLAZA ESTO
   },
 ];
 // ---------------------------------
@@ -44,7 +44,7 @@ export default function GaleriaPartes() {
   return (
     // Este es el contenedor de 2 columnas
     <div className="galeria-contenedor">
-      
+
       {/* Columna Izquierda: El Menú */}
       <nav className="galeria-menu">
         {partesData.map((parte) => (

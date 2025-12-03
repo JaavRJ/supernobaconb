@@ -10,11 +10,11 @@ import ChapterText1_5 from "../../components/texts/ChapterText1_5";
 import Photo from "../../components/Photos";
 
 const imgUrls = [
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_152021_xzy1ze.png",
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154559_ky1mqh.png",
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png",
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png",
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_152021_xzy1ze.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_154559_ky1mqh.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_154613_ef2yoz.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_154901_unwyfp.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
 ];
 
 

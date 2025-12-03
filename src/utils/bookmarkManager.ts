@@ -1,3 +1,5 @@
+import * as userDataService from '../services/userDataService';
+
 export interface Bookmark {
     id: string;
     partNumber: number;
@@ -7,13 +9,13 @@ export interface Bookmark {
     note?: string;
 }
 
-export const saveBookmark = (
+export const saveBookmark = async (
     partNumber: number,
     chapterIndex: number,
     pageNumber: number,
     note?: string
-): void => {
-    const bookmarks = getBookmarks();
+): Promise<void> => {
+    const bookmarks = await getBookmarks();
 
     // Check if bookmark already exists for this page
     const existing = bookmarks.find(
@@ -26,6 +28,7 @@ export const saveBookmark = (
         // Update existing bookmark
         existing.note = note;
         existing.createdAt = new Date().toISOString();
+        await userDataService.saveBookmark(existing);
     } else {
         // Create new bookmark
         const newBookmark: Bookmark = {
@@ -36,35 +39,24 @@ export const saveBookmark = (
             createdAt: new Date().toISOString(),
             note,
         };
-        bookmarks.push(newBookmark);
+        await userDataService.saveBookmark(newBookmark);
     }
-
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
 };
 
-export const getBookmarks = (partNumber?: number): Bookmark[] => {
-    const stored = localStorage.getItem('bookmarks');
-    const bookmarks: Bookmark[] = stored ? JSON.parse(stored) : [];
-
-    if (partNumber !== undefined) {
-        return bookmarks.filter(b => b.partNumber === partNumber);
-    }
-
-    return bookmarks;
+export const getBookmarks = async (partNumber?: number): Promise<Bookmark[]> => {
+    return await userDataService.getBookmarks(partNumber);
 };
 
-export const deleteBookmark = (id: string): void => {
-    const bookmarks = getBookmarks();
-    const filtered = bookmarks.filter(b => b.id !== id);
-    localStorage.setItem('bookmarks', JSON.stringify(filtered));
+export const deleteBookmark = async (id: string): Promise<void> => {
+    await userDataService.deleteBookmark(id);
 };
 
-export const hasBookmark = (
+export const hasBookmark = async (
     partNumber: number,
     chapterIndex: number,
     pageNumber: number
-): boolean => {
-    const bookmarks = getBookmarks(partNumber);
+): Promise<boolean> => {
+    const bookmarks = await getBookmarks(partNumber);
     return bookmarks.some(
         b => b.chapterIndex === chapterIndex && b.pageNumber === pageNumber
     );

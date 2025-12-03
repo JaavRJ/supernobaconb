@@ -6,7 +6,10 @@ import NavigationSystem from './NavigationSystem';
 import PDFDownloadButton from '../reading/PDFDownloadButton';
 import ReadingTimeIndicator from '../reading/ReadingTimeIndicator';
 import ImmersiveModeButton from '../reading/ImmersiveModeButton';
+import LoginModal from '../auth/LoginModal';
+import LoginButton from '../auth/LoginButton';
 import { useReadingProgress } from '../../hooks/useReadingProgress';
+import { getCurrentUser } from '../../services/authService';
 import '../../assets/styles/animations.css';
 
 interface PartLayoutProps {
@@ -23,6 +26,7 @@ export default function PartLayout({
     contentId
 }: PartLayoutProps) {
     const [showParticles, setShowParticles] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const location = useLocation();
     const { saveProgress } = useReadingProgress(partNumber);
 
@@ -31,6 +35,33 @@ export default function PartLayout({
         const timer = setTimeout(() => setShowParticles(false), 1000);
         return () => clearTimeout(timer);
     }, [location.pathname]);
+
+    // Show login modal on first visit if not authenticated
+    useEffect(() => {
+        const hasSeenLoginModal = localStorage.getItem('supernova_login_modal_seen');
+        const user = getCurrentUser();
+
+        // Show modal if user hasn't seen it and is not authenticated
+        if (!hasSeenLoginModal && !user) {
+            // Small delay to let the page load first
+            const timer = setTimeout(() => {
+                setShowLoginModal(true);
+            }, 1500);
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
+    const handleCloseLoginModal = () => {
+        setShowLoginModal(false);
+        // Mark as seen so it doesn't show again
+        localStorage.setItem('supernova_login_modal_seen', 'true');
+    };
+
+    const handleLoginSuccess = () => {
+        console.log('✅ Login exitoso, datos migrados automáticamente');
+        // Mark as seen
+        localStorage.setItem('supernova_login_modal_seen', 'true');
+    };
 
     // Track scroll progress
     useEffect(() => {
@@ -66,6 +97,17 @@ export default function PartLayout({
                 partNumber={partNumber}
                 partTitle={partTitle}
             />
+
+            {/* Login Button - appears when not authenticated */}
+            <LoginButton />
+
+            {/* Login Modal */}
+            {showLoginModal && (
+                <LoginModal
+                    onClose={handleCloseLoginModal}
+                    onLoginSuccess={handleLoginSuccess}
+                />
+            )}
 
             <div id={contentId}>
                 {children}

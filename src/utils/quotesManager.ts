@@ -1,3 +1,5 @@
+import * as userDataService from '../services/userDataService';
+
 export interface Quote {
     id: string;
     text: string;
@@ -9,14 +11,13 @@ export interface Quote {
     tags?: string[];
 }
 
-export const saveQuote = (
+export const saveQuote = async (
     text: string,
     partNumber: number,
     partTitle: string,
     chapterTitle: string,
     pageNumber: number
-): void => {
-    const quotes = getQuotes();
+): Promise<void> => {
     const newQuote: Quote = {
         id: Date.now().toString(),
         text,
@@ -27,25 +28,15 @@ export const saveQuote = (
         createdAt: new Date().toISOString(),
     };
 
-    quotes.push(newQuote);
-    localStorage.setItem('quotes', JSON.stringify(quotes));
+    await userDataService.saveQuote(newQuote);
 };
 
-export const getQuotes = (partNumber?: number): Quote[] => {
-    const stored = localStorage.getItem('quotes');
-    const quotes: Quote[] = stored ? JSON.parse(stored) : [];
-
-    if (partNumber !== undefined) {
-        return quotes.filter(q => q.partNumber === partNumber);
-    }
-
-    return quotes;
+export const getQuotes = async (partNumber?: number): Promise<Quote[]> => {
+    return await userDataService.getQuotes(partNumber);
 };
 
-export const deleteQuote = (id: string): void => {
-    const quotes = getQuotes();
-    const filtered = quotes.filter(q => q.id !== id);
-    localStorage.setItem('quotes', JSON.stringify(filtered));
+export const deleteQuote = async (id: string): Promise<void> => {
+    await userDataService.deleteQuote(id);
 };
 
 export const shareQuote = (quote: Quote, platform: 'twitter' | 'facebook' | 'whatsapp' | 'copy'): void => {

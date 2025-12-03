@@ -29,10 +29,10 @@ export default function TextSelectionMenu({
     const [showShareMenu, setShowShareMenu] = useState(false);
     const [showColorPicker, setShowColorPicker] = useState(false);
 
-    const handleHighlight = (color: 'yellow' | 'green' | 'blue') => {
+    const handleHighlight = async (color: 'yellow' | 'green' | 'blue') => {
         console.log('🎨 handleHighlight llamado con color:', color);
         try {
-            saveHighlight(text, color, partNumber, chapterIndex, pageNumber);
+            await saveHighlight(text, color, partNumber, chapterIndex, pageNumber);
             console.log('✅ Resaltado guardado:', { text, color });
             alert(`✅ Texto resaltado en ${color === 'yellow' ? 'amarillo' : color === 'green' ? 'verde' : 'azul'}!`);
             setShowColorPicker(false);
@@ -43,10 +43,10 @@ export default function TextSelectionMenu({
         }
     };
 
-    const handleSaveQuote = () => {
+    const handleSaveQuote = async () => {
         console.log('⭐ handleSaveQuote llamado');
         try {
-            saveQuote(text, partNumber, partTitle, chapterTitle, pageNumber);
+            await saveQuote(text, partNumber, partTitle, chapterTitle, pageNumber);
             console.log('✅ Cita guardada:', { text, partTitle, chapterTitle });
             alert('⭐ ¡Cita guardada exitosamente!');
             onClose();

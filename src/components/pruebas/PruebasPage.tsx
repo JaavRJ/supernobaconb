@@ -6,9 +6,9 @@ import FontTester from "../../components/pruebas/FontsPrueba";
 import FontEstrella from "../../components/pruebas/FontEstrella";
 
 export default function BeforePage() {
-    
+
   const imgUrls = [
-    "https://res.cloudinary.com/dgrhyyuef/image/upload/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
+    "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_154642_nudkkb.png",
   ];
 
   const starsRef = useRef<HTMLDivElement>(null);
@@ -65,11 +65,11 @@ export default function BeforePage() {
         <div className="side-text">SUPERNOBA</div>
         <div className="side-text-right"></div>
 
-            <FontEstrella/>
+        <FontEstrella />
         <div className="row">
         </div>
-        <div className="row"> 
-            <FontTester/>
+        <div className="row">
+          <FontTester />
         </div>
 
         {/* TEXTO */}
@@ -77,9 +77,9 @@ export default function BeforePage() {
           <TextBefore1 />
         </div>
 
-              
-        </div>
-           
+
+      </div>
+
     </>
   );
 }

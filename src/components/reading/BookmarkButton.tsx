@@ -17,22 +17,26 @@ export default function BookmarkButton({
     const [isBookmarked, setIsBookmarked] = React.useState(false);
 
     React.useEffect(() => {
-        setIsBookmarked(hasBookmark(partNumber, chapterIndex, pageNumber));
+        const checkBookmark = async () => {
+            const bookmarked = await hasBookmark(partNumber, chapterIndex, pageNumber);
+            setIsBookmarked(bookmarked);
+        };
+        checkBookmark();
     }, [partNumber, chapterIndex, pageNumber]);
 
-    const handleToggle = () => {
+    const handleToggle = async () => {
         if (isBookmarked) {
-            const bookmarks = getBookmarks(partNumber);
+            const bookmarks = await getBookmarks(partNumber);
             const bookmark = bookmarks.find(
                 b => b.chapterIndex === chapterIndex && b.pageNumber === pageNumber
             );
             if (bookmark) {
-                deleteBookmark(bookmark.id);
+                await deleteBookmark(bookmark.id);
                 setIsBookmarked(false);
                 console.log('🔖 Marcador eliminado');
             }
         } else {
-            saveBookmark(partNumber, chapterIndex, pageNumber);
+            await saveBookmark(partNumber, chapterIndex, pageNumber);
             setIsBookmarked(true);
             console.log('🔖 Marcador guardado:', { partNumber, chapterIndex, pageNumber });
         }

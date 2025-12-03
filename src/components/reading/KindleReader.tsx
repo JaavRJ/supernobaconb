@@ -46,15 +46,24 @@ export default function KindleReader({
     const [activeNote, setActiveNote] = useState<AuthorNote | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
     const [showNewsletter, setShowNewsletter] = useState(false);
+    const [highlights, setHighlights] = useState<any[]>([]);
 
     const contentRef = useRef<HTMLDivElement>(null);
     const currentChapter = chapters[currentChapterIndex];
+
+    // Load highlights when chapter changes
+    useEffect(() => {
+        const loadHighlights = async () => {
+            const loadedHighlights = await getHighlights(partNumber, currentChapterIndex);
+            setHighlights(loadedHighlights);
+        };
+        loadHighlights();
+    }, [partNumber, currentChapterIndex]);
 
     // Re-paginar al cambiar el tamaño de la ventana
     useEffect(() => {
         const handleResize = () => {
             if (contentRef.current && currentChapter) {
-                const highlights = getHighlights(partNumber, currentChapterIndex);
                 const paginatedPages = paginateContent(
                     currentChapter.content,
                     contentRef.current,
@@ -81,14 +90,11 @@ export default function KindleReader({
             window.removeEventListener('resize', debouncedResize);
             clearTimeout(timeoutId);
         };
-    }, [currentChapter, fontSize, partNumber, currentChapterIndex]);
+    }, [currentChapter, fontSize, highlights, partNumber, currentChapterIndex]);
 
     // Paginar contenido cuando cambia el capítulo o el tamaño de fuente
     useEffect(() => {
         if (contentRef.current && currentChapter) {
-            // Get highlights for current chapter
-            const highlights = getHighlights(partNumber, currentChapterIndex);
-
             const paginatedPages = paginateContent(
                 currentChapter.content,
                 contentRef.current,
@@ -100,7 +106,7 @@ export default function KindleReader({
             setPages(paginatedPages);
             setCurrentPage(0);
         }
-    }, [currentChapter, fontSize, partNumber, currentChapterIndex]);
+    }, [currentChapter, fontSize, highlights, partNumber, currentChapterIndex]);
 
     // Manejar selección de texto
     useEffect(() => {

@@ -1,3 +1,5 @@
+import * as userDataService from '../services/userDataService';
+
 export interface Highlight {
     id: string;
     text: string;
@@ -8,14 +10,13 @@ export interface Highlight {
     createdAt: string;
 }
 
-export const saveHighlight = (
+export const saveHighlight = async (
     text: string,
     color: 'yellow' | 'green' | 'blue',
     partNumber: number,
     chapterIndex: number,
     pageNumber: number
-): void => {
-    const highlights = getHighlights();
+): Promise<void> => {
     const newHighlight: Highlight = {
         id: Date.now().toString(),
         text: text.trim(),
@@ -26,32 +27,20 @@ export const saveHighlight = (
         createdAt: new Date().toISOString(),
     };
 
-    highlights.push(newHighlight);
-    localStorage.setItem('highlights', JSON.stringify(highlights));
+    await userDataService.saveHighlight(newHighlight);
     console.log('💾 Highlight guardado:', newHighlight);
 };
 
-export const getHighlights = (partNumber?: number, chapterIndex?: number): Highlight[] => {
-    const stored = localStorage.getItem('highlights');
-    const highlights: Highlight[] = stored ? JSON.parse(stored) : [];
-
-    if (partNumber !== undefined && chapterIndex !== undefined) {
-        return highlights.filter(
-            h => h.partNumber === partNumber && h.chapterIndex === chapterIndex
-        );
-    }
-
-    return highlights;
+export const getHighlights = async (partNumber?: number, chapterIndex?: number): Promise<Highlight[]> => {
+    return await userDataService.getHighlights(partNumber, chapterIndex);
 };
 
-export const deleteHighlight = (id: string): void => {
-    const highlights = getHighlights();
-    const filtered = highlights.filter(h => h.id !== id);
-    localStorage.setItem('highlights', JSON.stringify(filtered));
+export const deleteHighlight = async (id: string): Promise<void> => {
+    await userDataService.deleteHighlight(id);
 };
 
-export const exportHighlights = (): string => {
-    const highlights = getHighlights();
+export const exportHighlights = async (): Promise<string> => {
+    const highlights = await getHighlights();
     return JSON.stringify(highlights, null, 2);
 };
 
@@ -66,8 +55,20 @@ export const applyHighlightsToHTML = (
     const sortedHighlights = [...highlights].sort((a, b) => b.text.length - a.text.length);
 
     sortedHighlights.forEach(highlight => {
-        const escapedText = highlight.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`(${escapedText})`, 'gi');
+        // Normalize the highlight text (replace multiple spaces/newlines with single space)
+        const normalizedHighlightText = highlight.text
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        // Escape special regex characters
+        const escapedText = normalizedHighlightText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+        // Create regex that matches the text with flexible whitespace
+        // \s+ matches one or more whitespace characters (spaces, newlines, tabs)
+        const flexiblePattern = escapedText.replace(/\s+/g, '\\s+');
+        const regex = new RegExp(`(${flexiblePattern})`, 'gi');
+
+        // Apply highlight
         result = result.replace(regex, `<mark class="highlight-${highlight.color}" data-highlight-id="${highlight.id}">$1</mark>`);
     });
 

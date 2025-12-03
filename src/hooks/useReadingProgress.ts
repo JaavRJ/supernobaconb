@@ -1,52 +1,84 @@
-import { useState, useEffect } from 'react';
-
-interface ReadingProgress {
-    partNumber: number;
-    scrollPosition: number;
-    lastRead: string; // ISO date string
-    completed: boolean;
-}
+import { useState, useEffect, useCallback, useRef } from 'react';
+import * as userDataService from '../services/userDataService';
+import type { ReadingProgress } from '../services/userDataService';
 
 export const useReadingProgress = (partNumber: number) => {
     const [progress, setProgress] = useState<ReadingProgress | null>(null);
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Load progress from localStorage
+    // Load progress from Firebase (or localStorage fallback)
     useEffect(() => {
-        const savedProgress = localStorage.getItem(`reading-progress-part-${partNumber}`);
-        if (savedProgress) {
-            setProgress(JSON.parse(savedProgress));
-        }
+        const loadProgress = async () => {
+            try {
+                const savedProgress = await userDataService.getReadingProgress(partNumber);
+                if (savedProgress && !Array.isArray(savedProgress)) {
+                    setProgress(savedProgress);
+                }
+            } catch (error) {
+                console.error('Error loading reading progress:', error);
+            }
+        };
+
+        loadProgress();
     }, [partNumber]);
 
-    // Save progress
-    const saveProgress = (scrollPosition: number, completed: boolean = false) => {
+    // Save progress with debouncing (5 seconds)
+    const saveProgress = useCallback((scrollPosition: number, completed: boolean = false) => {
         const newProgress: ReadingProgress = {
             partNumber,
             scrollPosition,
             lastRead: new Date().toISOString(),
             completed,
         };
+
+        // Update local state immediately for better UX
         setProgress(newProgress);
-        localStorage.setItem(`reading-progress-part-${partNumber}`, JSON.stringify(newProgress));
-    };
+
+        // Clear previous timeout
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+
+        // Debounce the save operation (5 seconds)
+        saveTimeoutRef.current = setTimeout(async () => {
+            try {
+                await userDataService.saveReadingProgress(partNumber, newProgress);
+                console.log('✅ Progreso guardado (debounced):', partNumber);
+            } catch (error) {
+                console.error('Error saving reading progress:', error);
+            }
+        }, 5000);
+    }, [partNumber]);
 
     // Get all reading progress
-    const getAllProgress = (): ReadingProgress[] => {
-        const allProgress: ReadingProgress[] = [];
-        for (let i = 1; i <= 4; i++) {
-            const saved = localStorage.getItem(`reading-progress-part-${i}`);
-            if (saved) {
-                allProgress.push(JSON.parse(saved));
-            }
+    const getAllProgress = useCallback(async (): Promise<ReadingProgress[]> => {
+        try {
+            const allProgress = await userDataService.getReadingProgress();
+            return Array.isArray(allProgress) ? allProgress : [];
+        } catch (error) {
+            console.error('Error getting all progress:', error);
+            return [];
         }
-        return allProgress;
-    };
+    }, []);
 
     // Clear progress for this part
-    const clearProgress = () => {
-        localStorage.removeItem(`reading-progress-part-${partNumber}`);
-        setProgress(null);
-    };
+    const clearProgress = useCallback(async () => {
+        try {
+            await userDataService.clearReadingProgress(partNumber);
+            setProgress(null);
+        } catch (error) {
+            console.error('Error clearing progress:', error);
+        }
+    }, [partNumber]);
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+        };
+    }, []);
 
     return {
         progress,
