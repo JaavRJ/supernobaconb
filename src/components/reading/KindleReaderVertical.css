@@ -1,0 +1,321 @@
+.kindle-reader-vertical {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #f5f3ef;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+/* Header */
+.vertical-header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+.vertical-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2a2a2a;
+}
+
+.vertical-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.vertical-icon-btn {
+    background: transparent;
+    border: none;
+    color: #555;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vertical-icon-btn:hover {
+    background: #f0f0f0;
+    color: #000;
+}
+
+/* Settings Panel */
+.vertical-settings {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 16px 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.setting-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.setting-group label {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+}
+
+.font-size-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.font-size-controls button {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.font-size-controls button:hover {
+    background: #e0e0e0;
+    border-color: #ccc;
+}
+
+.font-size-controls span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2a2a2a;
+    min-width: 50px;
+    text-align: center;
+}
+
+/* Progress Bar */
+.vertical-progress-bar {
+    height: 4px;
+    background: #e0e0e0;
+    position: relative;
+}
+
+.vertical-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.1s ease;
+}
+
+/* Content Wrapper */
+.vertical-content-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+.vertical-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+    line-height: 1.8;
+    color: #2a2a2a;
+    /* Disable browser context menu features */
+    -webkit-touch-callout: none;
+    translate: no;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+/* Chapter Header */
+.vertical-chapter-header {
+    margin-bottom: 48px;
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 32px;
+}
+
+.vertical-chapter-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 16px 0;
+    line-height: 1.3;
+}
+
+.vertical-chapter-meta {
+    font-size: 14px;
+    color: #888;
+    font-weight: 500;
+}
+
+/* Chapter Content */
+.vertical-chapter-content {
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+.vertical-chapter-content p {
+    margin: 0 0 1.5em 0;
+    text-align: justify;
+}
+
+.vertical-chapter-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Highlights */
+.vertical-chapter-content .highlight {
+    background: rgba(255, 235, 59, 0.3);
+    padding: 2px 0;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.vertical-chapter-content .highlight:hover {
+    background: rgba(255, 235, 59, 0.5);
+}
+
+/* Author Notes */
+.vertical-chapter-content .author-note-trigger {
+    color: #667eea;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+.vertical-chapter-content .author-note-trigger:hover {
+    color: #764ba2;
+}
+
+/* Chapter Navigation */
+.vertical-chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 2px solid #e0e0e0;
+}
+
+.vertical-chapter-nav-btn {
+    flex: 1;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vertical-chapter-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+}
+
+/* Reaction Container */
+.vertical-reaction-container {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Scroll to Top Button */
+.vertical-scroll-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    z-index: 100;
+    animation: fadeInUp 0.3s ease;
+}
+
+.vertical-scroll-top:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scrollbar Styling */
+.vertical-content-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+.vertical-content-wrapper::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.vertical-content-wrapper::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 5px;
+}
+
+.vertical-content-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .vertical-header {
+        padding: 12px 16px;
+    }
+
+    .vertical-title {
+        font-size: 16px;
+    }
+
+    .vertical-content {
+        padding: 32px 20px 60px;
+    }
+
+    .vertical-chapter-title {
+        font-size: 28px;
+    }
+
+    .vertical-chapter-nav {
+        flex-direction: column;
+    }
+
+    .vertical-scroll-top {
+        bottom: 20px;
+        right: 20px;
+        width: 48px;
+        height: 48px;
+    }
+}

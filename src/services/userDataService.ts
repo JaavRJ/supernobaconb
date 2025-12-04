@@ -36,6 +36,15 @@ export interface UserProfile {
     lastLogin: string;
 }
 
+export interface UserPreferences {
+    readingMode: 'horizontal' | 'vertical';
+    fontSize: number;
+    hasSeenTutorial: boolean;
+    hasConfigured: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
@@ -580,3 +589,122 @@ export const initializeUserProfile = async (): Promise<void> => {
         console.error('❌ Error inicializando perfil de usuario:', error);
     }
 };
+
+// ============================================================================
+// USER PREFERENCES
+// ============================================================================
+
+/**
+ * Get default user preferences
+ */
+const getDefaultPreferences = (): UserPreferences => ({
+    readingMode: 'horizontal',
+    fontSize: 16,
+    hasSeenTutorial: false,
+    hasConfigured: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+});
+
+/**
+ * Save user preferences to Firebase (if authenticated) and localStorage (as backup)
+ */
+export const saveUserPreferences = async (preferences: UserPreferences): Promise<void> => {
+    const userId = getUserId();
+
+    console.log('💾 saveUserPreferences called:', preferences);
+
+    // Update timestamp
+    const preferencesWithTimestamp = {
+        ...preferences,
+        updatedAt: new Date().toISOString()
+    };
+
+    // Always save to localStorage
+    localStorage.setItem('userPreferences', JSON.stringify(preferencesWithTimestamp));
+    console.log('📝 Preferences guardadas en localStorage');
+
+    // If authenticated, also save to Firebase
+    if (userId) {
+        try {
+            const preferencesRef = doc(db, 'users', userId, 'preferences', 'settings');
+            await setDoc(preferencesRef, preferencesWithTimestamp);
+            console.log('✅ Preferences guardadas en Firebase');
+        } catch (error) {
+            console.error('❌ Error guardando preferences en Firebase:', error);
+        }
+    } else {
+        console.log('⚠️ Usuario no autenticado, preferences solo en localStorage');
+    }
+};
+
+/**
+ * Get user preferences - Firebase first (if authenticated), fallback to localStorage
+ */
+export const getUserPreferences = async (): Promise<UserPreferences> => {
+    const userId = getUserId();
+
+    console.log('🔍 getUserPreferences called:', { userId });
+
+    // If authenticated, try Firebase first
+    if (userId) {
+        try {
+            const preferencesRef = doc(db, 'users', userId, 'preferences', 'settings');
+            const snapshot = await getDoc(preferencesRef);
+
+            if (snapshot.exists()) {
+                const preferences = snapshot.data() as UserPreferences;
+                console.log('✅ Preferences cargadas desde Firebase:', preferences);
+
+                // Also sync to localStorage
+                localStorage.setItem('userPreferences', JSON.stringify(preferences));
+
+                return preferences;
+            } else {
+                console.log('⚠️ No hay preferences en Firebase, usando defaults');
+            }
+        } catch (error) {
+            console.error('❌ Error cargando preferences desde Firebase, usando localStorage:', error);
+        }
+    } else {
+        console.log('⚠️ Usuario no autenticado, usando localStorage para preferences');
+    }
+
+    // Fallback to localStorage
+    const stored = localStorage.getItem('userPreferences');
+    if (stored) {
+        const preferences = JSON.parse(stored) as UserPreferences;
+        console.log('📦 Preferences cargadas desde localStorage:', preferences);
+        return preferences;
+    }
+
+    // Return defaults if nothing found
+    console.log('📦 Usando preferences por defecto');
+    return getDefaultPreferences();
+};
+
+/**
+ * Update a specific preference
+ */
+export const updatePreference = async <K extends keyof UserPreferences>(
+    key: K,
+    value: UserPreferences[K]
+): Promise<void> => {
+    const currentPreferences = await getUserPreferences();
+    const updatedPreferences = {
+        ...currentPreferences,
+        [key]: value,
+        updatedAt: new Date().toISOString()
+    };
+    await saveUserPreferences(updatedPreferences);
+    console.log(`✅ Preference actualizada: ${key} = ${value}`);
+};
+
+/**
+ * Check if user has configured their preferences
+ */
+export const hasUserConfigured = async (): Promise<boolean> => {
+    const preferences = await getUserPreferences();
+    return preferences.hasConfigured;
+};
+

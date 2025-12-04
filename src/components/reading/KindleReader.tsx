@@ -7,10 +7,13 @@ import AuthorNoteTooltip from './AuthorNoteTooltip';
 import AuthorNoteModal from './AuthorNoteModal';
 import ReactionBar from './ReactionBar';
 import NewsletterModal from '../newsletter/NewsletterModal';
+import KindleConfigModal from './KindleConfigModal';
 import { getHighlights, applyHighlightsToHTML } from '../../utils/highlightManager';
 import { getAuthorNotes, applyAuthorNotesToHTML, type AuthorNote } from '../../data/authorNotes';
+import { getUserPreferences, updatePreference, type UserPreferences } from '../../services/userDataService';
 import { ALL_PARTS } from '../../data/sampleChapters';
 import './KindleReader.css';
+import './KindleReaderVerticalMode.css';
 import './ChapterNavControls.css';
 import './AuthorNoteTrigger.css';
 
@@ -40,16 +43,40 @@ export default function KindleReader({
     const [pages, setPages] = useState<string[]>([]);
     const [selectedText, setSelectedText] = useState('');
     const [selectionPosition, setSelectionPosition] = useState({ x: 0, y: 0 });
-    const [fontSize, setFontSize] = useState(14);
+    const [fontSize, setFontSize] = useState(16);
     const [showSettings, setShowSettings] = useState(false);
     const [showQuotes, setShowQuotes] = useState(false);
     const [activeNote, setActiveNote] = useState<AuthorNote | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
     const [showNewsletter, setShowNewsletter] = useState(false);
     const [highlights, setHighlights] = useState<any[]>([]);
+    const [showConfig, setShowConfig] = useState(false);
+    const [readingMode, setReadingMode] = useState<'horizontal' | 'vertical'>('horizontal');
+    const [isLoadingPreferences, setIsLoadingPreferences] = useState(true);
 
     const contentRef = useRef<HTMLDivElement>(null);
     const currentChapter = chapters[currentChapterIndex];
+
+    // Load user preferences on mount
+    useEffect(() => {
+        const loadPreferences = async () => {
+            try {
+                const preferences = await getUserPreferences();
+                setReadingMode(preferences.readingMode);
+                setFontSize(preferences.fontSize);
+
+                // Show config modal if user hasn't configured yet
+                if (!preferences.hasConfigured) {
+                    setShowConfig(true);
+                }
+            } catch (error) {
+                console.error('Error loading preferences:', error);
+            } finally {
+                setIsLoadingPreferences(false);
+            }
+        };
+        loadPreferences();
+    }, []);
 
     // Load highlights when chapter changes
     useEffect(() => {
@@ -128,7 +155,7 @@ export default function KindleReader({
                     const rect = range.getBoundingClientRect();
                     setSelectionPosition({
                         x: rect.left + rect.width / 2 - 100,
-                        y: rect.top
+                        y: rect.bottom
                     });
                     console.log('✅ Texto seleccionado:', text);
                 } else {
@@ -294,17 +321,54 @@ export default function KindleReader({
     const currentGlobalChapter = chapterOffset + currentChapterIndex + 1;
     const totalChaptersUpToPart = getTotalChaptersUpToPart();
 
+    // Handle configuration completion
+    const handleConfigComplete = (preferences: UserPreferences) => {
+        setReadingMode(preferences.readingMode);
+        setFontSize(preferences.fontSize);
+        setShowConfig(false);
+    };
+
+    // Handle font size change
+    const handleFontSizeChange = async (newSize: number) => {
+        setFontSize(newSize);
+        await updatePreference('fontSize', newSize);
+    };
+
+    // Handle reading mode toggle
+    const handleReadingModeToggle = async () => {
+        const newMode = readingMode === 'horizontal' ? 'vertical' : 'horizontal';
+        setReadingMode(newMode);
+        await updatePreference('readingMode', newMode);
+    };
+
+    // Show loading state while preferences load
+    if (isLoadingPreferences) {
+        return (
+            <div className="kindle-reader">
+                <div className="kindle-loading">Cargando preferencias...</div>
+            </div>
+        );
+    }
+
+    // Show config modal if needed
+    if (showConfig) {
+        return <KindleConfigModal onComplete={handleConfigComplete} />;
+    }
+
+    // Render horizontal mode (existing)
     return (
         <div className="kindle-reader">
             {/* Header */}
             <div className="kindle-header">
-                <button
-                    onClick={prevPage}
-                    disabled={currentPage === 0}
-                    className="nav-btn"
-                >
-                    <ChevronLeft size={24} />
-                </button>
+                {readingMode === 'horizontal' && (
+                    <button
+                        onClick={prevPage}
+                        disabled={currentPage === 0}
+                        className="nav-btn"
+                    >
+                        <ChevronLeft size={24} />
+                    </button>
+                )}
 
                 <div className="kindle-title">
                     {partTitle}
@@ -340,24 +404,36 @@ export default function KindleReader({
                     <X size={24} />
                 </button>
 
-                <button
-                    onClick={nextPage}
-                    disabled={currentPage === totalPages - 1}
-                    className="nav-btn"
-                >
-                    <ChevronRight size={24} />
-                </button>
+                {readingMode === 'horizontal' && (
+                    <button
+                        onClick={nextPage}
+                        disabled={currentPage === totalPages - 1}
+                        className="nav-btn"
+                    >
+                        <ChevronRight size={24} />
+                    </button>
+                )}
             </div>
 
             {/* Settings Panel */}
             {showSettings && (
                 <div className="kindle-settings">
                     <div className="setting-group">
+                        <label>Modo de lectura:</label>
+                        <button
+                            onClick={handleReadingModeToggle}
+                            className="mode-toggle-btn"
+                        >
+                            {readingMode === 'horizontal' ? '📖 Horizontal' : '📜 Vertical'}
+                        </button>
+                    </div>
+
+                    <div className="setting-group">
                         <label>Tamaño de fuente:</label>
                         <div className="font-size-controls">
-                            <button onClick={() => setFontSize(Math.max(14, fontSize - 2))}>A-</button>
+                            <button onClick={() => handleFontSizeChange(Math.max(14, fontSize - 2))}>A-</button>
                             <span>{fontSize}px</span>
-                            <button onClick={() => setFontSize(Math.min(24, fontSize + 2))}>A+</button>
+                            <button onClick={() => handleFontSizeChange(Math.min(24, fontSize + 2))}>A+</button>
                         </div>
                     </div>
 
@@ -365,39 +441,65 @@ export default function KindleReader({
             )}
 
             {/* Content */}
-            <div className="kindle-content" ref={contentRef}>
-                {pages.length > 0 ? (
-                    <div
-                        className="kindle-page"
-                        style={{ fontSize: `${fontSize}px` }}
-                        dangerouslySetInnerHTML={{ __html: pages[currentPage] || '' }}
-                    />
+            <div className={`kindle-content ${readingMode === 'vertical' ? 'kindle-content-vertical' : ''}`} ref={contentRef}>
+                {readingMode === 'horizontal' ? (
+                    // Horizontal mode: Paginated content
+                    pages.length > 0 ? (
+                        <div
+                            className="kindle-page"
+                            style={{ fontSize: `${fontSize}px` }}
+                            translate="no"
+                            dangerouslySetInnerHTML={{ __html: pages[currentPage] || '' }}
+                        />
+                    ) : (
+                        <div className="kindle-loading">Cargando...</div>
+                    )
                 ) : (
-                    <div className="kindle-loading">Cargando...</div>
+                    // Vertical mode: Continuous scrolling content
+                    <div className="kindle-page-vertical" style={{ fontSize: `${fontSize}px` }}>
+                        {(() => {
+                            const notes = getAuthorNotes(partNumber, currentChapterIndex);
+                            const contentWithNotes = applyAuthorNotesToHTML(currentChapter.content, notes);
+                            const contentWithHighlights = applyHighlightsToHTML(contentWithNotes, highlights);
+
+                            return (
+                                <div dangerouslySetInnerHTML={{
+                                    __html: contentWithHighlights
+                                        .split('\n\n')
+                                        .filter(p => p.trim())
+                                        .map(p => `<p>${p.trim()}</p>`)
+                                        .join('')
+                                }} />
+                            );
+                        })()}
+                    </div>
                 )}
             </div>
 
             {/* Footer */}
             <div className="kindle-footer">
-                <div className="footer-page-nav">
-                    <button
-                        onClick={prevPage}
-                        disabled={currentPage === 0}
-                        className="page-nav-btn"
-                    >
-                        <ChevronLeft size={18} />
-                        Página anterior
-                    </button>
+                {/* Only show page navigation in horizontal mode */}
+                {readingMode === 'horizontal' && (
+                    <div className="footer-page-nav">
+                        <button
+                            onClick={prevPage}
+                            disabled={currentPage === 0}
+                            className="page-nav-btn"
+                        >
+                            <ChevronLeft size={18} />
+                            Página anterior
+                        </button>
 
-                    <button
-                        onClick={nextPage}
-                        disabled={currentPage === totalPages - 1}
-                        className="page-nav-btn"
-                    >
-                        Página siguiente
-                        <ChevronRight size={18} />
-                    </button>
-                </div>
+                        <button
+                            onClick={nextPage}
+                            disabled={currentPage === totalPages - 1}
+                            className="page-nav-btn"
+                        >
+                            Página siguiente
+                            <ChevronRight size={18} />
+                        </button>
+                    </div>
+                )}
 
                 {/* Reaction Bar */}
                 <ReactionBar

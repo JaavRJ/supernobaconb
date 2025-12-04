@@ -1,0 +1,334 @@
+.tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.tutorial-modal {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.4s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Header */
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tutorial-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tutorial-close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tutorial-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* Progress Bar */
+.tutorial-progress-container {
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tutorial-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tutorial-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.tutorial-progress-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Content */
+.tutorial-content {
+    padding: 32px 28px;
+    text-align: center;
+}
+
+.tutorial-icon-container {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.tutorial-icon {
+    color: #667eea;
+    filter: drop-shadow(0 4px 12px rgba(102, 126, 234, 0.4));
+    animation: float 3s ease-in-out infinite;
+}
+
+.tutorial-step-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 16px 0;
+}
+
+.tutorial-step-description {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 28px 0;
+}
+
+/* Video Section */
+.tutorial-video-section {
+    margin: 28px 0;
+}
+
+.tutorial-video-placeholder {
+    width: 100%;
+    padding: 48px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #667eea;
+}
+
+.tutorial-video-placeholder:hover {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.tutorial-video-placeholder span {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.tutorial-video-container {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.tutorial-video {
+    width: 100%;
+    max-height: 300px;
+    display: block;
+}
+
+/* Step Indicators */
+.tutorial-step-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+}
+
+.tutorial-step-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tutorial-step-dot:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.2);
+}
+
+.tutorial-step-dot.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 24px;
+    border-radius: 5px;
+}
+
+.tutorial-step-dot.completed {
+    background: rgba(102, 126, 234, 0.5);
+}
+
+/* Footer */
+.tutorial-footer {
+    padding: 20px 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.tutorial-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.tutorial-prev-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.tutorial-prev-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-2px);
+}
+
+.tutorial-prev-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.tutorial-next-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+.tutorial-next-btn:hover {
+    transform: translateX(2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.tutorial-skip-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+.tutorial-skip-btn:hover {
+    color: #fff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tutorial-modal {
+        max-width: 100%;
+        border-radius: 16px;
+    }
+
+    .tutorial-header h2 {
+        font-size: 20px;
+    }
+
+    .tutorial-step-title {
+        font-size: 22px;
+    }
+
+    .tutorial-step-description {
+        font-size: 15px;
+    }
+
+    .tutorial-footer {
+        flex-wrap: wrap;
+    }
+
+    .tutorial-nav-btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .tutorial-skip-btn {
+        width: 100%;
+        order: -1;
+    }
+}

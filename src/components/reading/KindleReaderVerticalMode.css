@@ -1,0 +1,100 @@
+.mode-toggle-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.mode-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Vertical scrolling mode */
+.kindle-content-vertical {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scroll-behavior: smooth;
+}
+
+.kindle-page-vertical {
+    max-width: 700px;
+    width: 100%;
+    line-height: 1.8;
+    color: #2a2a2a;
+    text-align: justify;
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+
+.mode-toggle-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.mode-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Vertical scrolling mode */
+.kindle-content-vertical {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scroll-behavior: smooth;
+}
+
+.kindle-page-vertical {
+    max-width: 700px;
+    width: 100%;
+    line-height: 1.8;
+    color: #2a2a2a;
+    text-align: justify;
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+
+.kindle-page-vertical p {
+    margin-bottom: 1.5em;
+    text-indent: 2em;
+}
+
+.kindle-page-vertical p:first-child {
+    text-indent: 0;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+/* Highlight colors for vertical mode */
+.kindle-page-vertical .highlight-yellow {
+    background: rgba(255, 235, 59, 0.5);
+}
+
+.kindle-page-vertical .highlight-green {
+    background: rgba(76, 175, 80, 0.4);
+}
+
+.kindle-page-vertical .highlight-blue {
+    background: rgba(33, 150, 243, 0.4);
+}
+
+.kindle-page-vertical mark:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}

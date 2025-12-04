@@ -73,7 +73,7 @@ export default function TextSelectionMenu({
             className="text-selection-menu"
             style={{
                 left: `${position.x}px`,
-                top: `${position.y - 60}px`
+                top: `${position.y + 10}px`
             }}
             onClick={(e) => {
                 console.log('🖱️ Click en menu container');

@@ -1,0 +1,401 @@
+.config-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.config-modal {
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    border-radius: 24px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    animation: slideUp 0.5s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.config-step {
+    padding: 0;
+}
+
+/* Header */
+.config-header {
+    padding: 32px 32px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.config-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.config-step-indicator {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.config-skip-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.config-skip-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Content */
+.config-content {
+    padding: 40px 32px;
+    text-align: center;
+}
+
+.config-description {
+    font-size: 17px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 32px 0;
+}
+
+.config-welcome-icon {
+    margin-bottom: 32px;
+    color: #667eea;
+    display: flex;
+    justify-content: center;
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Buttons */
+.config-primary-btn {
+    width: 100%;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+}
+
+.config-primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+}
+
+.config-secondary-btn {
+    width: 100%;
+    padding: 14px 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+}
+
+.config-secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.config-text-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px;
+    transition: all 0.3s ease;
+}
+
+.config-text-btn:hover {
+    color: #fff;
+}
+
+/* Reading Mode Options */
+.config-mode-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.config-mode-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.config-mode-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-4px);
+}
+
+.config-mode-card.selected {
+    background: rgba(102, 126, 234, 0.15);
+    border-color: #667eea;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+}
+
+.config-mode-icon {
+    color: #667eea;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.config-mode-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.config-mode-card p {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+}
+
+.config-mode-preview {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.horizontal-preview .preview-page {
+    width: 40px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.horizontal-preview .preview-arrow {
+    color: #667eea;
+    font-size: 24px;
+}
+
+.vertical-preview .preview-scroll {
+    width: 40px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+    border-radius: 4px;
+}
+
+.vertical-preview .preview-arrow {
+    color: #667eea;
+    font-size: 24px;
+}
+
+/* Font Size Controls */
+.config-font-preview {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 32px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: left;
+    font-family: Georgia, serif;
+}
+
+.config-font-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+.config-font-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 12px 20px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.config-font-btn:hover:not(:disabled) {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+}
+
+.config-font-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.config-font-size-display {
+    font-size: 18px;
+    font-weight: 700;
+    color: #667eea;
+    min-width: 60px;
+    text-align: center;
+}
+
+.config-font-slider {
+    margin-bottom: 32px;
+}
+
+.config-slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+}
+
+.config-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.config-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Tutorial Features */
+.config-tutorial-icon {
+    margin-bottom: 24px;
+    color: #667eea;
+    display: flex;
+    justify-content: center;
+    animation: float 3s ease-in-out infinite;
+}
+
+.config-tutorial-features {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    text-align: left;
+}
+
+.config-feature-item {
+    padding: 12px 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.config-feature-item:last-child {
+    border-bottom: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .config-modal {
+        border-radius: 20px;
+    }
+
+    .config-title {
+        font-size: 24px;
+    }
+
+    .config-mode-options {
+        grid-template-columns: 1fr;
+    }
+
+    .config-header {
+        padding: 24px 20px 20px;
+    }
+
+    .config-content {
+        padding: 32px 20px;
+    }
+}
