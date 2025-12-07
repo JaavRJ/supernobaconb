@@ -25,19 +25,19 @@ const tutorialSteps: TutorialStep[] = [
         title: 'Seleccionar y Resaltar Texto',
         description: 'Selecciona cualquier texto en el libro para resaltarlo. Mantén presionado o arrastra el cursor sobre el texto que deseas destacar. Selecciona la opcion del marcador y recarga la pagina.',
         icon: <Highlighter size={48} className="tutorial-icon" />,
-        videoUrl: 'https://res.cloudinary.com/dgrhyyuef/video/upload/q_auto/f_auto/v1764786156/supernoba/VID-20251128-WA0006_qcdulv.mp4', // Usuario puede agregar URL de video aquí
+        videoUrl: 'https://res.cloudinary.com/dgrhyyuef/video/upload/q_auto/f_auto/v1764817182/supernoba/supernoba-highline_eonyc2.mp4', // Usuario puede agregar URL de video aquí
     },
     {
         title: 'Guardar Citas Favoritas',
         description: 'Guarda tus pasajes favoritos como citas. Selecciona el texto y elige el icono de estrella. Accede a todas tus citas guardadas tocando el ícono de estrella ⭐ en la parte superior.',
         icon: <Star size={48} className="tutorial-icon" />,
-        videoUrl: '', // Usuario puede agregar URL de video aquí
+        videoUrl: 'https://res.cloudinary.com/dgrhyyuef/video/upload/q_auto/f_auto/v1764817181/supernoba/supernoba-quote_fpuc4g.mp4', // Usuario puede agregar URL de video aquí
     },
     {
         title: 'Compartir',
         description: 'Comparte citas en Instagram Stories o demas plataformas. Selecciona texto, elige el botón de compartir y personaliza el diseño. Tambien puedes compartir tus citas favoritas.',
         icon: <Share2 size={48} className="tutorial-icon" />,
-        videoUrl: '', // Usuario puede agregar URL de video aquí
+        videoUrl: 'https://res.cloudinary.com/dgrhyyuef/video/upload/q_auto/f_auto/v1764817182/supernoba/supernoba-share_pv9fu4.mp4', // Usuario puede agregar URL de video aquí
     },
 ];
 
