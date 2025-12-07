@@ -640,21 +640,56 @@ function paginateContent(
     document.body.appendChild(tempDiv);
 
     // Apply author notes to content before pagination
-    // Note: Notes are now applied in the component before calling paginateContent
     const contentWithNotes = content;
 
-    const paragraphs = contentWithNotes.split('\n\n').filter(p => p.trim());
+    // IMPROVED: Detect and normalize content format
+    let paragraphs: string[];
+
+    // Check if content has HTML paragraph tags
+    if (contentWithNotes.includes('<p')) {
+        console.log(`📄 Detectado contenido HTML para Parte ${partNumber}, Capítulo ${chapterIndex}`);
+
+        // Parse HTML and extract paragraphs
+        const tempParser = document.createElement('div');
+        tempParser.innerHTML = contentWithNotes;
+        const pElements = Array.from(tempParser.querySelectorAll('p'));
+
+        // Filter out empty paragraphs or paragraphs with only &nbsp;
+        paragraphs = pElements
+            .map(p => p.outerHTML)
+            .filter(html => {
+                // Remove HTML tags and &nbsp; to check if there's actual content
+                const text = html
+                    .replace(/<[^>]*>/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/\s/g, '')
+                    .trim();
+                return text.length > 0;
+            });
+
+        console.log(`✅ Extraídos ${paragraphs.length} párrafos válidos del HTML`);
+    } else {
+        // Original behavior: split by double line breaks
+        paragraphs = contentWithNotes.split('\n\n').filter(p => p.trim());
+        console.log(`📄 Contenido de texto plano: ${paragraphs.length} párrafos`);
+    }
+
     let currentPageContent = '';
 
     for (const paragraph of paragraphs) {
-        const testContent = currentPageContent + `<p>${paragraph.trim()}</p>`;
+        // If paragraph already has <p> tags, use it as is; otherwise wrap it
+        const paragraphHTML = paragraph.trim().startsWith('<p')
+            ? paragraph
+            : `<p>${paragraph.trim()}</p>`;
+
+        const testContent = currentPageContent + paragraphHTML;
         tempDiv.innerHTML = testContent;
 
         if (tempDiv.scrollHeight > tempDiv.clientHeight && currentPageContent) {
             // Current page is full
             const highlightedContent = applyHighlightsToHTML(currentPageContent, highlights);
             pages.push(highlightedContent);
-            currentPageContent = `<p>${paragraph.trim()}</p>`;
+            currentPageContent = paragraphHTML;
         } else {
             currentPageContent = testContent;
         }
@@ -667,5 +702,8 @@ function paginateContent(
     }
 
     document.body.removeChild(tempDiv);
+
+    console.log(`✅ Paginación completada: ${pages.length} páginas creadas para Parte ${partNumber}, Capítulo ${chapterIndex}`);
+
     return pages.length > 0 ? pages : ['<p>Sin contenido</p>'];
 }
