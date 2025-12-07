@@ -16,7 +16,7 @@ export const PART_1_NOTES: AuthorNote[] = [
         id: '1',
         partNumber: 1,
         chapterIndex: 0,
-        triggerText: 'Cielo Estrellado',
+        triggerText: 'Cielo Estrellado xd',
         noteTitle: 'Cielo Estrellado',
         noteContent: 'Hola, ¿qué tal? A lo largo del libro encontrarás estas notas, y podrás hacer clic en ellas para obtener más información. Los quiero mucho.',
         type: 'tooltip'

@@ -9,7 +9,7 @@ import ReactionBar from './ReactionBar';
 import NewsletterModal from '../newsletter/NewsletterModal';
 import KindleConfigModal from './KindleConfigModal';
 import { getHighlights, applyHighlightsToHTML } from '../../utils/highlightManager';
-import { getAuthorNotes, applyAuthorNotesToHTML, type AuthorNote } from '../../data/authorNotes';
+import { getAuthorNotesForChapter, applyAuthorNotesToHTML, type AuthorNote } from '../../services/authorNotesLoaderService';
 import { getUserPreferences, updatePreference, type UserPreferences } from '../../services/userDataService';
 import { ALL_PARTS } from '../../data/sampleChapters';
 import './KindleReader.css';
@@ -53,6 +53,7 @@ export default function KindleReader({
     const [showConfig, setShowConfig] = useState(false);
     const [readingMode, setReadingMode] = useState<'horizontal' | 'vertical'>('horizontal');
     const [isLoadingPreferences, setIsLoadingPreferences] = useState(true);
+    const [authorNotes, setAuthorNotes] = useState<AuthorNote[]>([]);
 
     const contentRef = useRef<HTMLDivElement>(null);
     const currentChapter = chapters[currentChapterIndex];
@@ -87,12 +88,23 @@ export default function KindleReader({
         loadHighlights();
     }, [partNumber, currentChapterIndex]);
 
+    // Load author notes when chapter changes
+    useEffect(() => {
+        const loadNotes = async () => {
+            const notes = await getAuthorNotesForChapter(partNumber, currentChapterIndex);
+            setAuthorNotes(notes);
+        };
+        loadNotes();
+    }, [partNumber, currentChapterIndex]);
+
     // Re-paginar al cambiar el tamaño de la ventana
     useEffect(() => {
         const handleResize = () => {
             if (contentRef.current && currentChapter) {
+                console.log('📝 Aplicando notas en resize:', authorNotes.length, 'notas');
+                const contentWithNotes = applyAuthorNotesToHTML(currentChapter.content, authorNotes);
                 const paginatedPages = paginateContent(
-                    currentChapter.content,
+                    contentWithNotes,
                     contentRef.current,
                     fontSize,
                     highlights,
@@ -117,13 +129,16 @@ export default function KindleReader({
             window.removeEventListener('resize', debouncedResize);
             clearTimeout(timeoutId);
         };
-    }, [currentChapter, fontSize, highlights, partNumber, currentChapterIndex]);
+    }, [currentChapter, fontSize, highlights, authorNotes, partNumber, currentChapterIndex]);
 
     // Paginar contenido cuando cambia el capítulo o el tamaño de fuente
     useEffect(() => {
         if (contentRef.current && currentChapter) {
+            console.log('📝 Aplicando notas en paginación:', authorNotes.length, 'notas');
+            console.log('📋 Array de notas:', authorNotes);
+            const contentWithNotes = applyAuthorNotesToHTML(currentChapter.content, authorNotes);
             const paginatedPages = paginateContent(
-                currentChapter.content,
+                contentWithNotes,
                 contentRef.current,
                 fontSize,
                 highlights,
@@ -133,7 +148,7 @@ export default function KindleReader({
             setPages(paginatedPages);
             setCurrentPage(0);
         }
-    }, [currentChapter, fontSize, highlights, partNumber, currentChapterIndex]);
+    }, [currentChapter, fontSize, highlights, authorNotes, partNumber, currentChapterIndex]);
 
     // Manejar selección de texto
     useEffect(() => {
@@ -223,9 +238,8 @@ export default function KindleReader({
                 const noteType = trigger.getAttribute('data-note-type') as 'tooltip' | 'modal';
 
                 if (noteId) {
-                    // Get all notes for current chapter
-                    const notes = getAuthorNotes(partNumber, currentChapterIndex);
-                    const note = notes.find(n => n.id === noteId);
+                    // Get note from loaded notes
+                    const note = authorNotes.find(n => n.id === noteId);
 
                     if (note) {
                         setActiveNote(note);
@@ -245,7 +259,7 @@ export default function KindleReader({
 
         document.addEventListener('click', handleAuthorNoteClick);
         return () => document.removeEventListener('click', handleAuthorNoteClick);
-    }, [partNumber, currentChapterIndex]);
+    }, [partNumber, currentChapterIndex, authorNotes]);
 
     const nextPage = useCallback(() => {
         // Check if we're on the second-to-last page of the last chapter
@@ -458,8 +472,7 @@ export default function KindleReader({
                     // Vertical mode: Continuous scrolling content
                     <div className="kindle-page-vertical" style={{ fontSize: `${fontSize}px` }}>
                         {(() => {
-                            const notes = getAuthorNotes(partNumber, currentChapterIndex);
-                            const contentWithNotes = applyAuthorNotesToHTML(currentChapter.content, notes);
+                            const contentWithNotes = applyAuthorNotesToHTML(currentChapter.content, authorNotes);
                             const contentWithHighlights = applyHighlightsToHTML(contentWithNotes, highlights);
 
                             return (
@@ -627,8 +640,8 @@ function paginateContent(
     document.body.appendChild(tempDiv);
 
     // Apply author notes to content before pagination
-    const notes = getAuthorNotes(partNumber, chapterIndex);
-    const contentWithNotes = applyAuthorNotesToHTML(content, notes);
+    // Note: Notes are now applied in the component before calling paginateContent
+    const contentWithNotes = content;
 
     const paragraphs = contentWithNotes.split('\n\n').filter(p => p.trim());
     let currentPageContent = '';

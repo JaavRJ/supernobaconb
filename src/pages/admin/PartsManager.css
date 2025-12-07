@@ -1,0 +1,83 @@
+.parts-manager {
+    padding: 0;
+}
+
+.parts-list {
+    display: grid;
+    gap: 16px;
+}
+
+.part-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.part-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.part-info {
+    flex: 1;
+}
+
+.part-info h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1f36;
+    margin: 0 0 8px 0;
+}
+
+.part-description {
+    color: #6b7280;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 12px 0;
+}
+
+.part-meta {
+    color: #9ca3af;
+    font-size: 14px;
+    margin: 0;
+}
+
+.part-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Form */
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .part-card {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .part-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

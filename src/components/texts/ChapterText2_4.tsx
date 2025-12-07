@@ -1,11 +1,11 @@
 import React from "react";
+import TextImages from "../TextImages"
 
 export default function ChapterText2_4() {
     return (
-        <div className="chapter-text">
-            <p>
-                {/* PLACEHOLDER: Agrega aquí el contenido del capítulo iv de Parte 2 */}
-            </p>
-        </div>
+        <TextImages>
+            {`(ix. noba con b)
+todo lo que lo ha formado se desvanecerá.`}
+        </TextImages>
     );
 }

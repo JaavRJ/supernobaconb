@@ -1,0 +1,123 @@
+.pdf-manager {
+    padding: 0;
+}
+
+.subtitle {
+    color: #6b7280;
+    font-size: 16px;
+    margin: 8px 0 0 0;
+}
+
+.pdf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.pdf-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1f36;
+    margin: 0 0 16px 0;
+}
+
+.pdf-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pdf-details {
+    flex: 1;
+}
+
+.pdf-filename {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1a1f36;
+    margin: 0 0 4px 0;
+}
+
+.pdf-date {
+    font-size: 13px;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.pdf-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.pdf-upload {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 32px;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #6b7280;
+}
+
+.upload-label:hover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+    color: #667eea;
+}
+
+.upload-label span {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.upload-progress {
+    width: 100%;
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s ease;
+}
+
+.upload-progress p {
+    font-size: 14px;
+    font-weight: 600;
+    color: #667eea;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pdf-grid {
+        grid-template-columns: 1fr;
+    }
+}

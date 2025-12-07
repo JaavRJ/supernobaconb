@@ -1,0 +1,131 @@
+.simple-editor {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.editor-toolbar {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+    color: #374151;
+}
+
+.toolbar-btn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.toolbar-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.toolbar-divider {
+    width: 1px;
+    background: #d1d5db;
+    margin: 0 4px;
+}
+
+.editor-contenteditable {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    font-size: 15px;
+    font-family: Georgia, serif;
+    line-height: 1.8;
+    overflow-y: auto;
+    outline: none;
+    color: #1a1f36;
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    cursor: text;
+}
+
+.editor-contenteditable:empty:before {
+    content: attr(data-placeholder);
+    color: #9ca3af;
+}
+
+.editor-contenteditable p {
+    margin-bottom: 1em;
+    color: #1a1f36;
+}
+
+.editor-contenteditable strong {
+    font-weight: 600;
+    color: #1a1f36;
+}
+
+.editor-contenteditable em {
+    font-style: italic;
+    color: #1a1f36;
+}
+
+.editor-contenteditable ul {
+    margin-left: 20px;
+    margin-bottom: 1em;
+}
+
+.editor-contenteditable li {
+    margin-bottom: 0.5em;
+    color: #1a1f36;
+}
+
+.editor-contenteditable a {
+    color: #667eea;
+    text-decoration: underline;
+}
+
+.editor-preview {
+    padding: 12px;
+    font-size: 15px;
+    font-family: Georgia, serif;
+    line-height: 1.8;
+    overflow-y: auto;
+}
+
+.editor-preview p {
+    margin-bottom: 1em;
+}
+
+.editor-preview strong {
+    font-weight: 600;
+}
+
+.editor-preview em {
+    font-style: italic;
+}
+
+.editor-preview ul {
+    margin-left: 20px;
+    margin-bottom: 1em;
+}
+
+.editor-preview li {
+    margin-bottom: 0.5em;
+}
+
+.editor-preview a {
+    color: #667eea;
+    text-decoration: underline;
+}

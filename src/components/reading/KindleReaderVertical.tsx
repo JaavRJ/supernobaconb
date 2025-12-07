@@ -295,12 +295,28 @@ export default function KindleReaderVertical({
                         )}
                     </div>
 
-                    {/* Reaction Bar */}
-                    <div className="vertical-reaction-container">
+                    {/* Footer with Progress Info and Reactions */}
+                    <div className="vertical-footer">
+                        {/* Reaction Bar */}
                         <ReactionBar
                             partNumber={partNumber}
                             chapterIndex={currentChapterIndex}
                         />
+
+                        {/* Progress Info */}
+                        <div className="vertical-progress-info">
+                            <div className="vertical-progress-bar-footer">
+                                <div
+                                    className="vertical-progress-fill-footer"
+                                    style={{ width: `${scrollProgress}%` }}
+                                />
+                            </div>
+                            <div className="vertical-info-text">
+                                <span>{Math.round(scrollProgress)}% leído</span>
+                                <span> · </span>
+                                <span>{estimatedReadingTime} min de lectura</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

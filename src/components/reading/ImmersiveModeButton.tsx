@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Maximize2, ArrowRight } from 'lucide-react';
 import KindleReader from './KindleReader';
-import { getPartChapters } from '../../data/sampleChapters';
+import { getPartChapters } from '../../services/chapterLoaderService';
 import './ImmersiveModeButton.css';
 
 interface ImmersiveModeButtonProps {
@@ -11,14 +11,25 @@ interface ImmersiveModeButtonProps {
 
 export default function ImmersiveModeButton({ partNumber, partTitle }: ImmersiveModeButtonProps) {
     const [showKindleReader, setShowKindleReader] = useState(false);
+    const [chapters, setChapters] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
-    const handleOpenReader = () => {
-        const chapters = getPartChapters(partNumber);
-        if (chapters.length === 0) {
-            alert(`No hay capítulos disponibles para ${partTitle}`);
-            return;
+    const handleOpenReader = async () => {
+        setLoading(true);
+        try {
+            const loadedChapters = await getPartChapters(partNumber);
+            if (loadedChapters.length === 0) {
+                alert(`No hay capítulos disponibles para ${partTitle}`);
+                return;
+            }
+            setChapters(loadedChapters);
+            setShowKindleReader(true);
+        } catch (error) {
+            console.error('Error loading chapters:', error);
+            alert('Error al cargar los capítulos');
+        } finally {
+            setLoading(false);
         }
-        setShowKindleReader(true);
     };
 
     return (
@@ -29,16 +40,17 @@ export default function ImmersiveModeButton({ partNumber, partTitle }: Immersive
                 <button
                     className="immersive-mode-btn"
                     onClick={handleOpenReader}
+                    disabled={loading}
                     aria-label="Activar modo lectura Kindle"
                 >
                     <Maximize2 size={20} />
-                    <span>Lectura</span>
+                    <span>{loading ? 'Cargando...' : 'Lectura'}</span>
                 </button>
             </div>
 
-            {showKindleReader && (
+            {showKindleReader && chapters.length > 0 && (
                 <KindleReader
-                    chapters={getPartChapters(partNumber)}
+                    chapters={chapters}
                     currentChapterIndex={0}
                     onClose={() => setShowKindleReader(false)}
                     partNumber={partNumber}
