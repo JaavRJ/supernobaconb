@@ -11,7 +11,7 @@ import Photo from "../../components/Photos";
 const imgUrls = [
   "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763505974/supernoba/IMG_20251118_112016_ains9u.png",
   "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763505973/supernoba/IMG_20251118_111521_fqg05n.png",
-  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763505973/supernoba/IMG_20251118_164407_lytixh.png",
+  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765063762/supernoba/IMG_20251206_172038_mp4oq8.png",
   "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765063762/supernoba/IMG_20251206_172106_kqtg6h.png",
 ];
 
