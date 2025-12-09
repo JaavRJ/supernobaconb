@@ -73,11 +73,9 @@ export default function SavedQuotes({ partNumber, onClose }: SavedQuotesProps) {
             // Compartir en Instagram
             await shareToInstagram(blob, selectedQuote.text);
 
-            console.log('✅ Imagen generada y compartida exitosamente');
             setShowColorPicker(false);
             setSelectedQuote(null);
         } catch (error) {
-            console.error('❌ Error al generar/compartir imagen:', error);
             alert('Error al generar la imagen. Por favor, intenta de nuevo.');
         } finally {
             setIsGenerating(false);

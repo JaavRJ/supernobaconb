@@ -56,8 +56,6 @@ export const subscribeUser = async (
 
             await setDoc(docRef, subscriber);
         }
-
-        console.log('✅ Usuario suscrito:', email);
     } catch (error) {
         console.error('❌ Error al suscribir usuario:', error);
         throw error;
@@ -88,7 +86,6 @@ export const unsubscribeUser = async (userId: string): Promise<void> => {
 
     try {
         await deleteDoc(docRef);
-        console.log('✅ Usuario desuscrito');
     } catch (error) {
         console.error('❌ Error al desuscribir:', error);
         throw error;

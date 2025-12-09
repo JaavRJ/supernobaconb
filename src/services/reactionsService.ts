@@ -113,8 +113,6 @@ export const addReaction = async (
             reaction: newReaction,
             timestamp: new Date().toISOString()
         });
-
-        console.log('✅ Reacción guardada:', newReaction);
     } catch (error) {
         console.error('Error adding reaction:', error);
         throw error;

@@ -96,7 +96,6 @@ export const markMigrationCompleted = async (
         };
 
         await setDoc(migrationRef, status);
-        console.log('✅ Migración marcada como completada');
     } catch (error) {
         console.error('❌ Error marcando migración como completada:', error);
     }
@@ -140,8 +139,6 @@ const hasFirebaseData = async (userId: string): Promise<{
             counts.bookmarksCount > 0 ||
             counts.progressCount > 0;
 
-        console.log('🔍 Datos existentes en Firebase:', counts);
-
         return { hasData, ...counts };
     } catch (error) {
         console.error('❌ Error verificando datos en Firebase:', error);
@@ -162,15 +159,12 @@ const downloadFirebaseDataToLocal = async (userId: string): Promise<void> => {
     try {
         const { collection, getDocs } = await import('firebase/firestore');
 
-        console.log('⬇️ Descargando datos de Firebase a localStorage...');
-
         // Download highlights
         const highlightsRef = collection(db, 'users', userId, 'highlights');
         const highlightsSnap = await getDocs(highlightsRef);
         const highlights = highlightsSnap.docs.map(doc => doc.data());
         if (highlights.length > 0) {
             localStorage.setItem('highlights', JSON.stringify(highlights));
-            console.log(`✅ ${highlights.length} highlights descargados`);
         }
 
         // Download quotes
@@ -179,7 +173,6 @@ const downloadFirebaseDataToLocal = async (userId: string): Promise<void> => {
         const quotes = quotesSnap.docs.map(doc => doc.data());
         if (quotes.length > 0) {
             localStorage.setItem('quotes', JSON.stringify(quotes));
-            console.log(`✅ ${quotes.length} quotes descargados`);
         }
 
         // Download bookmarks
@@ -188,7 +181,6 @@ const downloadFirebaseDataToLocal = async (userId: string): Promise<void> => {
         const bookmarks = bookmarksSnap.docs.map(doc => doc.data());
         if (bookmarks.length > 0) {
             localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-            console.log(`✅ ${bookmarks.length} bookmarks descargados`);
         }
 
         // Download reading progress
@@ -200,9 +192,7 @@ const downloadFirebaseDataToLocal = async (userId: string): Promise<void> => {
                 localStorage.setItem(`reading-progress-part-${data.partNumber}`, JSON.stringify(data));
             }
         });
-        console.log(`✅ ${progressSnap.size} progreso de lectura descargados`);
 
-        console.log('✅ Datos de Firebase sincronizados a localStorage');
     } catch (error) {
         console.error('❌ Error descargando datos de Firebase:', error);
     }
@@ -227,7 +217,6 @@ const migrateHighlights = async (userId: string, batch: any): Promise<number> =>
             batch.set(highlightRef, highlight);
         }
 
-        console.log(`📦 ${highlights.length} highlights preparados para migración`);
         return highlights.length;
     } catch (error) {
         console.error('❌ Error preparando highlights para migración:', error);
@@ -250,7 +239,6 @@ const migrateQuotes = async (userId: string, batch: any): Promise<number> => {
             batch.set(quoteRef, quote);
         }
 
-        console.log(`📦 ${quotes.length} quotes preparados para migración`);
         return quotes.length;
     } catch (error) {
         console.error('❌ Error preparando quotes para migración:', error);
@@ -273,7 +261,6 @@ const migrateBookmarks = async (userId: string, batch: any): Promise<number> => 
             batch.set(bookmarkRef, bookmark);
         }
 
-        console.log(`📦 ${bookmarks.length} bookmarks preparados para migración`);
         return bookmarks.length;
     } catch (error) {
         console.error('❌ Error preparando bookmarks para migración:', error);
@@ -298,7 +285,6 @@ const migrateReadingProgress = async (userId: string, batch: any): Promise<numbe
             }
         }
 
-        console.log(`📦 ${count} progreso de lectura preparados para migración`);
         return count;
     } catch (error) {
         console.error('❌ Error preparando progreso de lectura para migración:', error);
@@ -326,12 +312,9 @@ export const migrateLocalDataToFirebase = async (): Promise<MigrationResult> => 
     const userId = user.uid;
     const errors: string[] = [];
 
-    console.log('🚀 Iniciando sincronización de datos...');
-
     // Check if migration already completed
     const alreadyMigrated = await isMigrationCompleted(userId);
     if (alreadyMigrated) {
-        console.log('ℹ️ Migración ya completada anteriormente');
         return {
             success: true,
             highlightsMigrated: 0,
@@ -346,7 +329,6 @@ export const migrateLocalDataToFirebase = async (): Promise<MigrationResult> => 
     const firebaseData = await hasFirebaseData(userId);
 
     if (firebaseData.hasData) {
-        console.log('🔄 Firebase ya tiene datos, descargando a localStorage...');
         await downloadFirebaseDataToLocal(userId);
 
         // Mark migration as completed
@@ -369,7 +351,6 @@ export const migrateLocalDataToFirebase = async (): Promise<MigrationResult> => 
 
     // Check if there's local data to migrate
     if (!hasLocalData()) {
-        console.log('ℹ️ No hay datos locales para migrar');
         await markMigrationCompleted(userId, {
             highlights: 0,
             quotes: 0,
@@ -398,12 +379,6 @@ export const migrateLocalDataToFirebase = async (): Promise<MigrationResult> => 
 
         // Commit the batch
         await batch.commit();
-
-        console.log('✅ Migración completada exitosamente');
-        console.log(`   - Highlights: ${highlightsCount}`);
-        console.log(`   - Quotes: ${quotesCount}`);
-        console.log(`   - Bookmarks: ${bookmarksCount}`);
-        console.log(`   - Progreso: ${progressCount}`);
 
         // Mark migration as completed
         await markMigrationCompleted(userId, {
@@ -443,12 +418,9 @@ export const syncFirebaseToLocalStorage = async (): Promise<void> => {
     const user = getCurrentUser();
     if (!user) return;
 
-    console.log('🔄 Sincronizando datos de Firebase a localStorage...');
-
     try {
         // This would be called by the individual get functions in userDataService
         // which already handle syncing to localStorage
-        console.log('✅ Sincronización completada (manejada por userDataService)');
     } catch (error) {
         console.error('❌ Error sincronizando datos:', error);
     }

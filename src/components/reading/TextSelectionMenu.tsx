@@ -30,10 +30,8 @@ export default function TextSelectionMenu({
     const [showColorPicker, setShowColorPicker] = useState(false);
 
     const handleHighlight = async (color: 'yellow' | 'green' | 'blue') => {
-        console.log('🎨 handleHighlight llamado con color:', color);
         try {
             await saveHighlight(text, color, partNumber, chapterIndex, pageNumber);
-            console.log('✅ Resaltado guardado:', { text, color });
             alert(`✅ Texto resaltado en ${color === 'yellow' ? 'amarillo' : color === 'green' ? 'verde' : 'azul'}!`);
             setShowColorPicker(false);
             onClose();
@@ -44,29 +42,22 @@ export default function TextSelectionMenu({
     };
 
     const handleSaveQuote = async () => {
-        console.log('⭐ handleSaveQuote llamado');
         try {
             await saveQuote(text, partNumber, partTitle, chapterTitle, pageNumber);
-            console.log('✅ Cita guardada:', { text, partTitle, chapterTitle });
             alert('⭐ ¡Cita guardada exitosamente!');
             onClose();
         } catch (error) {
-            console.error('❌ Error al guardar cita:', error);
             alert('❌ Error al guardar la cita');
         }
     };
 
     const handleHighlightClick = () => {
-        console.log('🖱️ Click en botón Resaltar');
         setShowColorPicker(!showColorPicker);
     };
 
     const handleShareClick = () => {
-        console.log('🖱️ Click en botón Compartir');
         setShowShareMenu(!showShareMenu);
     };
-
-    console.log('📋 TextSelectionMenu renderizado:', { text, position, showColorPicker, showShareMenu });
 
     return (
         <div
@@ -76,7 +67,6 @@ export default function TextSelectionMenu({
                 top: `${position.y + 10}px`
             }}
             onClick={(e) => {
-                console.log('🖱️ Click en menu container');
                 e.stopPropagation();
             }}
         >
@@ -116,7 +106,6 @@ export default function TextSelectionMenu({
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
-                        console.log('🖱️ Click en botón Cerrar');
                         onClose();
                     }}
                     title="Cerrar"

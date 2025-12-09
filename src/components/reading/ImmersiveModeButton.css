@@ -15,10 +15,8 @@
     height: 60px;
     border-radius: 50%;
     border: none;
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
+    background: var(--accent);
+    color: var(--bg-primary);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -75,14 +73,12 @@
 }
 
 .immersive-mode-btn svg {
-    stroke: var(--accent) !important;
+    stroke: var(--bg-primary) !important;
 }
 
 .immersive-mode-btn:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    background: var(--accent);
-    color: var(--bg-primary);
 }
 
 .immersive-mode-btn:hover svg {

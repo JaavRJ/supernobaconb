@@ -19,9 +19,6 @@ export const uploadPartPDF = async (
     const filename = `BDUEMP${partNumber}.pdf`;
     const publicUrl = `/${filename}`;
 
-    console.log('⚠️ NOTA: Debes colocar manualmente el archivo en /public/' + filename);
-    console.log('📁 Archivo seleccionado:', file.name);
-
     return publicUrl;
 };
 
@@ -34,8 +31,6 @@ export const uploadImage = async (
 ): Promise<string> => {
     const filename = `${folder}_${Date.now()}_${file.name}`;
     const publicUrl = `/images/${filename}`;
-
-    console.log('⚠️ NOTA: Debes colocar manualmente el archivo en /public/images/' + filename);
 
     return publicUrl;
 };
@@ -50,8 +45,6 @@ export const uploadVideo = async (
     const filename = `${folder}_${Date.now()}_${file.name}`;
     const publicUrl = `/videos/${filename}`;
 
-    console.log('⚠️ NOTA: Debes colocar manualmente el archivo en /public/videos/' + filename);
-
     return publicUrl;
 };
 
@@ -59,8 +52,6 @@ export const uploadVideo = async (
  * Elimina una referencia de archivo (no elimina el archivo físico)
  */
 export const deleteFile = async (fileUrl: string): Promise<void> => {
-    console.log('⚠️ NOTA: Debes eliminar manualmente el archivo de /public' + fileUrl);
-    console.log('✅ Referencia eliminada de la base de datos');
 };
 
 /**

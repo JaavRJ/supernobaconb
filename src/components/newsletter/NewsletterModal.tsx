@@ -48,10 +48,8 @@ export default function NewsletterModal({ partNumber, partTitle, onClose }: News
             );
 
             setSubscribed(true);
-            console.log('✅ Suscrito exitosamente');
         } catch (err: any) {
             setError(err.message || 'Error al iniciar sesión');
-            console.error('❌ Error:', err);
         } finally {
             setLoading(false);
         }
@@ -109,11 +107,8 @@ export default function NewsletterModal({ partNumber, partTitle, onClose }: News
             setSubscribed(true);
             setCalendarAdded(true);
             setUserEmail(user.email || '');
-
-            console.log('Suscrito y agregado al calendario');
         } catch (err: any) {
             setError(err.message || 'Error en la suscripción');
-            console.error('❌ Error:', err);
         } finally {
             setLoading(false);
         }

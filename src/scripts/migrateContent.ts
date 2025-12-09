@@ -15,27 +15,15 @@ import { PDF_LINKS } from '../data/pdfLinks';
 import { savePart, saveChapter, saveAuthorNote, savePDFInfo } from '../services/contentService';
 
 export const migrateAllData = async () => {
-    console.log('🚀 Iniciando migración de datos...\n');
-
     try {
         // Migrar partes y capítulos
-        console.log('📚 Migrando partes y capítulos...');
         await migrateParts();
-        console.log('✅ Partes y capítulos migrados\n');
 
         // Migrar notas del autor
-        console.log('📝 Migrando notas del autor...');
         await migrateAuthorNotes();
-        console.log('✅ Notas del autor migradas\n');
 
         // Migrar información de PDFs
-        console.log('📄 Migrando información de PDFs...');
         await migratePDFs();
-        console.log('✅ PDFs migrados\n');
-
-        console.log('🎉 ¡Migración completada exitosamente!');
-        console.log('\n⚠️  IMPORTANTE: Verifica los datos en Firebase Console');
-        console.log('📍 https://console.firebase.google.com/');
 
     } catch (error) {
         console.error('❌ Error durante la migración:', error);
@@ -48,7 +36,6 @@ export const migrateAllData = async () => {
  */
 const migrateParts = async () => {
     for (const part of ALL_PARTS) {
-        console.log(`  → Migrando Parte ${part.partNumber}: ${part.partTitle}`);
 
         // Guardar metadata de la parte
         await savePart({
@@ -60,7 +47,6 @@ const migrateParts = async () => {
         // Guardar cada capítulo
         for (let i = 0; i < part.chapters.length; i++) {
             const chapter = part.chapters[i];
-            console.log(`    • Capítulo ${chapter.number}: ${chapter.title}`);
 
             await saveChapter(part.partNumber, i, {
                 number: chapter.number,
@@ -78,8 +64,6 @@ const migrateAuthorNotes = async () => {
     const allNotes = [...PART_1_NOTES, ...PART_2_NOTES];
 
     for (const note of allNotes) {
-        console.log(`  → Migrando nota: ${note.noteTitle}`);
-
         await saveAuthorNote({
             id: note.id,
             partNumber: note.partNumber,
@@ -97,8 +81,6 @@ const migrateAuthorNotes = async () => {
  */
 const migratePDFs = async () => {
     for (const pdf of PDF_LINKS) {
-        console.log(`  → Migrando PDF Parte ${pdf.partNumber}`);
-
         await savePDFInfo({
             partNumber: pdf.partNumber,
             pdfUrl: pdf.pdfUrl,
@@ -117,7 +99,6 @@ export const runMigration = async () => {
         'Esta acción puede sobrescribir datos existentes.\n\n' +
         '¿Estás seguro de continuar?'
     )) {
-        console.log('❌ Migración cancelada');
         return;
     }
 
@@ -131,5 +112,4 @@ export const runMigration = async () => {
 // Exportar para uso en consola
 if (typeof window !== 'undefined') {
     (window as any).runMigration = runMigration;
-    console.log('💡 Para ejecutar la migración, escribe en la consola: runMigration()');
 }

@@ -76,7 +76,6 @@ export const createAdminUser = async (
         };
 
         await setDoc(adminDocRef, adminUser);
-        console.log('✅ Admin user created:', email);
     } catch (error) {
         console.error('❌ Error creating admin user:', error);
         throw error;

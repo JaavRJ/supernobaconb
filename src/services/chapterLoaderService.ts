@@ -30,12 +30,10 @@ export async function getPartChapters(partNumber: number): Promise<Chapter[]> {
         const part = parts.find(p => p.partNumber === partNumber);
 
         if (part && part.chapters && part.chapters.length > 0) {
-            console.log(`✅ Capítulos cargados desde Firebase para Parte ${partNumber}`);
             return part.chapters;
         }
 
         // Si no hay datos en Firebase, usar datos locales
-        console.log(`⚠️ No hay datos en Firebase, usando datos locales para Parte ${partNumber}`);
         return getLocalChapters(partNumber);
     } catch (error) {
         console.error(`❌ Error cargando de Firebase, usando datos locales para Parte ${partNumber}:`, error);
@@ -61,12 +59,10 @@ export async function getPartInfo(partNumber: number): Promise<Part | null> {
         const part = parts.find(p => p.partNumber === partNumber);
 
         if (part) {
-            console.log(`✅ Información de parte cargada desde Firebase para Parte ${partNumber}`);
             return part;
         }
 
         // Si no hay datos en Firebase, usar datos locales
-        console.log(`⚠️ No hay datos en Firebase, usando datos locales para Parte ${partNumber}`);
         return getLocalPart(partNumber);
     } catch (error) {
         console.error(`❌ Error cargando de Firebase, usando datos locales para Parte ${partNumber}:`, error);

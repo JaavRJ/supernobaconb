@@ -89,7 +89,6 @@ export const saveHighlight = async (highlight: Highlight): Promise<void> => {
         try {
             const highlightRef = doc(db, 'users', userId, 'highlights', highlight.id);
             await setDoc(highlightRef, highlight);
-            console.log('✅ Highlight guardado en Firebase:', highlight.id);
         } catch (error) {
             console.error('❌ Error guardando highlight en Firebase:', error);
             // Data is still in localStorage, so operation is not completely failed
@@ -116,25 +115,19 @@ export const getHighlights = async (
 
             if (partNumber !== undefined) {
                 q = query(highlightsRef, where('partNumber', '==', partNumber));
-                console.log('🔍 Querying Firebase with partNumber:', partNumber);
             }
 
             const snapshot = await getDocs(q);
-            console.log('🔍 Firebase snapshot size:', snapshot.size);
 
             let highlights = snapshot.docs.map(doc => {
                 const data = doc.data() as Highlight;
-                console.log('🔍 Highlight from Firebase:', data);
                 return data;
             });
 
             // Filter by chapter if specified
             if (chapterIndex !== undefined) {
-                console.log('🔍 Filtering by chapterIndex:', chapterIndex);
                 highlights = highlights.filter(h => h.chapterIndex === chapterIndex);
             }
-
-            console.log(`✅ Highlights cargados desde Firebase: ${highlights.length}`, highlights);
 
             // Also sync to localStorage
             if (highlights.length > 0) {
@@ -152,18 +145,15 @@ export const getHighlights = async (
 
     // Fallback to localStorage (or if not authenticated)
     const stored = localStorage.getItem('highlights');
-    console.log('🔍 localStorage highlights:', stored);
     const highlights: Highlight[] = stored ? JSON.parse(stored) : [];
 
     if (partNumber !== undefined && chapterIndex !== undefined) {
         const filtered = highlights.filter(
             h => h.partNumber === partNumber && h.chapterIndex === chapterIndex
         );
-        console.log(`📦 Filtered highlights from localStorage: ${filtered.length}`, filtered);
         return filtered;
     }
 
-    console.log(`📦 All highlights from localStorage: ${highlights.length}`);
     return highlights;
 };
 
@@ -183,7 +173,6 @@ export const deleteHighlight = async (highlightId: string): Promise<void> => {
         try {
             const highlightRef = doc(db, 'users', userId, 'highlights', highlightId);
             await deleteDoc(highlightRef);
-            console.log('✅ Highlight eliminado de Firebase:', highlightId);
         } catch (error) {
             console.error('❌ Error eliminando highlight de Firebase:', error);
         }
@@ -207,7 +196,6 @@ export const syncHighlightsListener = (
 
     return onSnapshot(highlightsRef, (snapshot) => {
         const highlights = snapshot.docs.map(doc => doc.data() as Highlight);
-        console.log(`🔄 Highlights actualizados en tiempo real: ${highlights.length}`);
 
         // Also update localStorage
         localStorage.setItem('highlights', JSON.stringify(highlights));
@@ -228,8 +216,6 @@ export const syncHighlightsListener = (
 export const saveQuote = async (quote: Quote): Promise<void> => {
     const userId = getUserId();
 
-    console.log('💾 saveQuote called:', quote);
-
     // Always save to localStorage
     const localQuotes = JSON.parse(localStorage.getItem('quotes') || '[]');
 
@@ -237,10 +223,8 @@ export const saveQuote = async (quote: Quote): Promise<void> => {
     const existingIndex = localQuotes.findIndex((q: Quote) => q.id === quote.id);
     if (existingIndex >= 0) {
         localQuotes[existingIndex] = quote;
-        console.log('📝 Quote actualizado en localStorage');
     } else {
         localQuotes.push(quote);
-        console.log('📝 Quote agregado a localStorage');
     }
 
     localStorage.setItem('quotes', JSON.stringify(localQuotes));
@@ -265,8 +249,6 @@ export const saveQuote = async (quote: Quote): Promise<void> => {
 export const getQuotes = async (partNumber?: number): Promise<Quote[]> => {
     const userId = getUserId();
 
-    console.log('🔍 getQuotes called:', { userId, partNumber });
-
     // If authenticated, try Firebase first
     if (userId) {
         try {
@@ -275,19 +257,14 @@ export const getQuotes = async (partNumber?: number): Promise<Quote[]> => {
 
             if (partNumber !== undefined) {
                 q = query(quotesRef, where('partNumber', '==', partNumber));
-                console.log('🔍 Querying Firebase quotes with partNumber:', partNumber);
             }
 
             const snapshot = await getDocs(q);
-            console.log('🔍 Firebase quotes snapshot size:', snapshot.size);
 
             const quotes = snapshot.docs.map(doc => {
                 const data = doc.data() as Quote;
-                console.log('🔍 Quote from Firebase:', data);
                 return data;
             });
-
-            console.log(`✅ Quotes cargados desde Firebase: ${quotes.length}`, quotes);
 
             // Also sync to localStorage
             if (quotes.length > 0) {
@@ -299,21 +276,17 @@ export const getQuotes = async (partNumber?: number): Promise<Quote[]> => {
             console.error('❌ Error cargando quotes desde Firebase, usando localStorage:', error);
         }
     } else {
-        console.log('⚠️ Usuario no autenticado, usando localStorage para quotes');
     }
 
     // Fallback to localStorage
     const stored = localStorage.getItem('quotes');
-    console.log('🔍 localStorage quotes:', stored);
     const quotes: Quote[] = stored ? JSON.parse(stored) : [];
 
     if (partNumber !== undefined) {
         const filtered = quotes.filter(q => q.partNumber === partNumber);
-        console.log(`📦 Filtered quotes from localStorage: ${filtered.length}`, filtered);
         return filtered;
     }
 
-    console.log(`📦 All quotes from localStorage: ${quotes.length}`);
     return quotes;
 };
 
@@ -333,7 +306,6 @@ export const deleteQuote = async (quoteId: string): Promise<void> => {
         try {
             const quoteRef = doc(db, 'users', userId, 'quotes', quoteId);
             await deleteDoc(quoteRef);
-            console.log('✅ Quote eliminado de Firebase:', quoteId);
         } catch (error) {
             console.error('❌ Error eliminando quote de Firebase:', error);
         }
@@ -350,17 +322,13 @@ export const deleteQuote = async (quoteId: string): Promise<void> => {
 export const saveBookmark = async (bookmark: Bookmark): Promise<void> => {
     const userId = getUserId();
 
-    console.log('💾 saveBookmark called:', bookmark);
-
     // Always save to localStorage
     const localBookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
     const existingIndex = localBookmarks.findIndex((b: Bookmark) => b.id === bookmark.id);
     if (existingIndex >= 0) {
         localBookmarks[existingIndex] = bookmark;
-        console.log('📝 Bookmark actualizado en localStorage');
     } else {
         localBookmarks.push(bookmark);
-        console.log('📝 Bookmark agregado a localStorage');
     }
     localStorage.setItem('bookmarks', JSON.stringify(localBookmarks));
 
@@ -384,8 +352,6 @@ export const saveBookmark = async (bookmark: Bookmark): Promise<void> => {
 export const getBookmarks = async (partNumber?: number): Promise<Bookmark[]> => {
     const userId = getUserId();
 
-    console.log('🔍 getBookmarks called:', { userId, partNumber });
-
     // If authenticated, try Firebase first
     if (userId) {
         try {
@@ -394,19 +360,14 @@ export const getBookmarks = async (partNumber?: number): Promise<Bookmark[]> => 
 
             if (partNumber !== undefined) {
                 q = query(bookmarksRef, where('partNumber', '==', partNumber));
-                console.log('🔍 Querying Firebase bookmarks with partNumber:', partNumber);
             }
 
             const snapshot = await getDocs(q);
-            console.log('🔍 Firebase bookmarks snapshot size:', snapshot.size);
 
             const bookmarks = snapshot.docs.map(doc => {
                 const data = doc.data() as Bookmark;
-                console.log('🔍 Bookmark from Firebase:', data);
                 return data;
             });
-
-            console.log(`✅ Bookmarks cargados desde Firebase: ${bookmarks.length}`, bookmarks);
 
             // Also sync to localStorage
             if (bookmarks.length > 0) {
@@ -418,21 +379,16 @@ export const getBookmarks = async (partNumber?: number): Promise<Bookmark[]> => 
             console.error('❌ Error cargando bookmarks desde Firebase, usando localStorage:', error);
         }
     } else {
-        console.log('⚠️ Usuario no autenticado, usando localStorage para bookmarks');
     }
 
     // Fallback to localStorage
     const stored = localStorage.getItem('bookmarks');
-    console.log('🔍 localStorage bookmarks:', stored);
     const bookmarks: Bookmark[] = stored ? JSON.parse(stored) : [];
 
     if (partNumber !== undefined) {
         const filtered = bookmarks.filter(b => b.partNumber === partNumber);
-        console.log(`📦 Filtered bookmarks from localStorage: ${filtered.length}`, filtered);
         return filtered;
     }
-
-    console.log(`📦 All bookmarks from localStorage: ${bookmarks.length}`);
     return bookmarks;
 };
 
@@ -452,7 +408,6 @@ export const deleteBookmark = async (bookmarkId: string): Promise<void> => {
         try {
             const bookmarkRef = doc(db, 'users', userId, 'bookmarks', bookmarkId);
             await deleteDoc(bookmarkRef);
-            console.log('✅ Bookmark eliminado de Firebase:', bookmarkId);
         } catch (error) {
             console.error('❌ Error eliminando bookmark de Firebase:', error);
         }
@@ -480,7 +435,6 @@ export const saveReadingProgress = async (
         try {
             const progressRef = doc(db, 'users', userId, 'readingProgress', `part-${partNumber}`);
             await setDoc(progressRef, progress);
-            console.log('✅ Progreso guardado en Firebase:', partNumber);
         } catch (error) {
             console.error('❌ Error guardando progreso en Firebase:', error);
         }
@@ -502,7 +456,6 @@ export const getReadingProgress = async (partNumber?: number): Promise<ReadingPr
                 const snapshot = await getDoc(progressRef);
 
                 if (snapshot.exists()) {
-                    console.log('✅ Progreso cargado desde Firebase:', partNumber);
                     return snapshot.data() as ReadingProgress;
                 }
             } catch (error) {
@@ -521,7 +474,6 @@ export const getReadingProgress = async (partNumber?: number): Promise<ReadingPr
             const progressRef = collection(db, 'users', userId, 'readingProgress');
             const snapshot = await getDocs(progressRef);
             const allProgress = snapshot.docs.map(doc => doc.data() as ReadingProgress);
-            console.log(`✅ Todo el progreso cargado desde Firebase: ${allProgress.length} partes`);
             return allProgress;
         } catch (error) {
             console.error('❌ Error cargando progreso desde Firebase, usando localStorage:', error);
@@ -553,7 +505,6 @@ export const clearReadingProgress = async (partNumber: number): Promise<void> =>
         try {
             const progressRef = doc(db, 'users', userId, 'readingProgress', `part-${partNumber}`);
             await deleteDoc(progressRef);
-            console.log('✅ Progreso eliminado de Firebase:', partNumber);
         } catch (error) {
             console.error('❌ Error eliminando progreso de Firebase:', error);
         }
@@ -584,7 +535,6 @@ export const initializeUserProfile = async (): Promise<void> => {
         };
 
         await setDoc(profileRef, profileData);
-        console.log('✅ Perfil de usuario inicializado/actualizado');
     } catch (error) {
         console.error('❌ Error inicializando perfil de usuario:', error);
     }
@@ -622,7 +572,6 @@ export const saveUserPreferences = async (preferences: UserPreferences): Promise
 
     // Always save to localStorage
     localStorage.setItem('userPreferences', JSON.stringify(preferencesWithTimestamp));
-    console.log('📝 Preferences guardadas en localStorage');
 
     // If authenticated, also save to Firebase
     if (userId) {
@@ -654,7 +603,6 @@ export const getUserPreferences = async (): Promise<UserPreferences> => {
 
             if (snapshot.exists()) {
                 const preferences = snapshot.data() as UserPreferences;
-                console.log('✅ Preferences cargadas desde Firebase:', preferences);
 
                 // Also sync to localStorage
                 localStorage.setItem('userPreferences', JSON.stringify(preferences));
@@ -674,12 +622,10 @@ export const getUserPreferences = async (): Promise<UserPreferences> => {
     const stored = localStorage.getItem('userPreferences');
     if (stored) {
         const preferences = JSON.parse(stored) as UserPreferences;
-        console.log('📦 Preferences cargadas desde localStorage:', preferences);
         return preferences;
     }
 
     // Return defaults if nothing found
-    console.log('📦 Usando preferences por defecto');
     return getDefaultPreferences();
 };
 

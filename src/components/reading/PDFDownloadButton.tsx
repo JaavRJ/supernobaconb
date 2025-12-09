@@ -32,10 +32,7 @@ export default function PDFDownloadButton({
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            console.log(`✅ Descargando PDF de la Parte ${partNumber}`);
         } catch (error) {
-            console.error('Error al descargar el PDF:', error);
             alert('Error al descargar el PDF. Por favor, intenta de nuevo.');
         } finally {
             // Pequeño delay para mostrar el estado de descarga

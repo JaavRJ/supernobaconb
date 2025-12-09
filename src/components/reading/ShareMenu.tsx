@@ -52,18 +52,15 @@ export default function ShareMenu({
     };
 
     const handleShare = (platform: 'twitter' | 'facebook' | 'whatsapp' | 'copy') => {
-        console.log(`📤 Compartiendo en ${platform}:`, text);
         shareQuote(quote, platform);
 
         if (platform === 'copy') {
             setCopied(true);
-            console.log('✅ Texto copiado al portapapeles');
             setTimeout(() => {
                 setCopied(false);
                 onClose();
             }, 1500);
         } else {
-            console.log(`✅ Abriendo ${platform}...`);
             onClose();
         }
     };

@@ -25,12 +25,10 @@ export async function getAuthorNotesForChapter(
         );
 
         if (filteredNotes.length > 0) {
-            console.log(`✅ Notas cargadas desde Firebase para Parte ${partNumber}, Capítulo ${chapterIndex}`);
             return filteredNotes;
         }
 
         // Si no hay datos en Firebase, usar datos locales
-        console.log(`⚠️ No hay notas en Firebase, usando datos locales para Parte ${partNumber}, Capítulo ${chapterIndex}`);
         return getLocalNotes(partNumber, chapterIndex);
     } catch (error) {
         console.error(`❌ Error cargando notas de Firebase, usando datos locales:`, error);
@@ -47,12 +45,10 @@ export async function getAllNotes(): Promise<AuthorNote[]> {
         const notes = await getAllAuthorNotes();
 
         if (notes.length > 0) {
-            console.log(`✅ Todas las notas cargadas desde Firebase (${notes.length} notas)`);
             return notes;
         }
 
         // Si no hay datos en Firebase, usar datos locales
-        console.log(`⚠️ No hay notas en Firebase, usando datos locales`);
         return getAllLocalNotes();
     } catch (error) {
         console.error(`❌ Error cargando notas de Firebase, usando datos locales:`, error);

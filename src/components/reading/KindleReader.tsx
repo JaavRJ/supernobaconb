@@ -101,7 +101,6 @@ export default function KindleReader({
     useEffect(() => {
         const handleResize = () => {
             if (contentRef.current && currentChapter) {
-                console.log('📝 Aplicando notas en resize:', authorNotes.length, 'notas');
                 const contentWithNotes = applyAuthorNotesToHTML(currentChapter.content, authorNotes);
                 const paginatedPages = paginateContent(
                     contentWithNotes,
@@ -134,8 +133,6 @@ export default function KindleReader({
     // Paginar contenido cuando cambia el capítulo o el tamaño de fuente
     useEffect(() => {
         if (contentRef.current && currentChapter) {
-            console.log('📝 Aplicando notas en paginación:', authorNotes.length, 'notas');
-            console.log('📋 Array de notas:', authorNotes);
             const contentWithNotes = applyAuthorNotesToHTML(currentChapter.content, authorNotes);
             const paginatedPages = paginateContent(
                 contentWithNotes,
@@ -156,7 +153,6 @@ export default function KindleReader({
             // Don't clear selection if clicking on the menu
             const target = e.target as HTMLElement;
             if (target.closest('.text-selection-menu')) {
-                console.log('🛑 Click en menú, no limpiar selección');
                 return;
             }
 
@@ -172,7 +168,6 @@ export default function KindleReader({
                         x: rect.left + rect.width / 2 - 100,
                         y: rect.bottom
                     });
-                    console.log('✅ Texto seleccionado:', text);
                 } else {
                     setSelectedText('');
                 }
@@ -184,7 +179,6 @@ export default function KindleReader({
             const target = e.target as HTMLElement;
             if (target.closest('.kindle-page')) {
                 e.preventDefault();
-                console.log('🚫 Menú contextual nativo deshabilitado');
             }
         };
 
@@ -268,7 +262,6 @@ export default function KindleReader({
 
         if (isLastChapter && isPenultimatePage) {
             // Show newsletter modal before advancing to last page
-            console.log('✅ Último capítulo, penúltima página - Mostrando modal');
             setShowNewsletter(true);
             setCurrentPage(prev => prev + 1);
             setSelectedText('');
@@ -647,7 +640,6 @@ function paginateContent(
 
     // Check if content has HTML paragraph tags
     if (contentWithNotes.includes('<p')) {
-        console.log(`📄 Detectado contenido HTML para Parte ${partNumber}, Capítulo ${chapterIndex}`);
 
         // Parse HTML and extract paragraphs
         const tempParser = document.createElement('div');
@@ -666,12 +658,9 @@ function paginateContent(
                     .trim();
                 return text.length > 0;
             });
-
-        console.log(`✅ Extraídos ${paragraphs.length} párrafos válidos del HTML`);
     } else {
         // Original behavior: split by double line breaks
         paragraphs = contentWithNotes.split('\n\n').filter(p => p.trim());
-        console.log(`📄 Contenido de texto plano: ${paragraphs.length} párrafos`);
     }
 
     let currentPageContent = '';
@@ -703,7 +692,6 @@ function paginateContent(
 
     document.body.removeChild(tempDiv);
 
-    console.log(`✅ Paginación completada: ${pages.length} páginas creadas para Parte ${partNumber}, Capítulo ${chapterIndex}`);
 
     return pages.length > 0 ? pages : ['<p>Sin contenido</p>'];
 }

@@ -125,7 +125,6 @@ export const savePart = async (part: Omit<Part, 'chapters'>): Promise<void> => {
             partTitle: part.partTitle,
             description: part.description || ''
         });
-        console.log('✅ Part saved:', part.partTitle);
     } catch (error) {
         console.error('❌ Error saving part:', error);
         throw error;
@@ -203,8 +202,6 @@ export const saveChapter = async (
             ...chapter,
             updatedAt: Timestamp.now()
         });
-
-        console.log('✅ Chapter saved:', chapter.title);
     } catch (error) {
         console.error('❌ Error saving chapter:', error);
         throw error;
@@ -224,7 +221,6 @@ export const deleteChapter = async (partNumber: number, chapterIndex: number): P
             chapterIndex.toString()
         );
         await deleteDoc(chapterRef);
-        console.log('✅ Chapter deleted');
     } catch (error) {
         console.error('❌ Error deleting chapter:', error);
         throw error;
@@ -283,7 +279,6 @@ export const saveAuthorNote = async (note: AuthorNote): Promise<void> => {
             ...note,
             createdAt: Timestamp.now()
         });
-        console.log('✅ Author note saved:', note.noteTitle);
     } catch (error) {
         console.error('❌ Error saving author note:', error);
         throw error;
@@ -297,7 +292,6 @@ export const deleteAuthorNote = async (noteId: string): Promise<void> => {
     try {
         const noteRef = doc(db, 'authorNotes', noteId);
         await deleteDoc(noteRef);
-        console.log('✅ Author note deleted');
     } catch (error) {
         console.error('❌ Error deleting author note:', error);
         throw error;
@@ -334,7 +328,6 @@ export const savePDFInfo = async (pdf: PartPDF): Promise<void> => {
             ...pdf,
             uploadedAt: Timestamp.now()
         });
-        console.log('✅ PDF info saved');
     } catch (error) {
         console.error('❌ Error saving PDF info:', error);
         throw error;

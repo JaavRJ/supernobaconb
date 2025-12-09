@@ -43,7 +43,6 @@ export const useReadingProgress = (partNumber: number) => {
         saveTimeoutRef.current = setTimeout(async () => {
             try {
                 await userDataService.saveReadingProgress(partNumber, newProgress);
-                console.log('✅ Progreso guardado (debounced):', partNumber);
             } catch (error) {
                 console.error('Error saving reading progress:', error);
             }
