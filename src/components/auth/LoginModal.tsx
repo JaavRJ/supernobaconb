@@ -6,9 +6,10 @@ import './LoginModal.css';
 interface LoginModalProps {
     onClose: () => void;
     onLoginSuccess?: () => void;
+    required?: boolean; // Si es true, no se puede cerrar sin login
 }
 
-export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps) {
+export default function LoginModal({ onClose, onLoginSuccess, required = false }: LoginModalProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -37,20 +38,28 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
     };
 
     return (
-        <div className="login-modal-overlay" onClick={onClose}>
+        <div
+            className="login-modal-overlay"
+            onClick={required ? undefined : onClose}
+        >
             <div className="login-modal" onClick={(e) => e.stopPropagation()}>
-                <button className="login-modal-close" onClick={onClose} aria-label="Cerrar">
-                    <X size={24} />
-                </button>
+                {!required && (
+                    <button className="login-modal-close" onClick={onClose} aria-label="Cerrar">
+                        <X size={24} />
+                    </button>
+                )}
 
                 <div className="login-modal-content">
                     <div className="login-modal-icon">
                         <Cloud size={48} />
                     </div>
 
-                    <h2>Sincroniza tu progreso</h2>
+                    <h2>{required ? 'Inicia sesión para leer' : 'Sincroniza tu progreso'}</h2>
                     <p className="login-modal-description">
-                        Inicia sesión con Google para guardar tu progreso, highlights, citas y bookmarks en la nube.
+                        {required
+                            ? 'Para acceder al modo de lectura, necesitas iniciar sesión con tu cuenta de Google.'
+                            : 'Inicia sesión con Google para guardar tu progreso, highlights, citas y bookmarks en la nube.'
+                        }
                     </p>
 
                     <div className="login-modal-benefits">
@@ -90,12 +99,17 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                         </span>
                     </button>
 
-                    <button className="login-modal-skip" onClick={onClose}>
-                        Continuar sin iniciar sesión
-                    </button>
+                    {!required && (
+                        <button className="login-modal-skip" onClick={onClose}>
+                            Continuar sin iniciar sesión
+                        </button>
+                    )}
 
                     <p className="login-modal-note">
-                        Tus datos locales se migrarán automáticamente cuando inicies sesión
+                        {required
+                            ? 'Tus datos se sincronizarán automáticamente en la nube'
+                            : 'Tus datos locales se migrarán automáticamente cuando inicies sesión'
+                        }
                     </p>
                 </div>
             </div>

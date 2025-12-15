@@ -1,11 +1,14 @@
 import React from "react";
+import TextImages from "../TextImages"
 
 export default function ChapterText3_4() {
     return (
-        <div className="chapter-text">
-            <p>
-                {/* PLACEHOLDER: Agrega aquí el contenido del capítulo iv de Parte 3 */}
-            </p>
-        </div>
+        <TextImages>
+            {`(xiii. marca de arrastre)
+sonido de claveles.
+resplandor de raíces.
+perfume de sol.
+`}
+        </TextImages>
     );
 }
