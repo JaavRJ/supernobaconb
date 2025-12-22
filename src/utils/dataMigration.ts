@@ -106,18 +106,7 @@ const migrateAllData = async () => {
             }
         }
 
-        console.log('✅ PDFs migrados\n');
 
-        // ==================== RESUMEN ====================
-        console.log('═══════════════════════════════════════');
-        console.log('🎉 ¡MIGRACIÓN COMPLETADA!');
-        console.log('═══════════════════════════════════════');
-        console.log(`✅ Total migrado: ${totalMigrated} elementos`);
-        console.log(`❌ Errores: ${errors}`);
-        console.log('\n📍 Verifica los datos en:');
-        console.log('   https://console.firebase.google.com/');
-        console.log('\n🔄 Recarga la página para ver los cambios');
-        console.log('═══════════════════════════════════════\n');
 
         if (errors > 0) {
             console.warn('⚠️  Hubo algunos errores. Revisa los logs arriba.');
@@ -135,7 +124,6 @@ const migrateAllData = async () => {
 // Exponer función globalmente
 if (typeof window !== 'undefined') {
     (window as any).migrateAllData = migrateAllData;
-    console.log('💡 Migración lista. Usa: window.migrateAllData()');
 }
 
 export default migrateAllData;

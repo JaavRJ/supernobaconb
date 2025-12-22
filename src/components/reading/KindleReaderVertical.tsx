@@ -8,6 +8,7 @@ import AuthorNoteModal from './AuthorNoteModal';
 import ReactionBar from './ReactionBar';
 import { getHighlights, applyHighlightsToHTML } from '../../utils/highlightManager';
 import { getAuthorNotes, applyAuthorNotesToHTML, type AuthorNote } from '../../data/authorNotes';
+import { sanitizeHTML } from '../../utils/sanitize';
 import './KindleReaderVertical.css';
 
 interface Chapter {
@@ -265,7 +266,7 @@ export default function KindleReaderVertical({
 
                     <div
                         className="vertical-chapter-content"
-                        dangerouslySetInnerHTML={{ __html: getFormattedContent() }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHTML(getFormattedContent()) }}
                     />
 
                     {/* Chapter Navigation */}

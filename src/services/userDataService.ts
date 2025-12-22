@@ -11,11 +11,14 @@ import {
     writeBatch,
     Unsubscribe
 } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { db } from '../.firebase/config';
 import { getCurrentUser } from './authService';
 import type { Highlight } from '../utils/highlightManager';
 import type { Quote } from '../utils/quotesManager';
 import type { Bookmark } from '../utils/bookmarkManager';
+import { validateHighlight, validateQuote, validateBookmark } from '../utils/validation';
+import { sanitizeText } from '../utils/sanitize';
+import { handleError } from '../utils/errorHandler';
 
 // ============================================================================
 // TYPES
@@ -72,25 +75,36 @@ export const isUserAuthenticated = (): boolean => {
  * Save highlight to Firebase (if authenticated) and localStorage (as backup)
  */
 export const saveHighlight = async (highlight: Highlight): Promise<void> => {
+    // Validar datos antes de guardar
+    if (!validateHighlight(highlight)) {
+        throw new Error('Datos de highlight inválidos');
+    }
+
+    // Sanitizar el texto
+    const sanitizedHighlight = {
+        ...highlight,
+        text: sanitizeText(highlight.text)
+    };
+
     const userId = getUserId();
 
     // Always save to localStorage
     const localHighlights = JSON.parse(localStorage.getItem('highlights') || '[]');
-    const existingIndex = localHighlights.findIndex((h: Highlight) => h.id === highlight.id);
+    const existingIndex = localHighlights.findIndex((h: Highlight) => h.id === sanitizedHighlight.id);
     if (existingIndex >= 0) {
-        localHighlights[existingIndex] = highlight;
+        localHighlights[existingIndex] = sanitizedHighlight;
     } else {
-        localHighlights.push(highlight);
+        localHighlights.push(sanitizedHighlight);
     }
     localStorage.setItem('highlights', JSON.stringify(localHighlights));
 
     // If authenticated, also save to Firebase
     if (userId) {
         try {
-            const highlightRef = doc(db, 'users', userId, 'highlights', highlight.id);
-            await setDoc(highlightRef, highlight);
+            const highlightRef = doc(db, 'users', userId, 'highlights', sanitizedHighlight.id);
+            await setDoc(highlightRef, sanitizedHighlight);
         } catch (error) {
-            console.error('❌ Error guardando highlight en Firebase:', error);
+            handleError(error, 'saveHighlight');
             // Data is still in localStorage, so operation is not completely failed
         }
     }
@@ -214,17 +228,28 @@ export const syncHighlightsListener = (
  * Save quote to Firebase (if authenticated) and localStorage (as backup)
  */
 export const saveQuote = async (quote: Quote): Promise<void> => {
+    // Validar datos antes de guardar
+    if (!validateQuote(quote)) {
+        throw new Error('Datos de quote inválidos');
+    }
+
+    // Sanitizar el texto
+    const sanitizedQuote = {
+        ...quote,
+        text: sanitizeText(quote.text)
+    };
+
     const userId = getUserId();
 
     // Always save to localStorage
     const localQuotes = JSON.parse(localStorage.getItem('quotes') || '[]');
 
     // Check if quote already exists (prevent duplicates)
-    const existingIndex = localQuotes.findIndex((q: Quote) => q.id === quote.id);
+    const existingIndex = localQuotes.findIndex((q: Quote) => q.id === sanitizedQuote.id);
     if (existingIndex >= 0) {
-        localQuotes[existingIndex] = quote;
+        localQuotes[existingIndex] = sanitizedQuote;
     } else {
-        localQuotes.push(quote);
+        localQuotes.push(sanitizedQuote);
     }
 
     localStorage.setItem('quotes', JSON.stringify(localQuotes));
@@ -232,11 +257,11 @@ export const saveQuote = async (quote: Quote): Promise<void> => {
     // If authenticated, also save to Firebase
     if (userId) {
         try {
-            const quoteRef = doc(db, 'users', userId, 'quotes', quote.id);
-            await setDoc(quoteRef, quote);
-            console.log('✅ Quote guardado en Firebase:', quote.id);
+            const quoteRef = doc(db, 'users', userId, 'quotes', sanitizedQuote.id);
+            await setDoc(quoteRef, sanitizedQuote);
+            console.log('✅ Quote guardado en Firebase:', sanitizedQuote.id);
         } catch (error) {
-            console.error('❌ Error guardando quote en Firebase:', error);
+            handleError(error, 'saveQuote');
         }
     } else {
         console.log('⚠️ Usuario no autenticado, quote solo en localStorage');
@@ -320,6 +345,11 @@ export const deleteQuote = async (quoteId: string): Promise<void> => {
  * Save bookmark to Firebase (if authenticated) and localStorage (as backup)
  */
 export const saveBookmark = async (bookmark: Bookmark): Promise<void> => {
+    // Validar datos antes de guardar
+    if (!validateBookmark(bookmark)) {
+        throw new Error('Datos de bookmark inválidos');
+    }
+
     const userId = getUserId();
 
     // Always save to localStorage
@@ -339,7 +369,7 @@ export const saveBookmark = async (bookmark: Bookmark): Promise<void> => {
             await setDoc(bookmarkRef, bookmark);
             console.log('✅ Bookmark guardado en Firebase:', bookmark.id);
         } catch (error) {
-            console.error('❌ Error guardando bookmark en Firebase:', error);
+            handleError(error, 'saveBookmark');
         }
     } else {
         console.log('⚠️ Usuario no autenticado, bookmark solo en localStorage');
@@ -548,7 +578,7 @@ export const initializeUserProfile = async (): Promise<void> => {
  * Get default user preferences
  */
 const getDefaultPreferences = (): UserPreferences => ({
-    readingMode: 'horizontal',
+    readingMode: 'vertical',
     fontSize: 16,
     hasSeenTutorial: false,
     hasConfigured: false,

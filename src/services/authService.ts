@@ -1,4 +1,4 @@
-import { auth, googleProvider } from '../firebase/config';
+import { auth, googleProvider } from '../.firebase/config';
 import {
     signInWithPopup,
     signOut as firebaseSignOut,
@@ -47,8 +47,24 @@ export const signInWithGoogle = async (): Promise<User> => {
 // Sign out
 export const signOut = async (): Promise<void> => {
     try {
+        // Limpiar datos locales antes de cerrar sesión (seguridad)
+        localStorage.removeItem('highlights');
+        localStorage.removeItem('quotes');
+        localStorage.removeItem('bookmarks');
+        localStorage.removeItem('userPreferences');
+
+        // Limpiar todas las claves de reading-progress
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key?.startsWith('reading-progress-')) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+
         await firebaseSignOut(auth);
-        console.log('✅ Sesión cerrada');
+        console.log('✅ Sesión cerrada y datos locales eliminados');
     } catch (error: any) {
         console.error('❌ Error al cerrar sesión:', error);
         throw error;

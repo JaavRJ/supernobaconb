@@ -1,5 +1,5 @@
 import { doc, setDoc, getDoc, writeBatch } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { db } from '../.firebase/config';
 import { getCurrentUser } from './authService';
 import type { Highlight } from '../utils/highlightManager';
 import type { Quote } from '../utils/quotesManager';

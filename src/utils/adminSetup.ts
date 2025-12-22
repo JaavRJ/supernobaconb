@@ -8,7 +8,7 @@
  */
 
 import { doc, setDoc } from 'firebase/firestore';
-import { db, auth } from '../firebase/config';
+import { db, auth } from '../.firebase/config';
 
 // Función para crear el primer usuario admin
 const createFirstAdmin = async () => {

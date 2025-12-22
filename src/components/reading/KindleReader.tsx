@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, Menu, Settings, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Settings, Star } from 'lucide-react';
 import TextSelectionMenu from './TextSelectionMenu';
 import BookmarkButton from './BookmarkButton';
 import SavedQuotes from './SavedQuotes';
@@ -11,6 +11,7 @@ import KindleConfigModal from './KindleConfigModal';
 import { getHighlights, applyHighlightsToHTML } from '../../utils/highlightManager';
 import { getAuthorNotesForChapter, applyAuthorNotesToHTML, type AuthorNote } from '../../services/authorNotesLoaderService';
 import { getUserPreferences, updatePreference, type UserPreferences } from '../../services/userDataService';
+import { sanitizeHTML } from '../../utils/sanitize';
 import { ALL_PARTS } from '../../data/sampleChapters';
 import './KindleReader.css';
 import './KindleReaderVerticalMode.css';
@@ -51,7 +52,7 @@ export default function KindleReader({
     const [showNewsletter, setShowNewsletter] = useState(false);
     const [highlights, setHighlights] = useState<any[]>([]);
     const [showConfig, setShowConfig] = useState(false);
-    const [readingMode, setReadingMode] = useState<'horizontal' | 'vertical'>('horizontal');
+    const [readingMode, setReadingMode] = useState<'horizontal' | 'vertical'>('vertical');
     const [isLoadingPreferences, setIsLoadingPreferences] = useState(true);
     const [authorNotes, setAuthorNotes] = useState<AuthorNote[]>([]);
 
@@ -367,16 +368,6 @@ export default function KindleReader({
         <div className="kindle-reader">
             {/* Header */}
             <div className="kindle-header">
-                {readingMode === 'horizontal' && (
-                    <button
-                        onClick={prevPage}
-                        disabled={currentPage === 0}
-                        className="nav-btn"
-                    >
-                        <ChevronLeft size={24} />
-                    </button>
-                )}
-
                 <div className="kindle-title">
                     {partTitle}
                 </div>
@@ -411,30 +402,11 @@ export default function KindleReader({
                     <X size={24} />
                 </button>
 
-                {readingMode === 'horizontal' && (
-                    <button
-                        onClick={nextPage}
-                        disabled={currentPage === totalPages - 1}
-                        className="nav-btn"
-                    >
-                        <ChevronRight size={24} />
-                    </button>
-                )}
             </div>
 
             {/* Settings Panel */}
             {showSettings && (
                 <div className="kindle-settings">
-                    <div className="setting-group">
-                        <label>Modo de lectura:</label>
-                        <button
-                            onClick={handleReadingModeToggle}
-                            className="mode-toggle-btn"
-                        >
-                            {readingMode === 'horizontal' ? '📖 Horizontal' : '📜 Vertical'}
-                        </button>
-                    </div>
-
                     <div className="setting-group">
                         <label>Tamaño de fuente:</label>
                         <div className="font-size-controls">
@@ -456,7 +428,7 @@ export default function KindleReader({
                             className="kindle-page"
                             style={{ fontSize: `${fontSize}px` }}
                             translate="no"
-                            dangerouslySetInnerHTML={{ __html: pages[currentPage] || '' }}
+                            dangerouslySetInnerHTML={{ __html: sanitizeHTML(pages[currentPage] || '') }}
                         />
                     ) : (
                         <div className="kindle-loading">Cargando...</div>
@@ -470,11 +442,11 @@ export default function KindleReader({
 
                             return (
                                 <div dangerouslySetInnerHTML={{
-                                    __html: contentWithHighlights
+                                    __html: sanitizeHTML(contentWithHighlights
                                         .split('\n\n')
                                         .filter(p => p.trim())
                                         .map(p => `<p>${p.trim()}</p>`)
-                                        .join('')
+                                        .join(''))
                                 }} />
                             );
                         })()}
@@ -484,29 +456,6 @@ export default function KindleReader({
 
             {/* Footer */}
             <div className="kindle-footer">
-                {/* Only show page navigation in horizontal mode */}
-                {readingMode === 'horizontal' && (
-                    <div className="footer-page-nav">
-                        <button
-                            onClick={prevPage}
-                            disabled={currentPage === 0}
-                            className="page-nav-btn"
-                        >
-                            <ChevronLeft size={18} />
-                            Página anterior
-                        </button>
-
-                        <button
-                            onClick={nextPage}
-                            disabled={currentPage === totalPages - 1}
-                            className="page-nav-btn"
-                        >
-                            Página siguiente
-                            <ChevronRight size={18} />
-                        </button>
-                    </div>
-                )}
-
                 {/* Reaction Bar */}
                 <ReactionBar
                     partNumber={partNumber}

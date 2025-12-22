@@ -1,8 +1,8 @@
-// Fechas de publicación estimadas para cada parte
+// Fechas de publicación estimadas para cada parte (con hora)
 export const PUBLICATION_DATES = {
-    parte2: '2025-12-10',  // Cambia estas fechas según tu plan
-    parte3: '2026-12-17',
-    parte4: '2026-12-24',
+    parte2: '2025-12-08T00:00:00',  // Cambia estas fechas según tu plan
+    parte3: '2025-12-15T00:00:00',
+    parte4: '2025-12-22T22:00:00',
     // Agrega más partes según necesites
 };
 
@@ -32,4 +32,20 @@ export const getPublicationDate = (partNumber: number): string | null => {
 export const getPartInfo = (partNumber: number) => {
     const key = `parte${partNumber}` as keyof typeof PART_INFO;
     return PART_INFO[key] || null;
+};
+
+// Obtener el número de partes que ya están publicadas
+export const getReleasedPartsCount = (): number => {
+    const now = new Date();
+    let releasedCount = 1; // Parte 1 siempre disponible
+
+    // Check each part's release date
+    for (let i = 2; i <= 4; i++) {
+        const releaseDate = getPublicationDate(i);
+        if (releaseDate && new Date(releaseDate) <= now) {
+            releasedCount = i;
+        }
+    }
+
+    return releasedCount;
 };

@@ -10,6 +10,7 @@ import LoginModal from '../auth/LoginModal';
 import LoginButton from '../auth/LoginButton';
 import { useReadingProgress } from '../../hooks/useReadingProgress';
 import { getCurrentUser } from '../../services/authService';
+import { getReleasedPartsCount } from '../../config/publicationDates';
 import '../../assets/styles/animations.css';
 
 interface PartLayoutProps {
@@ -87,11 +88,13 @@ export default function PartLayout({
     return (
         <div style={{ position: 'relative' }}>
             <Footer />
-            <NavigationSystem currentEpisode={partNumber} />
-            <PDFDownloadButton
-                partNumber={partNumber}
-                partTitle={partTitle}
-            />
+            <NavigationSystem currentEpisode={getReleasedPartsCount()} />
+            {partNumber === 1 && (
+                <PDFDownloadButton
+                    partNumber={partNumber}
+                    partTitle={partTitle}
+                />
+            )}
             <ReadingTimeIndicator contentId={contentId} />
             <ImmersiveModeButton
                 partNumber={partNumber}

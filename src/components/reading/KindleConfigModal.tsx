@@ -9,8 +9,8 @@ interface KindleConfigModalProps {
 }
 
 export default function KindleConfigModal({ onComplete }: KindleConfigModalProps) {
-    const [step, setStep] = useState<'welcome' | 'mode' | 'fontSize' | 'tutorial'>('welcome');
-    const [readingMode, setReadingMode] = useState<'horizontal' | 'vertical'>('horizontal');
+    const [step, setStep] = useState<'welcome' | 'fontSize' | 'tutorial'>('welcome');
+    const [readingMode, setReadingMode] = useState<'horizontal' | 'vertical'>('vertical');
     const [fontSize, setFontSize] = useState(16);
     const [showTutorial, setShowTutorial] = useState(false);
 
@@ -57,7 +57,7 @@ export default function KindleConfigModal({ onComplete }: KindleConfigModalProps
 
     const handleSkipAll = async () => {
         const preferences: UserPreferences = {
-            readingMode: 'horizontal',
+            readingMode: 'vertical',
             fontSize: 16,
             hasSeenTutorial: false,
             hasConfigured: true,
@@ -103,7 +103,7 @@ export default function KindleConfigModal({ onComplete }: KindleConfigModalProps
                             </p>
 
                             <button
-                                onClick={() => setStep('mode')}
+                                onClick={() => setStep('fontSize')}
                                 className="config-primary-btn"
                             >
                                 Comenzar configuración
@@ -119,67 +119,14 @@ export default function KindleConfigModal({ onComplete }: KindleConfigModalProps
                     </div>
                 )}
 
-                {/* Reading Mode Step */}
-                {step === 'mode' && (
-                    <div className="config-step">
-                        <div className="config-header">
-                            <h2 className="config-title">Elige tu modo de lectura</h2>
-                            <div className="config-step-indicator">Paso 1 de 3</div>
-                        </div>
 
-                        <div className="config-content">
-                            <p className="config-description">
-                                ¿Cómo prefieres leer?
-                            </p>
-
-                            <div className="config-mode-options">
-                                <div
-                                    className={`config-mode-card ${readingMode === 'horizontal' ? 'selected' : ''}`}
-                                    onClick={() => setReadingMode('horizontal')}
-                                >
-                                    <div className="config-mode-icon">
-                                        <BookOpen size={48} />
-                                    </div>
-                                    <h3>Horizontal</h3>
-                                    <p>Como un libro tradicional, con páginas que puedes pasar</p>
-                                    <div className="config-mode-preview horizontal-preview">
-                                        <div className="preview-page"></div>
-                                        <div className="preview-arrow">→</div>
-                                    </div>
-                                </div>
-
-                                <div
-                                    className={`config-mode-card ${readingMode === 'vertical' ? 'selected' : ''}`}
-                                    onClick={() => setReadingMode('vertical')}
-                                >
-                                    <div className="config-mode-icon">
-                                        <Scroll size={48} />
-                                    </div>
-                                    <h3>Vertical</h3>
-                                    <p>Desplazamiento continuo, como leer en la web</p>
-                                    <div className="config-mode-preview vertical-preview">
-                                        <div className="preview-scroll"></div>
-                                        <div className="preview-arrow">↓</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button
-                                onClick={() => handleModeSelect(readingMode)}
-                                className="config-primary-btn"
-                            >
-                                Continuar
-                            </button>
-                        </div>
-                    </div>
-                )}
 
                 {/* Font Size Step */}
                 {step === 'fontSize' && (
                     <div className="config-step">
                         <div className="config-header">
                             <h2 className="config-title">Tamaño de fuente</h2>
-                            <div className="config-step-indicator">Paso 2 de 3</div>
+                            <div className="config-step-indicator">Paso 1 de 2</div>
                         </div>
 
                         <div className="config-content">
@@ -235,7 +182,7 @@ export default function KindleConfigModal({ onComplete }: KindleConfigModalProps
                             </button>
 
                             <button
-                                onClick={() => setStep('mode')}
+                                onClick={() => setStep('welcome')}
                                 className="config-secondary-btn"
                             >
                                 Volver
@@ -249,7 +196,7 @@ export default function KindleConfigModal({ onComplete }: KindleConfigModalProps
                     <div className="config-step">
                         <div className="config-header">
                             <h2 className="config-title">Tutorial de funciones</h2>
-                            <div className="config-step-indicator">Paso 3 de 3</div>
+                            <div className="config-step-indicator">Paso 2 de 2</div>
                         </div>
 
                         <div className="config-content">
