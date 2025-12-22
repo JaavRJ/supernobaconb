@@ -6,10 +6,26 @@ import ChapterText4_1 from "../../components/texts/ChapterText4_1";
 import ChapterText4_2 from "../../components/texts/ChapterText4_2";
 import ChapterText4_3 from "../../components/texts/ChapterText4_3";
 import ChapterText4_4 from "../../components/texts/ChapterText4_4";
+import Photo from "../../components/Photos";
+
+const imgUrls = [
+  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765063322/supernoba/IMG_20251206_171941_gtcubw.png",
+  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765063322/supernoba/IMG_20251206_172014_jql8bx.png",
+  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765760145/supernoba/IMG_20251214_185038_cvsjga.png",
+  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765760153/supernoba/IMG_20251214_185136_rforir.png",
+];
+
 
 export default function Parte4() {
   const starsRef = useRef<HTMLDivElement>(null);
-
+  // Generar datos de fotos con rotación y escala aleatoria solo una vez
+  const photosData = useRef(
+    imgUrls.map((src) => ({
+      src,
+      rotation: Math.random() * 20 - 10, // -10 a +10 grados
+      scale: 0.75 + Math.random() * 0.1,  // 0.9 a 1.1
+    }))
+  );
   useEffect(() => {
     // Scroll horizontal con la rueda
     const handleWheel = (e: WheelEvent) => {
@@ -26,12 +42,16 @@ export default function Parte4() {
       for (let i = 0; i < 100; i++) {
         const star = document.createElement("div");
         star.className = "star";
+
         star.style.top = `${Math.random() * 100}vh`;
         star.style.left = `${Math.random() * 100}vw`;
+
         const size = Math.random() * 2 + 1;
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
+
         star.style.animationDuration = `${1.5 + Math.random() * 2}s`;
+
         container.appendChild(star);
       }
     }
@@ -50,48 +70,62 @@ export default function Parte4() {
       <div className="stars-container" ref={starsRef}></div>
 
       <div className="horizontal-scroll">
-        <div className="side-text">SUPERNOBA</div>
+        <div className="side-text">ENANA BLANCA</div>
         <div className="side-text-right">PARTE 4</div>
 
         <div className="main-title">
           PARTE 4: <br />ENANA BLANCA
         </div>
 
-        {/* Capítulo i */}
-        <Chapter
-          number="i"
-          title="Título del Capítulo 1"
-          imageSrc="https://via.placeholder.com/800x600?text=Parte+4+Capitulo+i"
-          imageAlt="Capítulo i"
-          content={<ChapterText4_1 />}
-        />
+        {/* TEXTO 1 */}
+        <div className="row">
+          <ChapterText4_1 />
+        </div>
 
-        {/* Capítulo ii */}
-        <Chapter
-          number="ii"
-          title="Título del Capítulo 2"
-          imageSrc="https://via.placeholder.com/800x600?text=Parte+4+Capitulo+ii"
-          imageAlt="Capítulo ii"
-          content={<ChapterText4_2 />}
-        />
+        {/* IMAGEN 1 */}
+        <div className="row">
+          <Photo
+            src={photosData.current[0].src}
+            alt="Foto 1"
+            style={{
+              transform: `rotate(${photosData.current[0].rotation}deg) scale(${photosData.current[0].scale})`,
+            }}
+          />
+        </div>
 
-        {/* Capítulo iii */}
-        <Chapter
-          number="iii"
-          title="Título del Capítulo 3"
-          imageSrc="https://via.placeholder.com/800x600?text=Parte+4+Capitulo+iii"
-          imageAlt="Capítulo iii"
-          content={<ChapterText4_3 />}
-        />
+        {/* TEXTO 2 */}
+        <div className="row">
+          <ChapterText4_2 />
+        </div>
 
-        {/* Capítulo iv */}
-        <Chapter
-          number="iv"
-          title="Título del Capítulo 4"
-          imageSrc="https://via.placeholder.com/800x600?text=Parte+4+Capitulo+iv"
-          imageAlt="Capítulo iv"
-          content={<ChapterText4_4 />}
-        />
+        {/* IMAGEN 2 */}
+        <div className="row">
+          <Photo
+            src={photosData.current[1].src}
+            alt="Foto 2"
+            style={{
+              transform: `rotate(${photosData.current[1].rotation}deg) scale(${photosData.current[1].scale})`,
+            }}
+          />
+        </div>
+
+        {/* TEXTO 3 */}
+        <div className="row">
+          <ChapterText4_3 />
+        </div>
+
+        {/* IMAGEN 3 */}
+        <div className="row">
+          <Photo
+            src={photosData.current[2].src}
+            alt="Foto 3"
+            style={{
+              transform: `rotate(${photosData.current[2].rotation}deg) scale(${photosData.current[2].scale})`,
+            }}
+          />
+        </div>
+
+
       </div>
     </PartLayout>
   );

@@ -96,7 +96,7 @@ export function applyAuthorNotesToHTML(
 
         const regex = new RegExp(`(${flexiblePattern})`, 'gi');
 
-        const replacement = `<span class="author-note-trigger" data-note-id="${note.id}" data-note-type="${note.type}">$1</span>`;
+        const replacement = `<span class="author-note-trigger" data-note-id="${note.id}" data-note-type="${note.type}">$1<sup class="note-icon">[${note.id}]</sup></span>`;
 
         processedHTML = processedHTML.replace(regex, replacement);
     });

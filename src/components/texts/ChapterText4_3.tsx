@@ -1,11 +1,12 @@
-import React from "react";
+import TextImages from "../TextImages"
 
 export default function ChapterText4_3() {
     return (
-        <div className="chapter-text">
-            <p>
-                {/* PLACEHOLDER: Agrega aquí el contenido del capítulo iii de Parte 4 */}
-            </p>
-        </div>
+        <TextImages>
+            {`(xvi. repintando las constelaciones)
+la luz de una estrella muerta 
+sigue iluminando. 
+`}
+        </TextImages>
     );
 }

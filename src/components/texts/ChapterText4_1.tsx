@@ -1,11 +1,13 @@
 import React from "react";
+import TextImages from "../TextImages"
 
 export default function ChapterText4_1() {
     return (
-        <div className="chapter-text">
-            <p>
-                {/* PLACEHOLDER: Agrega aquí el contenido del capítulo i de Parte 4 */}
-            </p>
-        </div>
+        <TextImages>
+            {`(xiv. lethephobia)
+nadie ve todo. ni siquiera 
+los que amamos más.
+`}
+        </TextImages>
     );
 }

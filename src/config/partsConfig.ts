@@ -4,7 +4,7 @@ export const PARTS_CONFIG = {
     parte1: true,  // Cambiar a true para habilitar Parte 1
     parte2: true,  // Cambiar a true para habilitar Parte 2
     parte3: true,  // Cambiar a true para habilitar Parte 3
-    parte4: false,  // Cambiar a true para habilitar Parte 4
+    parte4: true,  // Cambiar a true para habilitar Parte 4
 };
 
 // Función helper para verificar si una parte está habilitada

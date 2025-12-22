@@ -130,7 +130,7 @@ export const applyAuthorNotesToHTML = (
         // Reemplazar con span que tiene data attributes
         result = result.replace(
             regex,
-            `<span class="author-note-trigger" data-note-id="${note.id}" data-note-type="${note.type}">$1<sup class="note-icon">${note.id}</sup></span>`
+            `<span class="author-note-trigger" data-note-id="${note.id}" data-note-type="${note.type}">$1<sup class="note-icon">[${note.id}]</sup></span>`
         );
     });
 
