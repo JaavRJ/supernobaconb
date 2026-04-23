@@ -9,10 +9,9 @@ import ChapterText4_4 from "../../components/texts/ChapterText4_4";
 import Photo from "../../components/Photos";
 
 const imgUrls = [
-  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765063322/supernoba/IMG_20251206_171941_gtcubw.png",
-  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765063322/supernoba/IMG_20251206_172014_jql8bx.png",
-  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765760145/supernoba/IMG_20251214_185038_cvsjga.png",
-  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765760153/supernoba/IMG_20251214_185136_rforir.png",
+  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1766454582/supernoba/IMG_20251222_194149_vmyp2z.png",
+  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1766454582/supernoba/IMG_20251222_194226_ycmstx.png",
+  "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1766454788/supernoba/IMG_20251222_195015_doigdz.png",
 ];
 
 
