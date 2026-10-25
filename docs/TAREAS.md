@@ -216,6 +216,7 @@ Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y 
 | ID-04 | Era BDUEM en monocromo con scroll horizontal | Worker | ID-01 | ✅ |
 | ID-05 | Reproductor y pie con la nueva estética | Worker | ID-01 | ✅ |
 | ID-06 | Limpieza y verificación final | Orquestador | todas | ✅ |
+| ID-07 | Portada: nombre gigante y "Nuevo" como estrella lateral | Worker | ID-02 | ✅ |
 
 #### ID-01 — Base
 - **Archivos:** `web/src/styles/tokens.css`, `web/src/app/layout.tsx`, `web/src/app/globals.css`, `web/public/brand/` (nuevo), `web/src/components/brand/` (nuevo), `web/src/components/theme/Backdrop*`, `web/src/components/layout/SiteHeader*`.
@@ -242,6 +243,11 @@ Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y 
 #### ID-05 — Reproductor y pie
 - **Archivos:** `web/src/components/player/*.module.css`, `web/src/components/layout/SiteFooter*`, `PlayerSlot*`.
 - **Terminado cuando:** el mini reproductor es la barra flotante del mockup (cristal oscuro, bordes redondeados, progreso con el acento cálido) y el pie es mínimo como el del sitio original; sin regresiones de F1-12.
+
+#### ID-07 — Portada: nombre gigante y "Nuevo" lateral
+- **Pedido del artista:** el aviso "Nuevo" centrado se ve genérico y artificial. Regresa la idea del banner de su mockup de GPT: **SUPERN✦BA gigante** como primera impresión, pero sobre el cielo cósmico (no el fondo verde ni el eclipse). "Nuevo" pasa a un lateral o isla emergente.
+- **Archivos:** `web/src/app/page.tsx`, `page.module.css`, `web/src/components/home/*`.
+- **Terminado cuando:** hero con el nombre gigante y la estrella-brújula en la "O"; "Nuevo" integrado como una estrella con anotación en un lateral (escritorio) e isla flotante compacta en celular; el cielo de constelaciones sigue después; sin scroll horizontal; accesible.
 
 #### ID-06 — Limpieza y verificación
 - Borrar páginas y archivos de prueba, verificar build, rutas, navegador en escritorio y celular, y cerrar F1-14.
@@ -300,3 +306,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | ID-03 | Worker hizo el cielo radiante: escenario transparente sobre el cosmos, estrellas blancas, núcleo con la estrella-brújula y resplandor cálido, íconos de faceta, hilos por trazo con `inspira` cálido, nebulosa fotográfica con `feTurbulence` y eras en píldoras. Reviewer: aprobada. Pendiente para Fase 6: medir el costo de repintado del filtro de la nebulosa junto al parpadeo de estrellas en celulares de gama baja. ✅ |
 | 2026-10-25 | ID-06 | Orquestador: borró `/temas`, `/reproductor-prueba`, el audio de prueba y los mockups, y quitó Crimson Pro (sin uso). Tipos, lint y build sin errores; en producción todas las rutas dan 200, los slugs inexistentes y las páginas borradas 404, y el HTML no tiene datos de la era 2. Revisado en el navegador a 1440 y 390 px. Se detuvieron servidores de prueba que dejaron los agentes. ✅ |
 | 2026-10-25 | F1-14 | Identidad visual aplicada. **Fase 1 terminada.** Nota: el reproductor ya no tiene página de prueba; se podrá probar cuando haya audios reales (Fase 3). ✅ |
+| 2026-10-25 | ID-07 | El artista rechazó el aviso "Nuevo" centrado. Worker hizo el hero con SUPERN✦BA gigante sobre el cielo cósmico y "Nuevo" como estrella con anotación en el lateral (escritorio) e isla flotante (celular). Orquestador lo verificó en el navegador a 1440 y 390 px y corrigió el título cortado de la isla; sin reviewer por ser un cambio acotado. ✅ |

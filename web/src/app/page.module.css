@@ -1,5 +1,79 @@
-.notice {
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100svh - var(--header-height));
   padding: 0 var(--space-4);
+  overflow-x: clip;
+  text-align: center;
+}
+
+/* Resplandor muy sutil blanco-cálido detrás del nombre */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: min(90vw, 60rem);
+  height: 24rem;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 244, 222, 0.1),
+    rgba(242, 217, 166, 0.04) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.name {
+  position: relative;
+  margin: 0;
+  color: var(--era-fg);
+  font-family: var(--font-cinzel);
+  font-size: clamp(2.75rem, 11vw, 10rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.tagline {
+  position: relative;
+  margin: var(--space-4) 0 0;
+  color: var(--era-fg-muted);
+  font-family: var(--font-cormorant);
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  font-style: italic;
+}
+
+.down {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 16px;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+}
+
+.down:hover {
+  color: var(--era-fg);
+}
+
+.down:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 899px) {
+  .down {
+    display: none;
+  }
 }
 
 .sky {
