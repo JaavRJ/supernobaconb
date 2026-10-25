@@ -10,7 +10,7 @@ import { Lyrics } from "./Lyrics";
 import styles from "./Release.module.css";
 import { ReleaseListenButton, ReleaseTrackList } from "./ReleaseTracks";
 import { SpotifyEmbed } from "./SpotifyEmbed";
-import { YouTubeEmbed } from "./YouTubeEmbed";
+import { ReleaseVideos } from "./ReleaseVideos";
 
 const TYPE_LABEL: Partial<Record<Work["type"], string>> = {
   sencillo: "SENCILLO",
@@ -175,9 +175,7 @@ export function ReleaseView({ work, era, tracks }: ReleaseViewProps) {
             </h2>
             <div className={styles.embeds}>
               {spotifyUrl && <SpotifyEmbed url={spotifyUrl} title={work.title} />}
-              {videos.map((v) => (
-                <YouTubeEmbed key={v.url} url={v.url} title={v.title} />
-              ))}
+              <ReleaseVideos videos={videos} />
             </div>
           </section>
         )}

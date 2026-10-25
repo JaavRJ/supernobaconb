@@ -4,55 +4,11 @@
   gap: var(--space-4);
 }
 
-/* ---- Selector (solo escritorio) ---- */
-
-.selector {
-  display: none;
-  align-self: center;
-  gap: 0.5rem;
-  font-family: var(--font-ui);
-}
-
-.selectorButton {
-  min-height: 44px;
-  padding: 0.4rem 1.1rem;
-  border: 1px solid var(--era-line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--era-fg);
-  font: inherit;
-  font-size: 0.8125rem;
-  cursor: pointer;
-  transition:
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.selectorButton:hover {
-  border-color: color-mix(in srgb, var(--era-fg) 40%, transparent);
-}
-
-.selectorButton[aria-pressed="true"] {
-  border-color: color-mix(in srgb, var(--era-accent) 60%, transparent);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--era-accent) 15%, transparent);
-}
-
-.selectorButton:focus-visible,
 .listen:focus-visible,
 .platform:focus-visible,
 .titleLink:focus-visible {
   outline: 2px solid var(--era-accent);
   outline-offset: 2px;
-}
-
-@media (min-width: 640px) {
-  .selector {
-    display: flex;
-  }
-
-  .discography[data-view="lista"] .sky {
-    display: none;
-  }
 }
 
 /* En celular la lista va primero y la constelación después */
@@ -67,10 +23,6 @@
 }
 
 @media (min-width: 640px) {
-  .selector {
-    order: 0;
-  }
-
   .sky {
     order: 1;
   }

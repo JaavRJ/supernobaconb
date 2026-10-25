@@ -309,6 +309,29 @@
   min-width: 0;
 }
 
+.moreVideos {
+  align-self: center;
+  min-height: 44px;
+  padding: 0.4rem 1.2rem;
+  border: 1px solid var(--era-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--era-fg);
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.moreVideos:hover {
+  border-color: var(--era-fg-muted);
+}
+
+.moreVideos:focus-visible {
+  outline: 2px solid var(--era-fg);
+  outline-offset: 2px;
+}
+
 /* ---- Conectado con ---- */
 .threads {
   margin: 0;

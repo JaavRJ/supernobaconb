@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { usePlayer } from "@/components/player/PlayerProvider";
 import type { Track } from "@/types/content";
 import styles from "./Discography.module.css";
@@ -35,8 +35,6 @@ interface DiscographyViewProps {
   /** La constelación, ya dibujada en el servidor */
   sky: ReactNode;
 }
-
-type View = "constelacion" | "lista";
 
 const NEW_TAB = <span className={styles.srOnly}> (se abre en una pestaña nueva)</span>;
 
@@ -124,32 +122,11 @@ function Row({ item }: { item: DiscographyItem }) {
 
 /**
  * Discografía: la constelación Supernoba y la lista de sus sencillos.
- * En escritorio un selector elige qué ver; en celular la lista va primero y la constelación después.
+ * En escritorio la constelación va arriba; en celular la lista va primero y la constelación después.
  */
 export function DiscographyView({ items, sky }: DiscographyViewProps) {
-  const [view, setView] = useState<View>("constelacion");
-
   return (
-    <div className={styles.discography} data-view={view}>
-      <div className={styles.selector} role="group" aria-label="Ver la discografía como">
-        <button
-          type="button"
-          className={styles.selectorButton}
-          aria-pressed={view === "constelacion"}
-          onClick={() => setView("constelacion")}
-        >
-          Constelación
-        </button>
-        <button
-          type="button"
-          className={styles.selectorButton}
-          aria-pressed={view === "lista"}
-          onClick={() => setView("lista")}
-        >
-          Lista
-        </button>
-      </div>
-
+    <div className={styles.discography}>
       <section className={styles.sky} aria-label="Constelación Supernoba">
         {sky}
       </section>
