@@ -15,6 +15,9 @@ export interface Highlight {
   createdAt: string;
   /** Posición del texto dentro del capítulo, para volver a pintarlo. */
   offset?: number;
+  /** Texto que rodea al resaltado, para volver a anclarlo. */
+  prefix?: string;
+  suffix?: string;
 }
 
 export interface Quote {
@@ -28,6 +31,8 @@ export interface Quote {
   tags?: string[];
   chapterIndex?: number;
   offset?: number;
+  prefix?: string;
+  suffix?: string;
 }
 
 export interface Bookmark {

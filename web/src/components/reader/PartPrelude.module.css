@@ -1,4 +1,7 @@
+/* Contexto propio: las polaroids giradas no pasan por encima de la barra del lector */
 .prelude {
+  position: relative;
+  z-index: 0;
   color: var(--era-fg);
 }
 

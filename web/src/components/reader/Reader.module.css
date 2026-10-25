@@ -23,9 +23,8 @@
   top: var(--header-height);
   z-index: 25;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* Opaca: las polaroids giradas de la antesala pasan por debajo al hacer scroll */
+  background: #000;
 }
 
 .barInner {
@@ -296,10 +295,43 @@
   color: #fff;
 }
 
-/* Marcas de notas del autor: la interacción llega con F2-08 */
-.body [data-note-id] {
+/* Marcas de notas del autor: subrayado tenue y una estrella diminuta; abren su tarjeta */
+.text [data-note-id] {
   text-decoration: underline dotted rgba(255, 255, 255, 0.28);
   text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+
+.text [data-note-id]::after {
+  content: "\2726";
+  margin-left: 0.18em;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.5em;
+  font-style: normal;
+  vertical-align: 0.65em;
+}
+
+.text [data-note-id]:hover,
+.text [data-note-id]:focus-visible {
+  text-decoration-color: rgba(255, 255, 255, 0.7);
+}
+
+.text [data-note-id]:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Resaltados: luz blanca translúcida, sin color (los dibuja la CSS Custom Highlight API) */
+::highlight(resaltado) {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.body mark {
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #fff;
 }
 
 /* Final */
@@ -474,6 +506,252 @@
   color: #000;
 }
 
+/* Íconos finos de la barra */
+.barIcon {
+  display: block;
+  margin: 0 auto;
+}
+
+.barBtn[aria-pressed="true"] {
+  color: #fff;
+}
+
+/* Panel "Mis citas y marcadores" */
+.library {
+  width: min(400px, calc(100vw - 24px));
+  text-align: left;
+}
+
+.libraryTitle {
+  margin: 0 0 8px;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.library section + section {
+  margin-top: 20px;
+}
+
+.libraryEmpty {
+  margin: 0;
+  color: var(--era-fg-muted);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.libraryList {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.libraryItem {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.libraryGo {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 4px;
+  border: 0;
+  background: transparent;
+  color: var(--era-fg);
+  font-family: var(--era-font-body);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+}
+
+.libraryGo small {
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.quoteText {
+  display: -webkit-box;
+  overflow: hidden;
+  font-style: italic;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.libraryActs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.libraryAct {
+  min-width: 52px;
+  min-height: 36px;
+  padding: 0 6px;
+  border: 0;
+  background: transparent;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.libraryItem > .libraryAct {
+  align-self: center;
+}
+
+.libraryGo:hover,
+.libraryAct:hover {
+  color: #fff;
+}
+
+.libraryGo:focus-visible,
+.libraryAct:focus-visible,
+.selBtn:focus-visible,
+.noteClose:focus-visible,
+.noteCard:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.libraryAccount {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.libraryAccount p {
+  margin: 0 0 8px;
+  color: var(--era-fg-muted);
+  font-size: 1rem;
+}
+
+/* Menú de selección: pastilla pequeña junto al texto */
+.selMenu {
+  position: fixed;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: calc(100vw - 16px);
+  padding: 4px;
+  border: 1px solid var(--era-line);
+  border-radius: 999px;
+  background: var(--era-bg-elevated);
+  color: var(--era-fg);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7);
+}
+
+.selBtn {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--era-fg);
+  font: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.selBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.selStatus {
+  margin: 0;
+  padding: 0 16px;
+  font-size: 13px;
+  line-height: 40px;
+}
+
+/* Tarjeta de nota del autor */
+.noteCard {
+  position: fixed;
+  z-index: 40;
+  width: min(340px, calc(100vw - 24px));
+  max-height: min(60svh, 420px);
+  padding: 22px 22px 16px;
+  overflow-y: auto;
+  border: 1px solid var(--era-line);
+  border-radius: 14px;
+  background: var(--era-bg-elevated);
+  color: var(--era-fg);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.75);
+}
+
+.noteCard[data-sheet] {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  max-height: 65svh;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 18px 18px 0 0;
+}
+
+.noteEyebrow {
+  margin: 0 0 8px;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.noteTitle {
+  margin: 0 0 10px;
+  color: #fff;
+  font-family: var(--era-font-display);
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+.noteText {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+}
+
+.noteClose {
+  display: block;
+  min-height: 40px;
+  margin-left: auto;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.noteClose:hover {
+  color: #fff;
+}
+
 /* Aviso de lectura a medias */
 .resume {
   position: fixed;
@@ -590,8 +868,17 @@
   }
 
   .barInner {
-    gap: 10px;
+    gap: 6px;
     letter-spacing: 0.08em;
+  }
+
+  .barSlot {
+    gap: 0;
+  }
+
+  .barBtn {
+    min-width: 40px;
+    padding: 0 4px;
   }
 }
 

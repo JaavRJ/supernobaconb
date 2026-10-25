@@ -10,8 +10,12 @@ import {
   type ReactNode,
   type TouchEvent,
 } from "react";
-import { usePreferences, useReadingProgress } from "@/lib/reader";
+import { usePreferences, useReadingProgress, type Bookmark, type Quote } from "@/lib/reader";
+import { buildIndex, findRange } from "./anchoring";
+import { ReaderAnnotations } from "./ReaderAnnotations";
 import { ReaderBar } from "./ReaderBar";
+import { ReaderTools } from "./ReaderTools";
+import { useHydrated } from "./useHydrated";
 import { FONT_STEPS, LINE_STEPS, ReaderSettings, type ReadMode } from "./ReaderSettings";
 import styles from "./Reader.module.css";
 
@@ -33,6 +37,8 @@ interface ReaderShellProps {
   totalMinutes: number;
   /** Capítulos para el índice del panel de configuración */
   chapters: { index: number; title: string }[];
+  /** Notas del autor marcadas en el texto (título y contenido en texto plano) */
+  notes: { id: string; title: string; content: string }[];
   /** Portada de la parte; en modo páginas queda fuera del marco */
   heading: ReactNode;
   /** Antesala de fragmentos y polaroids; como la portada, solo en modo continuo */
@@ -53,18 +59,32 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
  * Envoltura cliente del lector: configuración, modo continuo o páginas, punto de lectura
  * y progreso guardado. El texto llega ya renderizado desde el servidor.
  */
-export function ReaderShell({ partNumber, partTitle, totalMinutes, chapters, heading, prelude, text, end }: ReaderShellProps) {
+export function ReaderShell({
+  partNumber,
+  partTitle,
+  totalMinutes,
+  chapters,
+  notes,
+  heading,
+  prelude,
+  text,
+  end,
+}: ReaderShellProps) {
   const { preferences, ready: prefsReady, update: updatePreferences } = usePreferences();
   const { progress: saved, ready, update: saveProgress } = useReadingProgress(partNumber);
 
-  const mode: ReadMode = prefsReady && preferences.readingMode === "horizontal" ? "pages" : "continuous";
-  const fontSize = nearest(FONT_STEPS, preferences.fontSize);
-  const lineHeight = nearest(LINE_STEPS, preferences.lineHeight ?? DEFAULT_LINE_HEIGHT);
+  // Las preferencias vienen del navegador: hasta hidratar se usa lo mismo que el servidor
+  const hydrated = useHydrated();
+  const mode: ReadMode = hydrated && prefsReady && preferences.readingMode === "horizontal" ? "pages" : "continuous";
+  const fontSize = nearest(FONT_STEPS, hydrated ? preferences.fontSize : 20);
+  const lineHeight = nearest(LINE_STEPS, hydrated ? (preferences.lineHeight ?? DEFAULT_LINE_HEIGHT) : DEFAULT_LINE_HEIGHT);
 
   const [overall, setOverall] = useState(0);
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(1);
   const [dismissed, setDismissed] = useState(false);
+  /** Capítulo y avance (a 1 %) del punto de lectura, para el marcador de la barra */
+  const [where, setWhere] = useState({ chapter: 0, progress: 0 });
 
   const shellRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -178,6 +198,8 @@ export function ReaderShell({ partNumber, partTitle, totalMinutes, chapters, hea
       }
     }
     setOverall(total);
+    const rounded = Math.round(pos.progress * 100) / 100;
+    setWhere((w) => (w.chapter === pos.chapter && w.progress === rounded ? w : { chapter: pos.chapter, progress: rounded }));
 
     if (noticeRef.current) {
       if (!pos.start) setDismissed(true);
@@ -406,6 +428,37 @@ export function ReaderShell({ partNumber, partTitle, totalMinutes, chapters, hea
     restore({ chapter: index, progress: 0, start: index === 0 });
   };
 
+  /** Lleva la vista a un fragmento de texto (cita) en el modo actual */
+  const goToRange = (range: Range) => {
+    setDismissed(true);
+    restoringRef.current = true;
+    clearTimeout(restoreTimer.current);
+    const rect = range.getClientRects()[0] ?? range.getBoundingClientRect();
+    if (modeRef.current === "pages") {
+      if (window.scrollY > 0) window.scrollTo(0, 0);
+      const flowLeft = flowRef.current?.getBoundingClientRect().left ?? 0;
+      goPage(Math.floor((rect.left - flowLeft + 1) / strideRef.current));
+    } else {
+      window.scrollTo({ top: rect.top + window.scrollY - anchor() - 40, behavior: "instant" });
+    }
+    restoreTimer.current = setTimeout(() => {
+      restoringRef.current = false;
+      report();
+    }, 150);
+  };
+
+  const goBookmark = (b: Bookmark) => {
+    setDismissed(true);
+    restore({ chapter: b.chapterIndex, progress: b.progress ?? 0, start: b.chapterIndex === 0 && (b.progress ?? 0) === 0 });
+  };
+
+  const goQuote = (q: Quote) => {
+    const article = flowRef.current?.querySelector("article");
+    const range = article ? findRange(buildIndex(article), q) : null;
+    if (range) goToRange(range);
+    else goChapter(q.chapterIndex ?? 0);
+  };
+
   const style = {
     "--reader-font-size": `${fontSize}px`,
     "--reader-line-height": lineHeight,
@@ -424,8 +477,16 @@ export function ReaderShell({ partNumber, partTitle, totalMinutes, chapters, hea
           onChapter={goChapter}
           onChange={(patch) => void updatePreferences(patch)}
         />
-        {/* Hueco para los controles de marcadores y notas (F2-08) */}
-        <div id="controles-de-lectura" className={styles.controls} />
+        <div id="controles-de-lectura" className={styles.controls}>
+          <ReaderTools
+            partNumber={partNumber}
+            chapters={chapters}
+            where={where}
+            pageNumber={pages ? page + 1 : 1}
+            onGoBookmark={goBookmark}
+            onGoQuote={goQuote}
+          />
+        </div>
       </ReaderBar>
 
       {!pages && heading}
@@ -457,6 +518,18 @@ export function ReaderShell({ partNumber, partTitle, totalMinutes, chapters, hea
           {end}
         </div>
       </div>
+
+      <ReaderAnnotations
+        partNumber={partNumber}
+        partTitle={partTitle}
+        chapters={chapters}
+        notes={notes}
+        flowRef={flowRef}
+        mode={mode}
+        page={page}
+        fontSize={fontSize}
+        lineHeight={lineHeight}
+      />
 
       {pages && (
         <p className={styles.pageNo} aria-live="polite">

@@ -130,6 +130,7 @@ export async function PartView({ partNumber }: { partNumber: number }) {
         partTitle={part.title}
         totalMinutes={part.minutes}
         chapters={part.chapters.map((c) => ({ index: c.index, title: c.title }))}
+        notes={part.notes.map((n) => ({ id: n.id, title: n.title, content: n.content }))}
         heading={
           <PartHeading meta={meta} minutes={part.minutes}>
             <nav className={styles.toc} aria-label="Capítulos">
@@ -161,7 +162,7 @@ export async function PartView({ partNumber }: { partNumber: number }) {
                     />
                     <Ornament />
                   </header>
-                  <div className={styles.body} dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+                  <div className={styles.body} data-chapter-body dangerouslySetInnerHTML={{ __html: bodyHtml }} />
                 </section>
               );
             })}
