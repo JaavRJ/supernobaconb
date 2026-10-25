@@ -1,0 +1,37 @@
+.word {
+  color: inherit;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/*
+ * La estrella es una máscara de luminancia sobre /brand/estrella.jpg (blanco sobre negro):
+ * se ve bien sobre cualquier fondo, también dentro de cabeceras con z-index o backdrop-filter.
+ * Para usar la imagen suelta sobre fondo oscuro (núcleos, miniaturas) se puede aplicar
+ * `mix-blend-mode: screen`, pero ningún ancestro entre la imagen y el fondo puede crear un
+ * contexto de apilamiento (z-index, isolation, transform, filter), porque el blend se rompe.
+ */
+.star {
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  margin: 0 0.02em;
+  vertical-align: -0.1em;
+  background-color: currentColor;
+  mask: url("/brand/estrella.jpg") center / contain no-repeat;
+  mask-mode: luminance;
+  transform: scale(1.35);
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

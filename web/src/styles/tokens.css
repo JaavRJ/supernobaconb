@@ -1,17 +1,20 @@
 /* Tokens base (tema "cielo"). Cada era los sobrescribe con <EraTheme>. */
 :root {
-  --era-bg: #0c1412;
-  --era-bg-elevated: #13201c;
-  --era-fg: #efe6d6;
-  --era-fg-muted: #a39d8e;
-  --era-accent: #d6bc86;
-  --era-accent-contrast: #0c1412;
-  --era-line: rgba(239, 230, 214, 0.14);
-  --era-glow: rgba(214, 188, 134, 0.35);
+  /* Cielo base (radiante). Contrastes sobre --era-bg #070b18: fg 17.2, fg-muted 7.8, accent 14.3 */
+  --era-bg: #070b18;
+  --era-bg-elevated: #0a1020;
+  --era-fg: #eef0f6;
+  --era-fg-muted: #9aa3bd;
+  --era-accent: #f2d9a6;
+  --era-accent-contrast: #0a0d18;
+  --era-line: rgba(238, 240, 246, 0.16);
+  --era-glow: rgba(242, 217, 166, 0.45);
   --era-font-display: var(--font-cinzel, 'Cinzel Decorative', serif);
-  --era-font-body: var(--font-crimson, 'Crimson Pro', Georgia, serif);
+  --era-font-body: var(--font-cormorant, 'Cormorant Garamond', Georgia, serif);
   --font-ui: var(--font-inter, system-ui, sans-serif);
   --font-title: var(--font-cinzel-text, 'Cinzel', serif);
+  /* Degradado del mockup: #101934 al centro, #070b18, #03040a en los bordes */
+  --sky-gradient: radial-gradient(120% 80% at 62% 38%, #101934 0%, #070b18 45%, #03040a 100%);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -55,7 +58,10 @@ html {
 
 body {
   padding-bottom: var(--player-height);
-  background: var(--era-bg);
+  background-color: var(--era-bg);
+  background-image: var(--sky-gradient);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--era-fg);
   font-family: var(--era-font-body);
 }

@@ -24,7 +24,7 @@ export interface EraThemeTokens {
   /** Familia tipográfica de texto */
   fontBody: string;
   /** Fondo decorativo de la era */
-  backdrop: "stars" | "grain" | "none";
+  backdrop: "stars" | "grain" | "cosmos" | "none";
 }
 
 export const ERA_THEME_VARS: Record<Exclude<keyof EraThemeTokens, "backdrop">, string> = {

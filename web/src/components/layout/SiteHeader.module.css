@@ -2,10 +2,14 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  border-bottom: 1px solid var(--era-line);
-  background: color-mix(in srgb, var(--era-bg-elevated) 85%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(
+    to bottom,
+    rgba(3, 4, 10, 0.92) 0%,
+    rgba(3, 4, 10, 0.82) 60%,
+    rgba(3, 4, 10, 0) 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .inner {
@@ -24,9 +28,9 @@
   min-height: 44px;
   color: var(--era-fg);
   font-family: var(--font-cinzel, 'Cinzel Decorative', serif);
-  font-size: var(--text-lg);
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: var(--text-xl);
+  font-weight: 400;
+  letter-spacing: 0.06em;
   text-decoration: none;
 }
 

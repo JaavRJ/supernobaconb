@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { StarWord } from "@/components/brand/StarWord";
 import { site } from "@/content/site";
 import { HeaderNav } from "./HeaderNav";
 import navStyles from "./HeaderNav.module.css";
@@ -11,7 +12,7 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link href="/" className={styles.brand}>
-          {site.name}
+          <StarWord text={site.name.toUpperCase()} />
         </Link>
         {/* usePathname puede suspender en rutas dinámicas: el fallback muestra los links sin estado activo */}
         <Suspense

@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import { Cinzel, Cinzel_Decorative, Crimson_Pro, Inter } from "next/font/google";
+import {
+  Cinzel,
+  Cinzel_Decorative,
+  Cormorant_Garamond,
+  Crimson_Pro,
+  Inter,
+  Uncial_Antiqua,
+} from "next/font/google";
+import { Backdrop } from "@/components/theme/Backdrop";
 import { PlayerProvider } from "@/components/player/PlayerProvider";
 import { PlayerSlot } from "@/components/layout/PlayerSlot";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -21,6 +29,19 @@ const cinzelText = Cinzel({
   display: "swap",
   variable: "--font-cinzel-text",
 });
+const uncial = Uncial_Antiqua({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+  variable: "--font-uncial",
+});
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-cormorant",
+});
 const crimson = Crimson_Pro({ subsets: ["latin"], display: "swap", variable: "--font-crimson" });
 
 export const metadata: Metadata = {
@@ -30,8 +51,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${inter.variable} ${cinzel.variable} ${cinzelText.variable} ${crimson.variable}`}>
+    <html lang="es" className={[
+        inter.variable,
+        cinzel.variable,
+        cinzelText.variable,
+        crimson.variable,
+        uncial.variable,
+        cormorant.variable,
+      ].join(" ")}
+    >
       <body>
+        <Backdrop variant="cosmos" />
         <PlayerProvider>
           <SkipLink />
           <SiteHeader />

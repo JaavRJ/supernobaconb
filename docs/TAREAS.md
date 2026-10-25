@@ -66,7 +66,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | F1-11 | Cielo: versión para celular y lista accesible | Worker | F1-10 | ✅ |
 | F1-12 | Reproductor persistente (versión inicial) | Worker | F1-03, F1-05 | ✅ |
 | F1-13 | Verificación final de la fase | Orquestador | todas | ✅ |
-| F1-14 | Recorrido de diseño con el artista | Orquestador + artista | F1-13 | ⬜ |
+| F1-14 | Recorrido de diseño con el artista | Orquestador + artista | F1-13 | 🔨 |
 
 ### F1-01 — Rama `artista` y proyecto Next.js en `web/`
 - **Objetivo:** crear la base del nuevo sitio sin tocar el sitio actual.
@@ -200,8 +200,51 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
   2. **Cielo:** quitar el marco; el cielo va de borde a borde.
   3. **Eras:** que el cambio se note más: cielo base más azul noche y BDUEM más cálida y dorada.
   4. **Tipografía de la marca:** el artista descartó las cuatro opciones propuestas (Syne, Unbounded, Michroma, Instrument Serif) por no tener identidad, y eligió la de su mockup: **Cinzel Decorative** (nombre y títulos destacados), **Crimson Pro** (texto) e **Inter** (interfaz).
-  5. **Portada como el mockup del artista:** nombre enorme y centrado, ilustración de eclipse con órbita, "Lo último" como franja minimalista con botón de play, y fondo verde-negro con crema y dorado para el cielo base (reemplaza al azul noche del cambio 3).
-  - Al terminar, se borran las páginas de prueba `/temas` y `/reproductor-prueba` y el audio `web/public/audio/prueba.wav` (se conservaron para usarlas en el recorrido).
+  5. ~~**Portada como el mockup del artista** (eclipse, verde-negro).~~ Descartado: el artista pidió partir de su identidad visual (ver abajo).
+  6. **Identidad visual (decisión final):** el orquestador estudió el sitio original y escribió [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md). El artista aprobó el mockup de `web/public/mockup/` (`portada.html` y `bduem.html`): **portada radiante** (espacio profundo azul-negro, polvo de estrellas, nebulosas fotográficas, un único resplandor cálido) y **era BDUEM en monocromo** como el sitio original. La estrella-brújula reemplaza la "O" en SUPERN✦BA y en el título de BDUEM. Scroll horizontal en eras y libro. Se implementa en las tareas ID-01 a ID-06.
+  - Al terminar, se borran las páginas de prueba `/temas` y `/reproductor-prueba`, el audio `web/public/audio/prueba.wav` y la carpeta `web/public/mockup/`.
+
+### Identidad visual (parte de F1-14)
+
+Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y los mockups `web/public/mockup/portada.html` y `bduem.html` (se ven en `http://localhost:3000/mockup/…`).
+
+| ID | Tarea | Quién | Depende de | Estado |
+|---|---|---|---|---|
+| ID-01 | Base: paleta radiante, fuentes, logo, marca SUPERN✦BA y fondo cósmico | Worker | — | ✅ |
+| ID-02 | Portada: aviso "Nuevo" y composición del mockup | Worker | ID-01 | 🔨 |
+| ID-03 | Cielo radiante: núcleo con la estrella-brújula, íconos de faceta, nebulosa fotográfica, eras | Worker | ID-01 | 🔨 |
+| ID-04 | Era BDUEM en monocromo con scroll horizontal | Worker | ID-01 | 🔨 |
+| ID-05 | Reproductor y pie con la nueva estética | Worker | ID-01 | 🔨 |
+| ID-06 | Limpieza y verificación final | Orquestador | todas | ⬜ |
+
+#### ID-01 — Base
+- **Archivos:** `web/src/styles/tokens.css`, `web/src/app/layout.tsx`, `web/src/app/globals.css`, `web/public/brand/` (nuevo), `web/src/components/brand/` (nuevo), `web/src/components/theme/Backdrop*`, `web/src/components/layout/SiteHeader*`.
+- **Terminado cuando:**
+  - Tokens del cielo base con la paleta radiante de IDENTIDAD-VISUAL (fondo azul-negro en degradado, texto blanco frío, un solo acento cálido para resplandores) y contraste AA verificado.
+  - Fuentes con `next/font`: Cinzel Decorative (marca), Uncial Antiqua (BDUEM), Cormorant Garamond (texto literario), Inter (interfaz); Crimson Pro y Cinzel se quitan si ya nadie las usa.
+  - El logo (`public/logo512.png` de la raíz) copiado a `web/public/brand/estrella.png`.
+  - Componente `StarWord` que escribe una palabra con la estrella-brújula en lugar de una "O" (se usa para SUPERN✦BA y para el título de BDUEM), accesible (el lector de pantalla lee la palabra completa).
+  - El header usa SUPERN✦BA.
+  - Nueva variante de fondo `cosmos` (polvo de estrellas determinista + algunas estrellas en cruz que destellan, sin `Math.random` en el render del servidor), usada por el cielo base en toda la página; `prefers-reduced-motion` respetado.
+
+#### ID-02 — Portada
+- **Archivos:** `web/src/app/page.tsx`, `page.module.css`, `web/src/components/home/*`.
+- **Terminado cuando:** la portada sigue el mockup: aviso "Nuevo" centrado (etiqueta, título en Cinzel Decorative, era en cursiva, "Escuchar" cálido y "Ver en el cielo" que baja al cielo), luego el cielo y la línea de eras. Se borran `HomeHero`, `EclipseArt` y `LatestPlay` si ya no se usan; la lógica de fecha de "lo último" se conserva.
+
+#### ID-03 — Cielo radiante
+- **Archivos:** `web/src/components/sky/*`, colores en `web/src/content/constellations.ts`.
+- **Terminado cuando:** estrellas blancas con halo; el núcleo de un libro se dibuja con la estrella-brújula y resplandor cálido; ícono fino de faceta junto a la estrella principal de cada constelación (libro, nota, `</>`); hilos blancos con trazo por tipo y `inspira` en tono cálido; nebulosa como nube fotográfica gris (`feTurbulence`); selector y línea de eras como en el mockup (puntos y píldoras). Todo lo de F1-08 a F1-11 sigue funcionando.
+
+#### ID-04 — Era BDUEM en monocromo
+- **Archivos:** `web/src/content/eras.ts` (tema de BDUEM), `web/src/types/content.ts` y `web/src/content/works.ts` (subtítulos de las partes y fotos), `web/src/components/era/*` (nuevo), `web/src/app/libros/bduem/`, `web/src/app/eras/[slug]/`, `web/next.config.ts` (imágenes de Cloudinary).
+- **Terminado cuando:** el tema de BDUEM es negro puro y blanco con Uncial Antiqua y Cormorant; `/libros/bduem` (y `/eras/bduem`) es la experiencia del mockup con scroll horizontal en escritorio y vertical en celular: etiqueta vertical "SUPERNOBA", título con la estrella en la "O", índice de las cuatro partes con sus subtítulos poéticos, polaroid en blanco y negro, panel de texto y las obras de la era en polaroids con su hilo en texto. Accesible con teclado y sin atrapar el scroll vertical en lectores de pantalla.
+
+#### ID-05 — Reproductor y pie
+- **Archivos:** `web/src/components/player/*.module.css`, `web/src/components/layout/SiteFooter*`, `PlayerSlot*`.
+- **Terminado cuando:** el mini reproductor es la barra flotante del mockup (cristal oscuro, bordes redondeados, progreso con el acento cálido) y el pie es mínimo como el del sitio original; sin regresiones de F1-12.
+
+#### ID-06 — Limpieza y verificación
+- Borrar páginas y archivos de prueba, verificar build, rutas, navegador en escritorio y celular, y cerrar F1-14.
 
 ---
 
@@ -249,3 +292,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | — | Se agregan dos momentos de diseño: F1-14 (recorrido de diseño con el artista al cerrar la fase 1) y el "Pase de diseño con materiales reales". |
 | 2026-10-25 | F1-11 | Worker hizo el cielo vertical para pantallas angostas (dos SVG, uno visible por CSS), el toque en dos pasos y la vista "Ver como lista". Reviewer detectó una regresión: el panel de señal se cerraba al tocarlo porque había dos montados; ahora tarjeta y panel solo se montan en la escena visible. También áreas de toque de 44 px y contraste de la lista. Orquestador verificó a 375 px y en escritorio. Para F1-14: los hilos cruzan las etiquetas "Jabi" y "noba" a 375 px. ✅ |
 | 2026-10-25 | F1-13 | Verificación del orquestador: tipos, lint y build sin errores (todas las rutas estáticas o con prerender parcial); en modo producción las 13 rutas dan 200 y los slugs inexistentes 404 desde la primera visita; el HTML no contiene datos de la era 2; en el navegador, consola limpia tras reiniciar el servidor, el reproductor sigue sonando al navegar por el menú y desde una estrella, y sin scroll horizontal a 375 px en todas las páginas. El sitio viejo no cambió respecto a `main`. Las páginas de prueba se conservan para F1-14. ✅ |
+| 2026-10-25 | F1-14 | El artista rechazó el primer pase (eclipse, verde-negro) por no usar su identidad. El orquestador estudió el sitio original, escribió IDENTIDAD-VISUAL.md y armó un mockup aprobado. Se definen las tareas ID-01 a ID-06. |
+| 2026-10-25 | ID-01 | Worker hizo la base: paleta radiante, fuentes (Cinzel Decorative, Uncial Antiqua, Cormorant Garamond, Inter), `StarWord` con la estrella-brújula en la "O" (máscara de luminancia, probada en Chromium, Firefox y WebKit), header SUPERN✦BA y fondo `cosmos`. Reviewer pidió legibilidad del header al hacer scroll, logo con su formato real (JPEG) y subrayado del enlace activo; corregido y revisado en el navegador. ✅ |
