@@ -39,7 +39,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 7 / 13 |
+| 1 — Base | 🔨 En curso | 9 / 13 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
@@ -59,11 +59,11 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | F1-05 | Layout raíz, menú y pie de página | Worker | F1-04 | ✅ |
 | F1-06 | Páginas provisionales de cada ruta | Worker | F1-05 | ✅ |
 | F1-07 | Bloque "Lo último" en la portada | Worker | F1-03, F1-05 | ✅ |
-| F1-08 | Cielo: dibujo de constelaciones y estrellas | Worker | F1-03, F1-04 | ⬜ |
+| F1-08 | Cielo: dibujo de constelaciones y estrellas | Worker | F1-03, F1-04 | ✅ |
 | F1-09 | Cielo: interacción e hilos | Worker | F1-08 | ⬜ |
 | F1-10 | Cielo: vista por era, línea de tiempo y nebulosas | Worker | F1-09 | ⬜ |
 | F1-11 | Cielo: versión para celular y lista accesible | Worker | F1-10 | ⬜ |
-| F1-12 | Reproductor persistente (versión inicial) | Worker | F1-03, F1-05 | ⬜ |
+| F1-12 | Reproductor persistente (versión inicial) | Worker | F1-03, F1-05 | ✅ |
 | F1-13 | Verificación final de la fase | Orquestador | todas | ⬜ |
 
 ### F1-01 — Rama `artista` y proyecto Next.js en `web/`
@@ -156,6 +156,8 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
   - Las estrellas se recorren con el teclado.
   - Los hilos se dibujan entre constelaciones, con un estilo distinto por tipo (`guiño` más tenue).
 
+- **Notas de la revisión de F1-08:** el `<svg>` tiene `role="img"`, que oculta a los lectores de pantalla los hijos interactivos; al volver las estrellas enlaces o botones, cambiarlo a `role="group"` (o similar). Los ids `sky-title`, `sky-desc` y `sky-halo-*` son fijos: usar un prefijo si hay más de un cielo por página.
+
 ### F1-10 — Cielo: vista por era, línea de tiempo y nebulosas
 - **Terminado cuando:**
   - Elegir una era enciende su libro y sus obras en órbita, y atenúa el resto.
@@ -167,6 +169,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
   - En pantallas angostas el cielo se recorre con un carrusel deslizable o una lista.
   - Existe una lista de texto equivalente al cielo para lectores de pantalla.
   - Sin scroll horizontal de página a 375 px.
+- **Notas de la revisión de F1-08:** a 375 px el SVG escala a 0.34, así que el nombre de la constelación se ve a ~10 px y la faceta a ~6 px (ilegible). Con muchas obras por constelación (30 o más) la colocación automática deja de garantizar la separación mínima, y dos obras con la misma `skyPosition` o dos núcleos en una constelación se enciman.
 
 ### F1-12 — Reproductor persistente (versión inicial)
 - **Archivos:** `web/src/components/player/`.
@@ -220,3 +223,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-05 | Worker hizo layout, menú (móvil accesible), pie, fuentes con `next/font` y espacio del reproductor. Reviewer encontró que el menú móvil se reabría al volver a una ruta (media) y detalles de accesibilidad; corregidos. Orquestador verificó en el navegador: menú, Escape, foco y que el menú ya no se reabre al ir y volver. Pendiente de diseño: el header queda fuera de `EraTheme` y siempre usa el cielo. ✅ |
 | 2026-10-25 | F1-06 | Worker creó las páginas provisionales; obra y era con su tema, la era 2 no revela nada. Reviewer probó en producción y encontró que la primera visita a un slug inexistente respondía 200 (media); se corrigió con `ensureStatic = "navigation"` (Cache Components no admite `dynamicParams`). Orquestador verificó con `next start`: 404 en la primera y segunda visita. ✅ |
 | 2026-10-25 | F1-07 | Worker hizo "Lo último" (fecha con `"use cache"` + `cacheLife("hours")`, aprobado por el reviewer). Orquestador vio en el navegador que el fondo de estrellas se salía de su sección: `Backdrop` pasa de `fixed` a `absolute` dentro de `EraTheme`. Más detalles de accesibilidad. ✅ |
+| 2026-10-25 | F1-08 | Worker dibujó el cielo (`layoutSky` pura y determinista + SVG). Reviewer: aprobada; se corrigió que el parpadeo pisaba el brillo por fecha. Notas para F1-09 y F1-11 anotadas en sus secciones. Orquestador lo revisó en el navegador. ✅ |
+| 2026-10-25 | F1-12 | Worker hizo el reproductor (provider con un solo `<audio>`, mini reproductor, Media Session, audio de prueba generado). Reviewer: aprobada; ajustes de robustez (errores de carga, Media Session, volumen). Orquestador verificó en el navegador que sigue sonando al navegar y que avanza de pista. ✅ |

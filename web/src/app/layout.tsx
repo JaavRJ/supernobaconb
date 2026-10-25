@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cinzel_Decorative, Crimson_Pro, Inter } from "next/font/google";
+import { PlayerProvider } from "@/components/player/PlayerProvider";
 import { PlayerSlot } from "@/components/layout/PlayerSlot";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -25,11 +26,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es" className={`${inter.variable} ${cinzel.variable} ${crimson.variable}`}>
       <body>
-        <SkipLink />
-        <SiteHeader />
-        <main id="contenido">{children}</main>
-        <SiteFooter />
-        <PlayerSlot />
+        <PlayerProvider>
+          <SkipLink />
+          <SiteHeader />
+          <main id="contenido">{children}</main>
+          <SiteFooter />
+          <PlayerSlot />
+        </PlayerProvider>
       </body>
     </html>
   );
