@@ -203,7 +203,7 @@ function portraitRegions(constellations: Constellation[]): Map<ConstellationId, 
   return new Map(
     ordered.map((c, i) => [
       c.id,
-      { x: i % 2 === 0 ? 0.36 : 0.64, y: n === 1 ? 0.55 : 0.3 + (0.52 * i) / (n - 1) },
+      { x: n === 1 ? 0.5 : i % 2 === 0 ? 0.36 : 0.64, y: n === 1 ? 0.5 : 0.3 + (0.52 * i) / (n - 1) },
     ]),
   );
 }

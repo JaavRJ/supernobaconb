@@ -1,5 +1,5 @@
 import { constellations, eras, getActiveSignal, getNebulas, threads, works } from "@/content";
-import type { EraPhase } from "@/types/content";
+import type { ConstellationId, EraPhase } from "@/types/content";
 import { layoutNebulas, layoutSky, type SkyLayout, type SkyOrientation } from "./layout";
 import { TYPE_LABELS, type SkyEraInfo, type SkySignal, type SkyStarInfo } from "./meta";
 import { buildTimeline } from "./eraTimeline";
@@ -8,6 +8,8 @@ import { SkyInteractive } from "./SkyInteractive";
 interface SkyProps {
   /** Cielo apaisado ya calculado; por defecto se calcula con los datos de `@/content` */
   layout?: SkyLayout;
+  /** Muestra solo esta constelación, sin eras, línea de tiempo ni nebulosas */
+  only?: ConstellationId;
 }
 
 const dateFormat = new Intl.DateTimeFormat("es-MX", {
@@ -65,7 +67,43 @@ function buildStarInfo(layout: SkyLayout): SkyStarInfo[] {
   });
 }
 
-export function Sky({ layout = defaultLayout("landscape") }: SkyProps) {
+/** Una sola constelación, centrada y con posiciones automáticas (las manuales eran para el cielo completo) */
+function soloInput(id: ConstellationId) {
+  return {
+    constellations: constellations
+      .filter((c) => c.id === id)
+      .map((c) => ({ ...c, skyRegion: { x: 0.5, y: 0.45 } })),
+    works: works
+      .filter((w) => !w.hidden && w.constellation === id)
+      .map((w) => ({ ...w, skyPosition: undefined })),
+  };
+}
+
+export function Sky({ layout, only }: SkyProps) {
+  if (only) return <SoloSky id={only} />;
+  return <FullSky layout={layout ?? defaultLayout("landscape")} />;
+}
+
+/** Cielo de una sola constelación: sin selector de eras, línea de tiempo, nebulosas ni leyenda */
+function SoloSky({ id }: { id: ConstellationId }) {
+  const input = soloInput(id);
+  const landscape = layoutSky({ ...input, threads, orientation: "landscape" });
+  const portrait = layoutSky({ ...input, threads, orientation: "portrait" });
+
+  return (
+    <SkyInteractive
+      compact
+      variants={{
+        landscape: { layout: landscape, nebulas: [] },
+        portrait: { layout: portrait, nebulas: [] },
+      }}
+      starInfo={buildStarInfo(landscape)}
+      constellationColors={Object.fromEntries(constellations.map((c) => [c.id, c.color]))}
+    />
+  );
+}
+
+function FullSky({ layout }: { layout: SkyLayout }) {
   const eraInfo: SkyEraInfo[] = eras.map((e) => ({
     id: e.id,
     label: e.phase === "nebulosa" || !e.name ? "Nebulosa" : e.name,

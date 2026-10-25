@@ -33,11 +33,13 @@ interface SkyInteractiveProps {
   starInfo: SkyStarInfo[];
   /** Color de cada constelación, por id */
   constellationColors: Record<string, string>;
-  eras: SkyEraInfo[];
+  eras?: SkyEraInfo[];
   /** Señal activa de cada nebulosa (null si no hay) */
-  signals: Record<string, SkySignal | null>;
-  timeline: TimelineData;
-  timelineLabels: Record<string, SkyTimelineLabels>;
+  signals?: Record<string, SkySignal | null>;
+  timeline?: TimelineData;
+  timelineLabels?: Record<string, SkyTimelineLabels>;
+  /** Cielo de una sola constelación: sin selector de eras, línea de tiempo, leyenda ni lista */
+  compact?: boolean;
 }
 
 function classes(...names: (string | false | undefined)[]): string {
@@ -72,10 +74,11 @@ export function SkyInteractive({
   variants,
   starInfo,
   constellationColors,
-  eras,
-  signals,
+  eras = [],
+  signals = {},
   timeline,
-  timelineLabels,
+  timelineLabels = {},
+  compact = false,
 }: SkyInteractiveProps) {
   const router = useRouter();
   const visible = useVisibleOrientation();
@@ -235,8 +238,9 @@ export function SkyInteractive({
           aria-describedby={`${prefix}-desc`}
         >
           <desc id={`${prefix}-desc`}>
-            Tres constelaciones, una por faceta del artista. Cada estrella es una obra; las más
-            recientes brillan más. Los hilos unen obras relacionadas.
+            {compact
+              ? "La constelación Supernoba. Cada estrella es un sencillo; las más recientes brillan más."
+              : "Tres constelaciones, una por faceta del artista. Cada estrella es una obra; las más recientes brillan más. Los hilos unen obras relacionadas."}
           </desc>
 
           <defs>
@@ -621,6 +625,7 @@ export function SkyInteractive({
 
   return (
     <div className={styles.wrapper}>
+      {!compact && (
       <div className={styles.controls}>
         <div className={styles.eraSelector} role="group" aria-label="Ver el cielo por era">
           <button
@@ -653,6 +658,7 @@ export function SkyInteractive({
           {listMode ? "Ver como cielo" : "Ver como lista"}
         </button>
       </div>
+      )}
 
       <div
         className={styles.stage}
@@ -690,15 +696,17 @@ export function SkyInteractive({
         )}
       </div>
 
-      <Timeline
-        data={timeline}
-        eras={eras}
-        labels={timelineLabels}
-        selectedEra={selectedEra}
-        onSelect={(id) => selectEra(selectedEra === id ? null : id)}
-      />
+      {timeline && (
+        <Timeline
+          data={timeline}
+          eras={eras}
+          labels={timelineLabels}
+          selectedEra={selectedEra}
+          onSelect={(id) => selectEra(selectedEra === id ? null : id)}
+        />
+      )}
 
-      {!listMode && presentKinds.length > 0 && (
+      {!compact && !listMode && presentKinds.length > 0 && (
         <ul className={styles.legend} aria-label="Tipos de hilo">
           {presentKinds.map((kind) => (
             <li key={kind}>
