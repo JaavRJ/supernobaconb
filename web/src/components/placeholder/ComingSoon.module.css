@@ -1,0 +1,29 @@
+.root {
+  position: relative;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4);
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--era-fg-muted);
+  font-size: var(--text-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--era-font-display);
+  font-size: var(--text-3xl);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.text {
+  margin: 0 0 var(--space-4);
+  color: var(--era-fg-muted);
+  font-size: var(--text-lg);
+  line-height: 1.6;
+}
