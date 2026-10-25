@@ -35,6 +35,8 @@ interface ReaderShellProps {
   chapters: { index: number; title: string }[];
   /** Portada de la parte; en modo páginas queda fuera del marco */
   heading: ReactNode;
+  /** Antesala de fragmentos y polaroids; como la portada, solo en modo continuo */
+  prelude?: ReactNode;
   /** `<article>` con las secciones de cada capítulo (HTML de servidor) */
   text: ReactNode;
   /** Cierre de la parte; en modo páginas es la última página */
@@ -51,7 +53,7 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
  * Envoltura cliente del lector: configuración, modo continuo o páginas, punto de lectura
  * y progreso guardado. El texto llega ya renderizado desde el servidor.
  */
-export function ReaderShell({ partNumber, partTitle, totalMinutes, chapters, heading, text, end }: ReaderShellProps) {
+export function ReaderShell({ partNumber, partTitle, totalMinutes, chapters, heading, prelude, text, end }: ReaderShellProps) {
   const { preferences, ready: prefsReady, update: updatePreferences } = usePreferences();
   const { progress: saved, ready, update: saveProgress } = useReadingProgress(partNumber);
 
@@ -427,6 +429,7 @@ export function ReaderShell({ partNumber, partTitle, totalMinutes, chapters, hea
       </ReaderBar>
 
       {!pages && heading}
+      {!pages && prelude}
 
       {showNotice && (
         <div className={styles.resume} role="region" aria-label="Continuar lectura">

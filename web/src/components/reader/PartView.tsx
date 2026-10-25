@@ -6,6 +6,7 @@ import { EraPanel } from "@/components/era/EraPanel";
 import { VerticalLabel } from "@/components/era/VerticalLabel";
 import { getBookPart, getBookParts, getPartMeta, isPartPublished, partSlug } from "@/lib/book";
 import { PartCountdown } from "./PartCountdown";
+import { PartPrelude } from "./PartPrelude";
 import { ReaderShell } from "./ReaderShell";
 import styles from "./Reader.module.css";
 import { formatReleaseDate } from "./format";
@@ -144,6 +145,7 @@ export async function PartView({ partNumber }: { partNumber: number }) {
             </nav>
           </PartHeading>
         }
+        prelude={<PartPrelude partNumber={part.number} startHref="#capitulo-1" showTitle={false} />}
         text={
           <article id={TEXT_ID} className={styles.text} aria-label={`Texto de la Parte ${part.number}`}>
             {part.chapters.map((c) => {
