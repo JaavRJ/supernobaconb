@@ -39,7 +39,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 12 / 14 |
+| 1 — Base | 🔨 En curso | 13 / 14 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
@@ -65,7 +65,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | F1-10 | Cielo: vista por era, línea de tiempo y nebulosas | Worker | F1-09 | ✅ |
 | F1-11 | Cielo: versión para celular y lista accesible | Worker | F1-10 | ✅ |
 | F1-12 | Reproductor persistente (versión inicial) | Worker | F1-03, F1-05 | ✅ |
-| F1-13 | Verificación final de la fase | Orquestador | todas | ⬜ |
+| F1-13 | Verificación final de la fase | Orquestador | todas | ✅ |
 | F1-14 | Recorrido de diseño con el artista | Orquestador + artista | F1-13 | ⬜ |
 
 ### F1-01 — Rama `artista` y proyecto Next.js en `web/`
@@ -120,7 +120,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
     - `none`: nada.
     - Va en `position: fixed` detrás del contenido, con `pointer-events: none` y `aria-hidden`.
   - **Fuentes:** las variables `--font-inter`, `--font-cinzel` y `--font-crimson` las define F1-05 con `next/font`. En F1-04 los tokens ya las referencian con fallback (`system-ui`, `serif`, `Georgia`).
-  - **Prueba:** página temporal `web/src/app/temas/page.tsx` que muestra el cielo y debajo cada era de `content/eras.ts` envuelta en `<EraTheme>`, con un título, un párrafo, un botón con acento y una línea. Se borra en F1-13.
+  - **Prueba:** página temporal `web/src/app/temas/page.tsx` que muestra el cielo y debajo cada era de `content/eras.ts` envuelta en `<EraTheme>`, con un título, un párrafo, un botón con acento y una línea. Se borra al final de F1-14.
 
 ### F1-05 — Layout raíz, menú y pie de página
 - **Archivos:** `web/src/app/layout.tsx`, `web/src/components/layout/`.
@@ -195,6 +195,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 - **Terminado cuando:**
   - Hay una lista de cambios de diseño acordados, anotada en este tablero.
   - Los ajustes acordados de tipografía, espacios, colores y composición de la portada están aplicados (con el mismo ciclo worker → reviewer).
+  - Al terminar, se borran las páginas de prueba `/temas` y `/reproductor-prueba` y el audio `web/public/audio/prueba.wav` (se conservaron para usarlas en el recorrido).
 
 ---
 
@@ -241,3 +242,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-10 | Worker hizo el selector de era (el cielo toma el tema de la era con transición), la línea de tiempo con fases encimadas y la nebulosa con su señal como "transmisión interceptada". Reviewer pidió correcciones: la nebulosa no se atenuaba (también visto por el orquestador), el panel podía recortarse en celular, y la línea de tiempo revelaba la fecha de inicio de la era 2. Decisión del orquestador: una nebulosa no muestra fechas; su franja empieza difuminada. Orquestador verificó en el navegador y que el HTML no contiene datos de la era 2. ✅ |
 | 2026-10-25 | — | Se agregan dos momentos de diseño: F1-14 (recorrido de diseño con el artista al cerrar la fase 1) y el "Pase de diseño con materiales reales". |
 | 2026-10-25 | F1-11 | Worker hizo el cielo vertical para pantallas angostas (dos SVG, uno visible por CSS), el toque en dos pasos y la vista "Ver como lista". Reviewer detectó una regresión: el panel de señal se cerraba al tocarlo porque había dos montados; ahora tarjeta y panel solo se montan en la escena visible. También áreas de toque de 44 px y contraste de la lista. Orquestador verificó a 375 px y en escritorio. Para F1-14: los hilos cruzan las etiquetas "Jabi" y "noba" a 375 px. ✅ |
+| 2026-10-25 | F1-13 | Verificación del orquestador: tipos, lint y build sin errores (todas las rutas estáticas o con prerender parcial); en modo producción las 13 rutas dan 200 y los slugs inexistentes 404 desde la primera visita; el HTML no contiene datos de la era 2; en el navegador, consola limpia tras reiniciar el servidor, el reproductor sigue sonando al navegar por el menú y desde una estrella, y sin scroll horizontal a 375 px en todas las páginas. El sitio viejo no cambió respecto a `main`. Las páginas de prueba se conservan para F1-14. ✅ |

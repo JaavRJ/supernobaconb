@@ -180,12 +180,12 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 ## 6. Fases
 
 ### Fase 1 — Base
-- [ ] Crear el proyecto Next.js en una rama nueva y conectar Firebase
-- [ ] Sistema de temas por era y tema base (cielo)
-- [ ] Menú, pie de página y layout raíz
-- [ ] **Portada**: acceso directo a lo último + mapa del cielo con las tres constelaciones, hilos y vista por era (con versión para celular)
-- [ ] Reproductor persistente (versión inicial)
-- [ ] Contenido de relleno donde aún falten datos
+- [x] Crear el proyecto Next.js en una rama nueva y conectar Firebase
+- [x] Sistema de temas por era y tema base (cielo)
+- [x] Menú, pie de página y layout raíz
+- [x] **Portada**: acceso directo a lo último + mapa del cielo con las tres constelaciones, hilos y vista por era (con versión para celular)
+- [x] Reproductor persistente (versión inicial)
+- [x] Contenido de relleno donde aún falten datos
 - [ ] **Recorrido de diseño con el artista**: revisar juntos el sitio en el navegador, anotar qué funciona y qué no, y ajustar tipografía, espacios, colores y la composición de la portada
 
 ### Fase 2 — Libro
