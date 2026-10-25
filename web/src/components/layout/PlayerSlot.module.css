@@ -1,3 +1,4 @@
+/* Capa fija que no intercepta clics; la barra flotante los recupera */
 .slot {
   position: fixed;
   right: 0;
@@ -5,4 +6,5 @@
   left: 0;
   z-index: 20;
   height: var(--player-height);
+  pointer-events: none;
 }

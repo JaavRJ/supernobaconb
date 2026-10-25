@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { getEra, getWork } from "@/content";
 import { eraThemeStyle } from "@/lib/theme";
 import { usePlayer } from "./PlayerProvider";
 import styles from "./MiniPlayer.module.css";
 
-const PLAYER_HEIGHT = "72px";
+/** Margen entre la barra flotante y el borde inferior (px); debe coincidir con el CSS */
+const PLAYER_MARGIN = 18;
 
 /** m:ss */
 function formatTime(seconds: number): string {
@@ -85,11 +86,25 @@ export function MiniPlayer() {
 
   const visible = Boolean(currentTrack);
 
-  // Reserva espacio al final de la página mientras el reproductor está visible
+  const barRef = useRef<HTMLDivElement>(null);
+
+  // Reserva espacio al final de la página: alto real de la barra + su margen inferior
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty("--player-height", visible ? PLAYER_HEIGHT : "0px");
-    return () => root.style.setProperty("--player-height", "0px");
+    const bar = barRef.current;
+    if (!visible || !bar) {
+      root.style.setProperty("--player-height", "0px");
+      return;
+    }
+    const update = () =>
+      root.style.setProperty("--player-height", `${bar.offsetHeight + PLAYER_MARGIN}px`);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(bar);
+    return () => {
+      observer.disconnect();
+      root.style.setProperty("--player-height", "0px");
+    };
   }, [visible]);
 
   if (!currentTrack) return null;
@@ -100,7 +115,12 @@ export function MiniPlayer() {
   const progressText = `${formatTime(currentTime)} de ${formatTime(total)}`;
 
   return (
-    <div className={styles.player} style={era ? eraThemeStyle(era.theme) : undefined}>
+    <div
+      ref={barRef}
+      className={styles.player}
+      style={era ? eraThemeStyle(era.theme) : undefined}
+    >
+      <div className={styles.thumb} aria-hidden="true" />
       <div className={styles.info}>
         <span className={styles.title}>{currentTrack.title}</span>
         {work && <span className={styles.work}>{work.title}</span>}
@@ -139,6 +159,7 @@ export function MiniPlayer() {
         <input
           type="range"
           className={styles.range}
+          style={{ "--pct": `${total ? (Math.min(currentTime, total) / total) * 100 : 0}%` } as CSSProperties}
           min={0}
           max={total}
           step={1}
@@ -162,6 +183,7 @@ export function MiniPlayer() {
         <input
           type="range"
           className={`${styles.range} ${styles.volumeRange}`}
+          style={{ "--pct": `${(muted ? 0 : volume) * 100}%` } as CSSProperties}
           min={0}
           max={1}
           step={0.05}
