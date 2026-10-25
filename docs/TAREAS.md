@@ -211,10 +211,10 @@ Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y 
 | ID | Tarea | Quién | Depende de | Estado |
 |---|---|---|---|---|
 | ID-01 | Base: paleta radiante, fuentes, logo, marca SUPERN✦BA y fondo cósmico | Worker | — | ✅ |
-| ID-02 | Portada: aviso "Nuevo" y composición del mockup | Worker | ID-01 | 🔨 |
+| ID-02 | Portada: aviso "Nuevo" y composición del mockup | Worker | ID-01 | ✅ |
 | ID-03 | Cielo radiante: núcleo con la estrella-brújula, íconos de faceta, nebulosa fotográfica, eras | Worker | ID-01 | 🔨 |
 | ID-04 | Era BDUEM en monocromo con scroll horizontal | Worker | ID-01 | 🔨 |
-| ID-05 | Reproductor y pie con la nueva estética | Worker | ID-01 | 🔨 |
+| ID-05 | Reproductor y pie con la nueva estética | Worker | ID-01 | 👀 |
 | ID-06 | Limpieza y verificación final | Orquestador | todas | ⬜ |
 
 #### ID-01 — Base
@@ -229,7 +229,7 @@ Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y 
 
 #### ID-02 — Portada
 - **Archivos:** `web/src/app/page.tsx`, `page.module.css`, `web/src/components/home/*`.
-- **Terminado cuando:** la portada sigue el mockup: aviso "Nuevo" centrado (etiqueta, título en Cinzel Decorative, era en cursiva, "Escuchar" cálido y "Ver en el cielo" que baja al cielo), luego el cielo y la línea de eras. Se borran `HomeHero`, `EclipseArt` y `LatestPlay` si ya no se usan; la lógica de fecha de "lo último" se conserva.
+- **Terminado cuando:** la portada sigue el mockup: aviso "Nuevo" centrado (etiqueta, título en Cinzel (como el mockup), era en cursiva, "Escuchar" cálido y "Ver en el cielo" que baja al cielo), luego el cielo y la línea de eras. Se borran `HomeHero`, `EclipseArt` y `LatestPlay` si ya no se usan; la lógica de fecha de "lo último" se conserva.
 
 #### ID-03 — Cielo radiante
 - **Archivos:** `web/src/components/sky/*`, colores en `web/src/content/constellations.ts`.
@@ -294,3 +294,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-13 | Verificación del orquestador: tipos, lint y build sin errores (todas las rutas estáticas o con prerender parcial); en modo producción las 13 rutas dan 200 y los slugs inexistentes 404 desde la primera visita; el HTML no contiene datos de la era 2; en el navegador, consola limpia tras reiniciar el servidor, el reproductor sigue sonando al navegar por el menú y desde una estrella, y sin scroll horizontal a 375 px en todas las páginas. El sitio viejo no cambió respecto a `main`. Las páginas de prueba se conservan para F1-14. ✅ |
 | 2026-10-25 | F1-14 | El artista rechazó el primer pase (eclipse, verde-negro) por no usar su identidad. El orquestador estudió el sitio original, escribió IDENTIDAD-VISUAL.md y armó un mockup aprobado. Se definen las tareas ID-01 a ID-06. |
 | 2026-10-25 | ID-01 | Worker hizo la base: paleta radiante, fuentes (Cinzel Decorative, Uncial Antiqua, Cormorant Garamond, Inter), `StarWord` con la estrella-brújula en la "O" (máscara de luminancia, probada en Chromium, Firefox y WebKit), header SUPERN✦BA y fondo `cosmos`. Reviewer pidió legibilidad del header al hacer scroll, logo con su formato real (JPEG) y subrayado del enlace activo; corregido y revisado en el navegador. ✅ |
+| 2026-10-25 | ID-02 | Worker hizo el aviso "Nuevo" del mockup (Escuchar con Spotify o el reproductor, Ver en el cielo) y borró la portada del eclipse. Reviewer: aprobada, casi idéntica al mockup a 1440 px y sin scroll horizontal a 390 px. ✅ |

@@ -1,8 +1,13 @@
+.notice {
+  padding: 0 var(--space-4);
+}
+
 .sky {
   max-width: 72rem;
-  margin: 0 auto;
-  padding: var(--space-4);
+  margin: 10px auto 0;
+  padding: 0 var(--space-4) var(--space-4);
   overflow-x: visible;
+  scroll-margin-top: var(--header-height);
 }
 
 .visuallyHidden {
