@@ -1,0 +1,53 @@
+.sky {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+.lines line {
+  stroke-width: 1;
+  stroke-opacity: 0.35;
+  vector-effect: non-scaling-stroke;
+}
+
+.star .core {
+  animation: twinkle var(--twinkle-duration, 4s) ease-in-out var(--twinkle-delay, 0s) infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.labels text {
+  pointer-events: none;
+}
+
+.name {
+  fill: var(--era-fg);
+  font-family: var(--era-font-display);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.facet {
+  fill: var(--era-fg-muted);
+  font-family: var(--era-font-body);
+  font-size: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star .core {
+    animation: none;
+  }
+}
+
+.unreleased {
+  opacity: 0.8;
+}

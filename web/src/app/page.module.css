@@ -17,5 +17,19 @@
 }
 
 .sky {
-  min-height: 60vh;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-4);
+  overflow-x: clip;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

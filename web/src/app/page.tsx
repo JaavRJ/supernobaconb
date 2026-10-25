@@ -1,4 +1,5 @@
 import { LatestRelease } from "@/components/home/LatestRelease";
+import { Sky } from "@/components/sky/Sky";
 import { site } from "@/content/site";
 import styles from "./page.module.css";
 
@@ -10,7 +11,10 @@ export default function Home() {
         <p className={styles.tagline}>{site.description}</p>
       </div>
       <LatestRelease />
-      <section id="cielo" aria-label="El cielo" className={styles.sky} />
+      <section id="cielo" className={styles.sky}>
+        <h2 className={styles.visuallyHidden}>El cielo</h2>
+        <Sky />
+      </section>
     </>
   );
 }
