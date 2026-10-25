@@ -196,9 +196,10 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - Quedan para después: reacciones, tarjeta de cita para Instagram, descarga en PDF, tutorial y aviso de newsletter del lector viejo
 
 ### Fase 3 — Música
-- [ ] Discografía (constelación + lista)
-- [ ] Página de disco/sencillo con tema propio, embeds y reproductor
-- [ ] Letras y créditos
+- [x] Discografía (constelación + lista)
+- [x] Página de disco/sencillo con tema propio, embeds y reproductor
+- [x] Letras y créditos
+- [x] Reproductor a pantalla completa con portada y letra
 
 ### Fase 4 — Jabi, videos, tienda y sobre mí
 - [ ] Página de proyectos de software y detalle de cada proyecto
@@ -280,12 +281,12 @@ Las tres facetas son las tres constelaciones del cielo (ver sección 2). Jabi in
 - Lector de BDUEM / este sitio → `construye` → BDUEM
 
 ### Aún falta
-- [ ] Portadas en alta calidad (las de Too Lost son links temporales)
+- [x] Portadas en alta calidad (las de Too Lost son links temporales)
 - [ ] Fotos para la portada, sobre mí y prensa
 - [ ] Biografía larga
 - [ ] Instagram, TikTok y otras redes
 - [ ] Colores o estética de cada era (si ya existe)
-- [ ] Audios para el reproductor propio (adelantos o exclusivas)
+- [x] Audios para el reproductor propio
 - [ ] Productos de la tienda y dónde se compran
 - [ ] Proyectos de software para Jabi: nombre, descripción, repositorio o demo, capturas
 - [ ] Primera señal de la era 2 (video glitch, frase o imagen)

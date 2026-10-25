@@ -41,7 +41,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 |---|---|---|
 | 1 — Base | ✅ Hecha | 14 / 14 |
 | 2 — Libro | ✅ Hecha | 9 / 9 |
-| 3 — Música | 🔨 En curso | 3 / 7 |
+| 3 — Música | ✅ Hecha | 7 / 7 |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
@@ -369,10 +369,10 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 | F3-01 | Material: letras, créditos, portadas y audios | Artista entrega, orquestador + worker | — | ✅ |
 | F3-02 | Fachada para embeds de Spotify y YouTube | Worker | — | ✅ |
 | F3-03 | Discografía `/musica`: constelación y lista | Worker | — (usa F3-01 si ya está) | ✅ |
-| F3-04 | Página de sencillo `/musica/[slug]` | Worker | F3-01, F3-02 | ⬜ |
-| F3-05 | Letras y créditos | Worker | F3-01, F3-04 | ⬜ |
-| F3-06 | Reproductor a pantalla completa con portada y letra | Worker | F3-01 | ⬜ |
-| F3-07 | Verificación final de la fase | Orquestador | todas | ⬜ |
+| F3-04 | Página de sencillo `/musica/[slug]` | Worker | F3-01, F3-02 | ✅ |
+| F3-05 | Letras y créditos | Worker | F3-01, F3-04 | ✅ |
+| F3-06 | Reproductor a pantalla completa con portada y letra | Worker | F3-01 | ✅ |
+| F3-07 | Verificación final de la fase | Orquestador | todas | ✅ |
 
 **Orden y paralelo:** F3-02 y F3-03 empiezan ya (no comparten archivos). F3-01 arranca cuando llegue el material. Después F3-04 y F3-06 en paralelo, luego F3-05 y al final F3-07.
 
@@ -502,3 +502,7 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F3-03 | Worker hizo `/musica`: constelación Supernoba sola (opción `only` en `Sky`, sin selector de eras, línea de tiempo ni nebulosas) y lista de sencillos con portada, fecha, era, canciones, "Escuchar" y plataformas; obras por publicar apagadas. Reviewer: sin problemas en el cielo de la portada; el orquestador corrigió el nombre accesible de los enlaces a plataformas. Verificado en el navegador a 1440 y 390 px, y la portada sin cambios. Para revisar con el artista: en escritorio "Constelación" muestra el cielo y la lista, y "Lista" oculta el cielo. ✅ |
 | 2026-10-25 | F3 | Artista: los audios del reproductor propio no llevan etiqueta de "adelanto" o "exclusiva"; se quita `audio.txt` de la entrega. |
 | 2026-10-25 | F3-01 | El artista entregó letras, créditos, audios (MP3, WAV de 86 MB y FLAC) y portadas en PNG de 3500 px. El orquestador convirtió los audios a MP3 de 128 kbps (2.7, 3.9 y 2.6 MB; duraciones iguales a Spotify) y las portadas a WebP de 1400 px (175 y 231 KB) más JPEG de 512 px, sin instalar nada en el sistema. Worker pasó letras por estrofas, créditos, audios y portadas a los datos; el reproductor y la sesión de medios usan la portada real. Orquestador comprobó que las 96 líneas de letra coinciden con los archivos del artista y, en el navegador, que "Escuchar" en `/musica` reproduce el audio propio y sigue sonando al navegar. Sin reviewer: cambio de datos verificado línea por línea. ✅ |
+| 2026-10-25 | F3-06 | Worker hizo el reproductor a pantalla completa (diálogo modal en portal, resto de la página inerte, Escape, botón y gesto hacia abajo; escritorio: portada, controles y cola a la izquierda y letra a la derecha; celular: una columna con pestañas Letra / Cola). Reviewer: aprobada; el orquestador agregó la cancelación del gesto. Verificado en el navegador a 1440 y 390 px: la letra se ve, Escape cierra, el foco vuelve y la música no se corta. ✅ |
+| 2026-10-25 | F3-04 | Worker hizo la página de sencillo en el tema BDUEM: portada a color con marco, título con la estrella, canciones con reproducir y la que suena marcada, embeds con fachada y "Conectado con" desde los hilos (part3 → Parte 3 del libro). Reviewer: aprobada; el orquestador agregó `aria-current`. Verificado a 1440 y 390 px. Para revisar con el artista: un video de YouTube grande por canción. ✅ |
+| 2026-10-25 | F3-05 | Worker hizo `Lyrics` y `Credits` (servidor, letra en el HTML con ancla por canción, créditos en `dl`, enlace "Letra" en la lista). Orquestador lo revisó a 1440 y 390 px: agregó margen lateral en celular y ajustó el ancla a la altura del header. Sin reviewer: componente de presentación verificado en el navegador. ✅ |
+| 2026-10-25 | F3-07 | Verificación del orquestador: tipos, lint y build sin errores; en producción `/musica`, `/musica/rulos` y `/musica/nohablobien-part3` dan 200, `/musica/nada` 404, audios y portadas 200; el HTML trae las letras y el enlace a la Parte 3 y ningún iframe; en el navegador, antes de pulsar solo se piden miniaturas de `i.ytimg.com`, y Spotify carga al pulsar. Consola limpia. Servidor de prueba detenido. **Fase 3 terminada.** Para revisar con el artista: un video grande por canción en la página del sencillo y el selector Constelación/Lista de `/musica`. ✅ |
