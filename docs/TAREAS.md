@@ -41,7 +41,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 |---|---|---|
 | 1 — Base | ✅ Hecha | 14 / 14 |
 | 2 — Libro | ✅ Hecha | 9 / 9 |
-| 3 — Música | ⬜ Pendiente | se detalla al empezar |
+| 3 — Música | ⬜ Pendiente | 0 / 7 |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
@@ -354,10 +354,91 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 
 ---
 
-## Fases siguientes (se detallan al empezar)
+## Fase 3 — Música
 
-### Fase 3 — Música
-Discografía · página de sencillo/disco con embeds y reproductor · letras y créditos.
+**Decisiones de la fase 3**
+- **Letras públicas** (decisión del artista, 2026-10-25): se leen sin sesión y Google las puede indexar.
+- **Material del artista listo**: letras, créditos, audios propios y portadas en alta. Se entrega en `web/materiales/musica/` (carpeta ignorada por git, ver F3-01) y el orquestador lo pasa a datos.
+- **Dónde vive el material en esta fase**: letras y créditos en `web/src/content/` (como el resto del contenido; pasan a Firestore en la Fase 5); portadas optimizadas en `web/public/musica/` y audios en `web/public/audio/` (MP3, ≤ 3 MB por adelanto). En la Fase 5 los audios pasan a Firebase Storage.
+- **Estética**: `/musica` es parte del cielo base (radiante). La página de cada sencillo toma el tema de su era: Rulos y nohablobien / part3 son de la era BDUEM, así que van en monocromo con Uncial y Cormorant. **Las portadas se muestran a color** (son la obra), con el marco fino de las polaroids, sin giro; es la única excepción al blanco y negro de la era y se confirma con el artista al revisarla en el navegador.
+- **Embeds de Spotify y YouTube con fachada**: no se cargan hasta que alguien pulsa "Escuchar en Spotify" o "Ver video", para no meter cookies de terceros ni pesar en la carga.
+- **Reproductor propio** para adelantos y exclusivas, con una etiqueta que dice cuál es cuál; las canciones publicadas también enlazan a las plataformas.
+
+| ID | Tarea | Quién | Depende de | Estado |
+|---|---|---|---|---|
+| F3-01 | Material: letras, créditos, portadas y audios | Artista entrega, orquestador + worker | — | ⬜ |
+| F3-02 | Fachada para embeds de Spotify y YouTube | Worker | — | ⬜ |
+| F3-03 | Discografía `/musica`: constelación y lista | Worker | — (usa F3-01 si ya está) | ⬜ |
+| F3-04 | Página de sencillo `/musica/[slug]` | Worker | F3-01, F3-02 | ⬜ |
+| F3-05 | Letras y créditos | Worker | F3-01, F3-04 | ⬜ |
+| F3-06 | Reproductor a pantalla completa con portada y letra | Worker | F3-01 | ⬜ |
+| F3-07 | Verificación final de la fase | Orquestador | todas | ⬜ |
+
+**Orden y paralelo:** F3-02 y F3-03 empiezan ya (no comparten archivos). F3-01 arranca cuando llegue el material. Después F3-04 y F3-06 en paralelo, luego F3-05 y al final F3-07.
+
+### F3-01 — Material: letras, créditos, portadas y audios
+- **Entrega del artista** en `web/materiales/musica/` (se agrega `materiales/` a `web/.gitignore`), una carpeta por canción con su `id` (`rulos`, `nohablobien`, `part3`):
+  - `letra.txt` (estrofas separadas por una línea en blanco).
+  - `creditos.txt` (una línea por rol, por ejemplo "Producción: …").
+  - `audio.mp3` y, en `audio.txt`, si es **adelanto** o **exclusiva**.
+  - La portada de cada sencillo en `web/materiales/musica/portadas/` (`rulos.jpg`, `nohablobien-part3.jpg`), en el mayor tamaño que tengas.
+- **Archivos:** `web/.gitignore`, `web/src/types/content.ts` (`Track`: `lyrics` como estrofas, `credits`, `audioKind`), `web/src/content/tracks.ts`, `web/src/content/works.ts` (`coverUrl`), `web/public/musica/`, `web/public/audio/`.
+- **Terminado cuando:**
+  - Cada canción tiene su letra, créditos y audio con su tipo; cada sencillo, su portada.
+  - Portadas en WebP o JPEG de hasta 1400 px y ≤ 300 KB, más una de 512 px para el reproductor y la sesión de medios.
+  - Audios en MP3 de ≤ 3 MB; si son más pesados, se acortan o se recomprimen y se avisa al artista.
+  - El aviso "Nuevo" de la portada y el reproductor ya usan la portada real.
+  - Nada de `web/materiales/` entra a git.
+
+### F3-02 — Fachada para embeds de Spotify y YouTube
+- **Archivos:** `web/src/components/music/Embed*` (nuevo).
+- **Terminado cuando:**
+  - `<SpotifyEmbed url>` y `<YouTubeEmbed url>` muestran primero una tarjeta ligera (portada o miniatura, título y un botón "Escuchar en Spotify" o "Ver video"); al pulsarla se carga el `iframe` oficial (`open.spotify.com/embed/…`, `youtube-nocookie.com/embed/…`).
+  - Antes del clic no hay ninguna petición a Spotify ni a YouTube (verificable en la pestaña de red), salvo la miniatura de YouTube, que se sirve desde `i.ytimg.com` o desde una imagen local.
+  - Aceptan URL de canción, álbum y video tal como están en `content/`.
+  - Accesibles (botón real, título del `iframe`), sin desbordar a 390 px y con la estética de la era donde se usen (variables `--era-*`).
+
+### F3-03 — Discografía `/musica`: constelación y lista
+- **Archivos:** `web/src/app/musica/page.tsx`, `web/src/components/music/Discography*` (nuevo).
+- **Terminado cuando:**
+  - Arriba, la constelación **Supernoba** sola (reutiliza el dibujo y la lógica de `web/src/components/sky/`, sin duplicarla: si hace falta, se agrega una opción para filtrar por constelación) con sus estrellas enlazadas a cada sencillo.
+  - Debajo, la vista de lista: cada sencillo con portada, nombre, fecha, era, número de canciones, y botones "Escuchar" (reproductor propio si hay audio) y a plataformas.
+  - Un selector "Constelación / Lista" en escritorio; en celular la lista va primero.
+  - Las obras por publicar aparecen apagadas con su fecha.
+  - Página en el tema base radiante, accesible y sin scroll horizontal a 390 px.
+
+### F3-04 — Página de sencillo `/musica/[slug]`
+- **Archivos:** `web/src/app/musica/[slug]/page.tsx`, `web/src/components/music/Release*` (nuevo).
+- **Terminado cuando:**
+  - Toma el tema de su era (`EraTheme`) con etiqueta vertical "SUPERNOBA": portada grande con marco fino, título, tipo y fecha, era y botones a Spotify, Apple Music, YouTube y el smart link.
+  - Lista de canciones con número, duración, explícito y botón de reproducir (reproductor propio con la etiqueta adelanto/exclusiva, o enlace a la plataforma si no hay audio).
+  - Embed de Spotify del sencillo y videos de YouTube con la fachada de F3-02.
+  - Sección **"Conectado con"** con sus hilos: por ejemplo, part3 → "inspirada en la Parte 3: Supernoba" con enlace a `/libros/bduem/leer/parte-3`.
+  - Deja un lugar claro para letras y créditos (F3-05).
+  - 404 real en slugs inexistentes, metadatos con título y descripción, accesible y sin scroll horizontal a 390 px.
+
+### F3-05 — Letras y créditos
+- **Archivos:** `web/src/components/music/Lyrics*` y `Credits*` (nuevos), la página de F3-04 para insertarlos.
+- **Terminado cuando:**
+  - Cada canción tiene su letra completa en la página del sencillo, con estrofas, en Cormorant, y un ancla propia (`/musica/nohablobien-part3#letra-part3`).
+  - Los créditos aparecen bajo cada letra o al final del sencillo, en texto pequeño.
+  - La letra está en el HTML del servidor (indexable) y se puede copiar.
+  - Si una canción no tiene letra, la sección no aparece.
+
+### F3-06 — Reproductor a pantalla completa con portada y letra
+- **Archivos:** `web/src/components/player/*`.
+- **Terminado cuando:**
+  - El mini reproductor se expande a una vista completa con la portada grande, título, sencillo, la etiqueta adelanto/exclusiva, controles, cola y la letra de la canción (si la tiene), con el tema de la era de la canción.
+  - Se cierra con Escape, con el botón de bajar o con un gesto hacia abajo en celular; el foco se maneja bien y el resto de la página queda inerte mientras está abierta.
+  - La sesión de medios del sistema muestra la portada real.
+  - La música sigue sonando al navegar, como en F1-12.
+
+### F3-07 — Verificación final de la fase
+- **Terminado cuando:** tipos, lint y build sin errores; en producción `/musica`, `/musica/rulos` y `/musica/nohablobien-part3` dan 200 y un slug inexistente 404; antes de pulsar un embed no hay peticiones a Spotify ni YouTube; los audios suenan y siguen al navegar; revisión en el navegador a 1440 y 390 px; el plan y este tablero actualizados.
+
+---
+
+## Fases siguientes (se detallan al empezar)
 
 ### Fase 4 — Jabi, videos, tienda y sobre mí
 Proyectos de software · páginas de era y "Conectado con" · videos y fotos · tienda con links · biografía y kit de prensa.

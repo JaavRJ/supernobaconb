@@ -297,4 +297,4 @@ Las tres facetas son las tres constelaciones del cielo (ver sección 2). Jabi in
 
 - Pagos integrados en la tienda (Stripe) o solo links externos a largo plazo
 - Dominio propio para el sitio de artista
-- Si las letras de las canciones son públicas o exclusivas para suscriptores
+- ~~Si las letras de las canciones son públicas o exclusivas para suscriptores~~ Decidido (2026-10-25): públicas

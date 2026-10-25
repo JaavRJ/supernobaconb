@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Material del artista sin procesar (letras, audios, portadas en alta)
+/materiales/
