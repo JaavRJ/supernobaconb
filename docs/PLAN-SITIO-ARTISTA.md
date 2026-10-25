@@ -189,10 +189,11 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - [x] **Recorrido de diseño con el artista** (resultado: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md)): revisar juntos el sitio en el navegador, anotar qué funciona y qué no, y ajustar tipografía, espacios, colores y la composición de la portada
 
 ### Fase 2 — Libro
-- [ ] Migrar el lector (paginado y vertical), resaltados, citas, marcadores y notas del autor
-- [ ] Página de la era BDUEM con su estética espacial
-- [ ] Publicación escalonada y redirecciones de `/parteN`
-- [ ] Migrar los puzzles
+- [x] Migrar el lector (paginado y vertical), resaltados, citas, marcadores y notas del autor
+- [x] Página de la era BDUEM con su estética espacial
+- [x] Publicación escalonada y redirecciones de `/parteN`
+- [x] Migrar los puzzles
+- Quedan para después: reacciones, tarjeta de cita para Instagram, descarga en PDF, tutorial y aviso de newsletter del lector viejo
 
 ### Fase 3 — Música
 - [ ] Discografía (constelación + lista)

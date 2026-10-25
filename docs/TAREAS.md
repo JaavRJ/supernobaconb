@@ -40,7 +40,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | Fase | Estado | Progreso |
 |---|---|---|
 | 1 — Base | ✅ Hecha | 14 / 14 |
-| 2 — Libro | 🔨 En curso | 0 / 9 |
+| 2 — Libro | ✅ Hecha | 9 / 9 |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
@@ -266,15 +266,15 @@ Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y 
 
 | ID | Tarea | Quién | Depende de | Estado |
 |---|---|---|---|---|
-| F2-01 | Contenido del libro desde Firestore | Worker | — | ⬜ |
-| F2-02 | Sesión y datos del lector | Worker | — | ⬜ |
-| F2-03 | Puzzles `/0618am` y `/0618am/030806` | Worker | — | ⬜ |
-| F2-04 | Lector: página de la parte y lectura continua | Worker | F2-01 | ⬜ |
-| F2-05 | Publicación escalonada, redirecciones y "Leer la Parte 1" | Worker | F2-01 | ⬜ |
-| F2-06 | Antesala de cada parte: fragmentos y polaroids | Worker | F2-04 | ⬜ |
-| F2-07 | Modo páginas y configuración de lectura | Worker | F2-02, F2-04 | ⬜ |
-| F2-08 | Resaltados, citas, marcadores y notas del autor | Worker | F2-02, F2-07 | ⬜ |
-| F2-09 | Verificación final de la fase | Orquestador | todas | ⬜ |
+| F2-01 | Contenido del libro desde Firestore | Worker | — | ✅ |
+| F2-02 | Sesión y datos del lector | Worker | — | ✅ |
+| F2-03 | Puzzles `/0618am` y `/0618am/030806` | Worker | — | ✅ |
+| F2-04 | Lector: página de la parte y lectura continua | Worker | F2-01 | ✅ |
+| F2-05 | Publicación escalonada, redirecciones y "Leer la Parte 1" | Worker | F2-01 | ✅ |
+| F2-06 | Antesala de cada parte: fragmentos y polaroids | Worker | F2-04 | ✅ |
+| F2-07 | Modo páginas y configuración de lectura | Worker | F2-02, F2-04 | ✅ |
+| F2-08 | Resaltados, citas, marcadores y notas del autor | Worker | F2-02, F2-07 | ✅ |
+| F2-09 | Verificación final de la fase | Orquestador | todas | ✅ |
 
 Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM" de [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y los componentes de `web/src/components/era/` (`VerticalLabel`, `Polaroid`, `EraPanel`, `HorizontalScroll`) y `web/src/components/brand/StarWord`. Negro puro, luz blanca, Uncial Antiqua en títulos y Cormorant Garamond en el texto; nada de color.
 
@@ -405,3 +405,14 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-14 | Identidad visual aplicada. **Fase 1 terminada.** Nota: el reproductor ya no tiene página de prueba; se podrá probar cuando haya audios reales (Fase 3). ✅ |
 | 2026-10-25 | ID-07 | El artista rechazó el aviso "Nuevo" centrado. Worker hizo el hero con SUPERN✦BA gigante sobre el cielo cósmico y "Nuevo" como estrella con anotación en el lateral (escritorio) e isla flotante (celular). Orquestador lo verificó en el navegador a 1440 y 390 px y corrigió el título cortado de la isla; sin reviewer por ser un cambio acotado. ✅ |
 | 2026-10-25 | ID-07 | Ajuste pedido por el artista: la isla de celular estaba chueca y estorbaba. Ahora es una pastilla "Nuevo" que se abre en un panel compacto y solo aparece mientras se ve la primera pantalla. Verificado a 390 px. ✅ |
+| 2026-10-25 | F2 | Orquestador midió el contenido real: el texto completo y las notas del autor están en Firestore (lo local era relleno). Se detallan las tareas F2-01 a F2-09. |
+| 2026-10-25 | F2-01 | Worker hizo la lectura de Firestore por REST con caché, la limpieza con `sanitize-html`, el corte en capítulos (5, 4, 4, 3) y el marcado de notas (23 de 23). Reviewer: aprobada; el orquestador agregó un tiempo límite a la red. La lista blanca final es `p`, `br`, `em`, `strong` (los `h2` los genera el corte). Para F2-08: el título y texto de las notas se muestran como texto, no como HTML. ✅ |
+| 2026-10-25 | F2-03 | Worker migró los dos puzzles sin librerías de arrastre (Pointer Events, teclado con flechas, tablero que escala). Reviewer: aprobada; el orquestador corrigió la cancelación del arrastre y el multitoque. ✅ |
+| 2026-10-25 | F2-02 | Worker hizo la sesión con Google y los datos del lector con las rutas del sitio viejo. Reviewer pidió corregir una carrera al cerrar sesión durante la migración (media), datos del usuario anterior en pantalla y errores silenciosos; corregidos. Desvíos aceptados: con sesión no se guarda copia local; letra por defecto 20 px. Falta probarlo contra Firestore real con la interfaz (F2-07/F2-08). ✅ |
+| 2026-10-25 | F2-05 | Worker hizo las redirecciones permanentes de `/parte1…4`, el enlace "Leer la Parte 1" y el índice con partes enlazadas o apagadas según su fecha (`"use cache"` + `cacheLife("hours")`). Reviewer pidió contraste en la parte apagada (media); el orquestador la dejó en #7a7a7a (4.9:1). ✅ |
+| 2026-10-25 | F2-04 | Worker hizo `/libros/bduem/leer/parte-N` (estática, 404 real en otros slugs): encabezado en Uncial con la estrella en la "O", índice de capítulos, texto en Cormorant a 34em, barra fija con progreso y tiempo restante (bajo el header global), final con enlaces y estados "por publicar" (cuenta regresiva) y "no disponible". Reviewer: aprobada. Orquestador lo revisó en el navegador a 1440 y 390 px (sin scroll horizontal, texto a 20 px en celular) y corrigió el título de capítulo repetido: el `h2` del HTML ahora es el encabezado del capítulo, conservando la nota del autor de "Cielo Estrellado". Nota: una parte puede tardar hasta 1 h en abrirse después de su fecha (caché). ✅ |
+| 2026-10-25 | F2-07 | Worker hizo el modo páginas (columnas CSS, flechas, deslizar, clic en los bordes, "pág. X de N"), el panel "Aa" (modo, 5 tamaños, 3 interlineados, índice de capítulos) y "Continuar donde te quedaste"; montó `ReaderDataProvider` y corrigió un `new Date()` en el render de F2-02 que rompía el prerender. Reviewer pidió (bajas) que el foco no quede en otra página y un índice en modo páginas; el orquestador vio en el navegador que las flechas fallaban tras cerrar el panel. Corregido. Verificado a 1440 y 390 px: al cambiar el ancho se conserva el punto (pág. 3/32 → 4/60). Decisión: en modo páginas la portada y la antesala no se muestran. ✅ |
+| 2026-10-25 | F2-06 | Worker pasó a datos los 16 fragmentos y 16 fotos de las páginas viejas (5, 4, 4, 3) y creó `PartPrelude` con `HorizontalScroll` y polaroids. Reviewer: aprobada. Orquestador la integró entre la portada y el texto, sin repetir el título de la parte, con paneles numerados para lector de pantalla; verificada a 1440 (rueda → horizontal) y 390 px (vertical, sin desborde). ✅ |
+| 2026-10-25 | F2-03 | Orquestador revisó los puzzles en el navegador: el encabezado no tomaba el negro de la era y había un `<main>` dentro de otro; corregido. A 390 px el margen de acierto de las estrellas nunca baja de 22 px. ✅ |
+| 2026-10-25 | F2-08 | Worker hizo el menú de selección (Resaltar, Guardar cita, Copiar, Compartir), los resaltados con la CSS Custom Highlight API (respaldo con `<mark>`) anclados por capítulo, desplazamiento y contexto, también los del sitio viejo; marcador y panel "Mis citas y marcadores" con invitación a iniciar sesión; notas del autor enfocables con su tarjeta. Reviewer marcó como alta que el nombre del resaltado no coincidía con el CSS: el orquestador comprobó en el navegador que sí coincide (CSS Modules transforma los dos) y que el resaltado se dibuja y se guarda. El orquestador hizo opaca la barra del lector porque las polaroids de la antesala se veían encima al hacer scroll. Pendiente menor: el efecto de resaltados se repite al cambiar letra o modo (solo rendimiento). ✅ |
+| 2026-10-25 | F2-09 | Verificación del orquestador: tipos, lint y build sin errores. En producción (`next start` en otro puerto, ya detenido): `/libros/bduem/leer/parte-1…4` dan 200 con el texto y las notas en el HTML; `parte-5` y `foo` dan 404; `/parte1…4` redirigen con 308; `/pruebas` da 404; los puzzles dan 200 con `noindex`; la era BDUEM enlaza las cuatro partes. Consola limpia en producción. Lector revisado en el navegador a 1440 y 390 px en los dos modos, con antesala, panel "Aa", resaltado y nota del autor. Sin probar todavía: guardar en la cuenta con sesión de Google real. **Fase 2 terminada.** ✅ |
