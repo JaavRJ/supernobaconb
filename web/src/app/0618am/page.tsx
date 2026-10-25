@@ -13,11 +13,11 @@ export default function CuadraticoPage() {
   if (!era) throw new Error("Falta la era bduem en @/content");
   return (
     <EraTheme era={era}>
-      <main>
+      <div data-era-page>
         <ClientOnly>
           <CuadraticoPuzzle />
         </ClientOnly>
-      </main>
+      </div>
     </EraTheme>
   );
 }

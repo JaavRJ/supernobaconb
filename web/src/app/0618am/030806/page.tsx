@@ -12,9 +12,9 @@ export default function ConstelacionPage() {
   if (!era) throw new Error("Falta la era bduem en @/content");
   return (
     <EraTheme era={era}>
-      <main>
+      <div data-era-page>
         <ConstellationPuzzle />
-      </main>
+      </div>
     </EraTheme>
   );
 }

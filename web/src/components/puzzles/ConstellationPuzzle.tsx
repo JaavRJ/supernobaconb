@@ -14,6 +14,8 @@ interface Star {
 const BOARD_W = 1100;
 const BOARD_H = 480;
 const TOLERANCE = 40;
+/** En pantallas chicas el tablero se encoge: el acierto nunca baja de este margen en píxeles */
+const MIN_TOLERANCE_PX = 22;
 const KEY_STEP = 12;
 
 const INITIAL: Star[] = [
@@ -55,11 +57,13 @@ export function ConstellationPuzzle() {
   const place = (id: number, x: number, y: number, settle: boolean) => {
     const nx = clamp(x, BOARD_W);
     const ny = clamp(y, BOARD_H);
+    const width = boardRef.current?.getBoundingClientRect().width ?? BOARD_W;
+    const tolerance = Math.max(TOLERANCE, (MIN_TOLERANCE_PX * BOARD_W) / width);
     setStars((prev) =>
       prev.map((s) => {
         if (s.id !== id || s.done) return s;
         const t = TARGETS[id - 1];
-        if (settle && Math.hypot(nx - t.x, ny - t.y) < TOLERANCE) {
+        if (settle && Math.hypot(nx - t.x, ny - t.y) < tolerance) {
           return { ...s, x: t.x, y: t.y, done: true };
         }
         return { ...s, x: nx, y: ny };
