@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent } from "react";
 import { Backdrop } from "@/components/theme/Backdrop";
 import { eraThemeStyle } from "@/lib/theme";
-import type { SkyLayout, SkyNebula, SkyOrientation } from "./layout";
+import { FacetIcon } from "./FacetIcon";
+import { coreVisualRadius, type SkyLayout, type SkyNebula, type SkyOrientation } from "./layout";
 import {
   THREAD_LABELS,
   THREAD_ORDER,
@@ -246,35 +247,55 @@ export function SkyInteractive({
                 <stop offset="100%" stopColor={color} stopOpacity="0" />
               </radialGradient>
             ))}
-            {nebulas.map((n) => {
-              const accent = eras.find((e) => e.id === n.eraId)?.theme.accent ?? "#ffffff";
-              return (
-                <radialGradient key={n.eraId} id={`${prefix}-nebula-${n.eraId}`}>
-                  <stop offset="0%" stopColor={accent} stopOpacity="0.55" />
-                  <stop offset="55%" stopColor={accent} stopOpacity="0.18" />
-                  <stop offset="100%" stopColor={accent} stopOpacity="0" />
-                </radialGradient>
-              );
-            })}
-            {layout.threads.map((t) => {
-              const a = starById.get(t.from);
-              const b = starById.get(t.to);
-              if (!a || !b) return null;
-              return (
-                <linearGradient
-                  key={t.id}
-                  id={`${prefix}-thread-${t.id}`}
-                  gradientUnits="userSpaceOnUse"
-                  x1={a.x}
-                  y1={a.y}
-                  x2={b.x}
-                  y2={b.y}
-                >
-                  <stop offset="0%" stopColor={a.color} />
-                  <stop offset="100%" stopColor={b.color} />
-                </linearGradient>
-              );
-            })}
+            <radialGradient id={`${prefix}-core-glow`}>
+              <stop offset="0%" stopColor="#f2d9a6" stopOpacity="0.38" />
+              <stop offset="35%" stopColor="#f2d9a6" stopOpacity="0.12" />
+              <stop offset="70%" stopColor="#f2d9a6" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id={`${prefix}-cloud-mask`}>
+              <stop offset="0%" stopColor="#fff" />
+              <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+            </radialGradient>
+            {nebulas.map((n, i) => (
+              <filter
+                key={n.eraId}
+                id={`${prefix}-cloud-${n.eraId}`}
+                x="-50%"
+                y="-50%"
+                width="200%"
+                height="200%"
+              >
+                <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" seed={7 + i} />
+                <feColorMatrix values="0 0 0 0 .62  0 0 0 0 .66  0 0 0 0 .78  0 0 0 .9 -.25" />
+                <feGaussianBlur stdDeviation="3" />
+                <feComposite in2="SourceGraphic" operator="in" />
+              </filter>
+            ))}
+            {layout.stars
+              .filter((s) => s.core && !s.unreleased)
+              .map((s) => {
+                const size = coreVisualRadius(orientation) * 2;
+                return (
+                  <mask
+                    key={s.workId}
+                    id={`${prefix}-core-mask-${s.workId}`}
+                    maskUnits="userSpaceOnUse"
+                    x={s.x - size / 2}
+                    y={s.y - size / 2}
+                    width={size}
+                    height={size}
+                  >
+                    <image
+                      href="/brand/estrella.jpg"
+                      x={s.x - size / 2}
+                      y={s.y - size / 2}
+                      width={size}
+                      height={size}
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                  </mask>
+                );
+              })}
           </defs>
 
           <g className={styles.lines}>
@@ -291,7 +312,6 @@ export function SkyInteractive({
                 y1={l.y1}
                 x2={l.x2}
                 y2={l.y2}
-                stroke={constellationColors[l.constellation]}
               />
             ))}
           </g>
@@ -313,7 +333,6 @@ export function SkyInteractive({
                   data-to={t.to}
                   d={t.path}
                   fill="none"
-                  stroke={`url(#${prefix}-thread-${t.id})`}
                 />
               );
             })}
@@ -322,14 +341,17 @@ export function SkyInteractive({
           <g className={styles.nebulas} aria-hidden="true">
             {nebulas.map((n) => {
               const off = eraFilter && selected?.id !== n.eraId;
-              const fill = `url(#${prefix}-nebula-${n.eraId})`;
               return (
                 <g key={n.eraId} className={classes(styles.nebulaWrap, off && styles.dim)}>
-                  <g className={styles.nebula} style={{ transformOrigin: `${n.x}px ${n.y}px` }}>
-                    <circle cx={n.x} cy={n.y} r={n.r * 1.5} fill={fill} />
-                    <circle cx={n.x - n.r * 0.35} cy={n.y + n.r * 0.1} r={n.r * 0.8} fill={fill} />
-                    <circle cx={n.x + n.r * 0.4} cy={n.y - n.r * 0.15} r={n.r * 0.65} fill={fill} />
-                  </g>
+                  <ellipse
+                    className={styles.nebula}
+                    cx={n.x}
+                    cy={n.y}
+                    rx={n.r * 2.2}
+                    ry={n.r * 1.4}
+                    fill={`url(#${prefix}-cloud-mask)`}
+                    filter={`url(#${prefix}-cloud-${n.eraId})`}
+                  />
                 </g>
               );
             })}
@@ -347,10 +369,17 @@ export function SkyInteractive({
                 activeId !== null
                   ? s.workId !== activeId && !isLit
                   : eraFilter && !inEra(s.workId);
+              const coreR = coreVisualRadius(orientation);
+              const isCoreStar = s.core && !s.unreleased;
               const content = (
                 <>
-                  <circle className={styles.hit} cx={s.x} cy={s.y} r={hitRadius(s)} />
-                  <circle className={styles.ring} cx={s.x} cy={s.y} r={s.r + 9} />
+                  <circle
+                    className={styles.hit}
+                    cx={s.x}
+                    cy={s.y}
+                    r={isCoreStar ? Math.max(hitRadius(s), coreR * 0.85) : hitRadius(s)}
+                  />
+                  <circle className={styles.ring} cx={s.x} cy={s.y} r={isCoreStar ? coreR * 0.8 : s.r + 9} />
                   {s.unreleased ? (
                     <circle
                       cx={s.x}
@@ -362,6 +391,20 @@ export function SkyInteractive({
                       strokeDasharray="3 3"
                       opacity={0.55}
                     />
+                  ) : isCoreStar ? (
+                    <>
+                      <circle cx={s.x} cy={s.y} r={coreR * 2.7} fill={`url(#${prefix}-core-glow)`} />
+                      <g className={styles.core}>
+                        <rect
+                          x={s.x - coreR}
+                          y={s.y - coreR}
+                          width={coreR * 2}
+                          height={coreR * 2}
+                          fill="#fff"
+                          mask={`url(#${prefix}-core-mask-${s.workId})`}
+                        />
+                      </g>
+                    </>
                   ) : (
                     <>
                       <circle
@@ -437,6 +480,32 @@ export function SkyInteractive({
                 </g>
               );
             })}
+          </g>
+
+          <g aria-hidden="true">
+            {layout.stars
+              .filter((s) => s.main)
+              .map((s) => {
+                const coreR = coreVisualRadius(orientation);
+                const side = s.x < width / 2 ? -1 : 1;
+                const radius = portrait ? 26 : 19;
+                const x = s.core ? s.x + coreR * 1.15 : s.x + side * (s.r + radius + 14);
+                const y = s.core ? s.y + coreR * 0.8 : s.y - (s.r + radius + 8);
+                const dim =
+                  activeId !== null
+                    ? s.workId !== activeId && !connected.has(s.workId)
+                    : eraFilter && !inEra(s.workId);
+                return (
+                  <FacetIcon
+                    key={s.workId}
+                    constellation={s.constellation}
+                    x={x}
+                    y={y}
+                    radius={radius}
+                    dim={dim}
+                  />
+                );
+              })}
           </g>
 
           <g className={styles.labels}>
@@ -518,7 +587,7 @@ export function SkyInteractive({
                 style={{
                   left,
                   top: `${(n.y / height) * 100}%`,
-                  width: `${((n.r * 2) / width) * 100}%`,
+                  width: `${((n.r * 3) / width) * 100}%`,
                 }}
                 aria-label="Una nebulosa. Ver señal"
                 aria-expanded={isOpen}
@@ -641,7 +710,6 @@ export function SkyInteractive({
                   y1={4}
                   x2={38}
                   y2={4}
-                  stroke="currentColor"
                 />
               </svg>
               {THREAD_LABELS[kind]}

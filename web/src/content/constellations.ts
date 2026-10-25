@@ -6,7 +6,7 @@ export const constellations: Constellation[] = [
     name: "Jabi",
     facet: "el que piensa",
     description: "Proyectos de software, herramientas, experimentos, puzzles y secretos.",
-    color: "#7fd8c8",
+    color: "#e6f2f7",
     skyRegion: { x: 0.2, y: 0.35 },
   },
   {
@@ -14,7 +14,7 @@ export const constellations: Constellation[] = [
     name: "noba",
     facet: "el que escribe",
     description: "Los libros y textos: Brillo de una Estrella Muerta y los que vienen.",
-    color: "#f1e6d0",
+    color: "#ffffff",
     skyRegion: { x: 0.5, y: 0.6 },
   },
   {
@@ -22,7 +22,7 @@ export const constellations: Constellation[] = [
     name: "Supernoba",
     facet: "el que canta",
     description: "Sencillos, EPs, discos y videos.",
-    color: "#a995e8",
+    color: "#eceefa",
     skyRegion: { x: 0.8, y: 0.35 },
   },
 ];

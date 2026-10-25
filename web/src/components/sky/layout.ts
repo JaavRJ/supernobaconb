@@ -17,6 +17,10 @@ export const SKY_MARGIN = 56;
 export const MIN_STAR_DISTANCE = 64;
 
 const CORE_RADIUS = 8;
+/** Radio con que se dibuja la estrella-brújula del núcleo (unidades del viewBox) */
+export function coreVisualRadius(orientation: SkyOrientation): number {
+  return orientation === "portrait" ? 46 : 56;
+}
 const ORBIT_RADIUS = 5;
 const BRIGHTNESS_OLDEST = 0.45;
 const BRIGHTNESS_UNRELEASED = 0.2;
@@ -41,6 +45,10 @@ export interface SkyStar {
   brightness: number;
   unreleased: boolean;
   color: string;
+  /** Núcleo de la constelación (obra con `role: "nucleo"`): se dibuja con la estrella-brújula */
+  core: boolean;
+  /** Estrella principal: el núcleo, o la más reciente si no hay; lleva el ícono de la faceta */
+  main: boolean;
 }
 
 export interface SkyLine {
@@ -293,8 +301,16 @@ export function layoutSky({
         brightness: released ? (brightness.get(w.id) ?? 1) : BRIGHTNESS_UNRELEASED,
         unreleased: !released,
         color: c.color,
+        core: isCore,
+        main: false,
       });
     }
+
+    const mainStar =
+      constellationStars.find((s) => s.core) ??
+      constellationStars.filter((s) => !s.unreleased).sort((a, b) => b.brightness - a.brightness).at(0) ??
+      constellationStars.at(0);
+    if (mainStar) mainStar.main = true;
 
     for (let i = 1; i < constellationStars.length; i++) {
       const a = constellationStars[i - 1];
@@ -311,7 +327,9 @@ export function layoutSky({
     }
 
     if (constellationStars.length > 0) {
-      const lowest = Math.max(...constellationStars.map((s) => s.y + s.r));
+      const lowest = Math.max(
+        ...constellationStars.map((s) => s.y + (s.core ? coreVisualRadius(orientation) : s.r)),
+      );
       const xs = constellationStars.map((s) => s.x);
       labels.push({
         constellation: c.id,
@@ -343,7 +361,7 @@ export interface SkyNebula {
   r: number;
 }
 
-const NEBULA_Y = { landscape: 0.16, portrait: 0.1 };
+const NEBULA_Y = { landscape: 0.2, portrait: 0.1 };
 const NEBULA_RADIUS = 64;
 
 /** Una nebulosa por era en fase `nebulosa`, repartidas en horizontal arriba del cielo (en ambas orientaciones) */
