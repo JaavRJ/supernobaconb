@@ -3,23 +3,11 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent } from "react";
-import { Backdrop } from "@/components/theme/Backdrop";
-import { eraThemeStyle } from "@/lib/theme";
 import { FacetIcon } from "./FacetIcon";
 import { coreVisualRadius, type SkyLayout, type SkyNebula, type SkyOrientation } from "./layout";
-import {
-  THREAD_LABELS,
-  THREAD_ORDER,
-  type SkyEraInfo,
-  type SkySignal,
-  type SkyStarInfo,
-  type SkyTimelineLabels,
-} from "./meta";
+import { THREAD_LABELS, THREAD_ORDER, type SkySignal, type SkyStarInfo } from "./meta";
 import { SignalPanel } from "./SignalPanel";
-import { SkyList } from "./SkyList";
 import styles from "./Sky.module.css";
-import { Timeline } from "./Timeline";
-import type { TimelineData } from "./eraTimeline";
 
 /** Cielo y nebulosas calculados para una orientación */
 export interface SkyVariant {
@@ -33,12 +21,9 @@ interface SkyInteractiveProps {
   starInfo: SkyStarInfo[];
   /** Color de cada constelación, por id */
   constellationColors: Record<string, string>;
-  eras?: SkyEraInfo[];
   /** Señal activa de cada nebulosa (null si no hay) */
   signals?: Record<string, SkySignal | null>;
-  timeline?: TimelineData;
-  timelineLabels?: Record<string, SkyTimelineLabels>;
-  /** Cielo de una sola constelación: sin selector de eras, línea de tiempo, leyenda ni lista */
+  /** Cielo de una sola constelación: sin leyenda de hilos */
   compact?: boolean;
 }
 
@@ -74,10 +59,7 @@ export function SkyInteractive({
   variants,
   starInfo,
   constellationColors,
-  eras = [],
   signals = {},
-  timeline,
-  timelineLabels = {},
   compact = false,
 }: SkyInteractiveProps) {
   const router = useRouter();
@@ -93,18 +75,13 @@ export function SkyInteractive({
     landscape: [],
     portrait: [],
   });
-  const [selectedEra, setSelectedEra] = useState<string | null>(null);
   const [openNebula, setOpenNebula] = useState<string | null>(null);
-  const [listMode, setListMode] = useState(false);
   const nebulaButtons = useRef(new Map<string, HTMLButtonElement>());
 
   const activeId = hovered ?? focused ?? touched;
   const infoById = useMemo(() => new Map(starInfo.map((i) => [i.workId, i])), [starInfo]);
   // Las obras y los hilos son los mismos en las dos orientaciones; solo cambian las posiciones
-  const { layout: baseLayout, nebulas: baseNebulas } = variants.landscape;
-  const selected = selectedEra ? eras.find((e) => e.id === selectedEra) : undefined;
-  const eraFilter = selected !== undefined;
-  const inEra = (workId: string) => infoById.get(workId)?.eraId === selected?.id;
+  const baseLayout = variants.landscape.layout;
   const activeInfo = activeId ? infoById.get(activeId) : undefined;
 
   const connected = useMemo(() => {
@@ -142,20 +119,6 @@ export function SkyInteractive({
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [touched]);
-
-  function selectEra(id: string | null) {
-    setSelectedEra(id);
-    setOpenNebula(null);
-    setTouched(null);
-  }
-
-  function toggleList() {
-    setListMode((on) => !on);
-    setOpenNebula(null);
-    setTouched(null);
-    setHovered(null);
-    setFocused(null);
-  }
 
   function navigate(event: MouseEvent<HTMLAnchorElement>, href: string) {
     if (
@@ -306,11 +269,7 @@ export function SkyInteractive({
             {layout.lines.map((l) => (
               <line
                 key={`${l.from}-${l.to}`}
-                className={classes(
-                  (activeId !== null
-                    ? l.from !== activeId && l.to !== activeId
-                    : eraFilter && !(inEra(l.from) && inEra(l.to))) && styles.dim,
-                )}
+                className={classes(activeId !== null && l.from !== activeId && l.to !== activeId && styles.dim)}
                 data-constellation={l.constellation}
                 x1={l.x1}
                 y1={l.y1}
@@ -323,15 +282,10 @@ export function SkyInteractive({
           <g className={styles.threads}>
             {layout.threads.map((t) => {
               const isLit = activeId !== null && (t.from === activeId || t.to === activeId);
-              const offEra = activeId === null && eraFilter && !(inEra(t.from) && inEra(t.to));
               return (
                 <path
                   key={t.id}
-                  className={classes(
-                    styles.thread,
-                    isLit && styles.lit,
-                    ((activeId !== null && !isLit) || offEra) && styles.dim,
-                  )}
+                  className={classes(styles.thread, isLit && styles.lit, activeId !== null && !isLit && styles.dim)}
                   data-kind={t.kind}
                   data-from={t.from}
                   data-to={t.to}
@@ -343,22 +297,19 @@ export function SkyInteractive({
           </g>
 
           <g className={styles.nebulas} aria-hidden="true">
-            {nebulas.map((n) => {
-              const off = eraFilter && selected?.id !== n.eraId;
-              return (
-                <g key={n.eraId} className={classes(styles.nebulaWrap, off && styles.dim)}>
-                  <ellipse
-                    className={styles.nebula}
-                    cx={n.x}
-                    cy={n.y}
-                    rx={n.r * 2.2}
-                    ry={n.r * 1.4}
-                    fill={`url(#${prefix}-cloud-mask)`}
-                    filter={`url(#${prefix}-cloud-${n.eraId})`}
-                  />
-                </g>
-              );
-            })}
+            {nebulas.map((n) => (
+              <g key={n.eraId} className={styles.nebulaWrap}>
+                <ellipse
+                  className={styles.nebula}
+                  cx={n.x}
+                  cy={n.y}
+                  rx={n.r * 2.2}
+                  ry={n.r * 1.4}
+                  fill={`url(#${prefix}-cloud-mask)`}
+                  filter={`url(#${prefix}-cloud-${n.eraId})`}
+                />
+              </g>
+            ))}
           </g>
 
           <g className={styles.stars}>
@@ -369,10 +320,7 @@ export function SkyInteractive({
                 "--twinkle-duration": `${(3.2 + (i % 3) * 0.8).toFixed(1)}s`,
               } as CSSProperties;
               const isLit = connected.has(s.workId);
-              const dim =
-                activeId !== null
-                  ? s.workId !== activeId && !isLit
-                  : eraFilter && !inEra(s.workId);
+              const dim = activeId !== null && s.workId !== activeId && !isLit;
               const coreR = coreVisualRadius(orientation);
               const isCoreStar = s.core && !s.unreleased;
               const content = (
@@ -495,10 +443,7 @@ export function SkyInteractive({
                 const radius = portrait ? 26 : 19;
                 const x = s.core ? s.x + coreR * 1.15 : s.x + side * (s.r + radius + 14);
                 const y = s.core ? s.y + coreR * 0.8 : s.y - (s.r + radius + 8);
-                const dim =
-                  activeId !== null
-                    ? s.workId !== activeId && !connected.has(s.workId)
-                    : eraFilter && !inEra(s.workId);
+                const dim = activeId !== null && s.workId !== activeId && !connected.has(s.workId);
                 return (
                   <FacetIcon
                     key={s.workId}
@@ -584,10 +529,7 @@ export function SkyInteractive({
                   if (node) nebulaButtons.current.set(buttonKey, node);
                   else nebulaButtons.current.delete(buttonKey);
                 }}
-                className={classes(
-                  styles.nebulaButton,
-                  eraFilter && selected?.id !== n.eraId && styles.dim,
-                )}
+                className={styles.nebulaButton}
                 style={{
                   left,
                   top: `${(n.y / height) * 100}%`,
@@ -625,88 +567,22 @@ export function SkyInteractive({
 
   return (
     <div className={styles.wrapper}>
-      {!compact && (
-      <div className={styles.controls}>
-        <div className={styles.eraSelector} role="group" aria-label="Ver el cielo por era">
-          <button
-            type="button"
-            className={styles.eraButton}
-            aria-pressed={selectedEra === null}
-            onClick={() => selectEra(null)}
+      <div className={styles.stage}>
+        {ORIENTATIONS.map((orientation) => (
+          <div
+            key={orientation}
+            className={classes(
+              styles.scene,
+              orientation === "portrait" ? styles.scenePortrait : styles.sceneLandscape,
+            )}
+            data-orientation={orientation}
           >
-            Todas
-          </button>
-          {eras.map((era) => (
-            <button
-              key={era.id}
-              type="button"
-              className={styles.eraButton}
-              style={{ "--accent": era.theme.accent } as CSSProperties}
-              aria-pressed={selectedEra === era.id}
-              onClick={() => selectEra(era.id)}
-            >
-              {era.label}
-            </button>
-          ))}
-        </div>
-        <button
-          type="button"
-          className={classes(styles.eraButton, styles.viewToggle)}
-          aria-pressed={listMode}
-          onClick={toggleList}
-        >
-          {listMode ? "Ver como cielo" : "Ver como lista"}
-        </button>
-      </div>
-      )}
-
-      <div
-        className={styles.stage}
-        data-era={selected?.id}
-        style={selected ? eraThemeStyle(selected.theme) : undefined}
-      >
-        {selected && selected.theme.backdrop !== "none" && (
-          <Backdrop variant={selected.theme.backdrop} />
-        )}
-        {listMode ? (
-          <SkyList
-            layout={baseLayout}
-            infoById={infoById}
-            nebulas={baseNebulas}
-            signals={signals}
-            selectedEra={selectedEra}
-            openNebula={openNebula}
-            onToggleNebula={(eraId) => setOpenNebula((cur) => (cur === eraId ? null : eraId))}
-            onNavigate={navigate}
-            idPrefix={basePrefix}
-          />
-        ) : (
-          ORIENTATIONS.map((orientation) => (
-            <div
-              key={orientation}
-              className={classes(
-                styles.scene,
-                orientation === "portrait" ? styles.scenePortrait : styles.sceneLandscape,
-              )}
-              data-orientation={orientation}
-            >
-              {renderScene(orientation)}
-            </div>
-          ))
-        )}
+            {renderScene(orientation)}
+          </div>
+        ))}
       </div>
 
-      {timeline && (
-        <Timeline
-          data={timeline}
-          eras={eras}
-          labels={timelineLabels}
-          selectedEra={selectedEra}
-          onSelect={(id) => selectEra(selectedEra === id ? null : id)}
-        />
-      )}
-
-      {!compact && !listMode && presentKinds.length > 0 && (
+      {!compact && presentKinds.length > 0 && (
         <ul className={styles.legend} aria-label="Tipos de hilo">
           {presentKinds.map((kind) => (
             <li key={kind}>

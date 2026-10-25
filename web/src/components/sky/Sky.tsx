@@ -1,14 +1,13 @@
 import { constellations, eras, getActiveSignal, getNebulas, threads, works } from "@/content";
-import type { ConstellationId, EraPhase } from "@/types/content";
-import { layoutNebulas, layoutSky, type SkyLayout, type SkyOrientation } from "./layout";
-import { TYPE_LABELS, type SkyEraInfo, type SkySignal, type SkyStarInfo } from "./meta";
-import { buildTimeline } from "./eraTimeline";
+import type { ConstellationId } from "@/types/content";
+import { layoutNebulas, layoutSky, type SkyLayout, type SkyNebula, type SkyOrientation } from "./layout";
+import { TYPE_LABELS, type SkySignal, type SkyStarInfo } from "./meta";
 import { SkyInteractive } from "./SkyInteractive";
 
 interface SkyProps {
   /** Cielo apaisado ya calculado; por defecto se calcula con los datos de `@/content` */
   layout?: SkyLayout;
-  /** Muestra solo esta constelación, sin eras, línea de tiempo ni nebulosas */
+  /** Muestra solo esta constelación, sin nebulosas ni leyenda */
   only?: ConstellationId;
 }
 
@@ -18,19 +17,6 @@ const dateFormat = new Intl.DateTimeFormat("es-MX", {
   year: "numeric",
   timeZone: "UTC",
 });
-
-const monthFormat = new Intl.DateTimeFormat("es-MX", {
-  month: "long",
-  year: "numeric",
-  timeZone: "UTC",
-});
-
-const PHASE_LABELS: Record<EraPhase, string> = {
-  nebulosa: "en nebulosa",
-  encendida: "encendida",
-  orbita: "en órbita",
-  cerrada: "cerrada",
-};
 
 function defaultLayout(orientation: SkyOrientation): SkyLayout {
   return layoutSky({ constellations, works: works.filter((w) => !w.hidden), threads, orientation });
@@ -58,7 +44,6 @@ function buildStarInfo(layout: SkyLayout): SkyStarInfo[] {
         dateLabel,
         dateIso: w.releaseDate,
         eraName: eraNames.get(w.era) ?? null,
-        eraId: w.era,
         constellationName,
         coverUrl: w.coverUrl,
         ariaLabel: `${w.title} — ${constellationName}, ${typeLabel.toLowerCase()}, ${dateLabel}`,
@@ -84,7 +69,7 @@ export function Sky({ layout, only }: SkyProps) {
   return <FullSky layout={layout ?? defaultLayout("landscape")} />;
 }
 
-/** Cielo de una sola constelación: sin selector de eras, línea de tiempo, nebulosas ni leyenda */
+/** Cielo de una sola constelación: sin nebulosas ni leyenda */
 function SoloSky({ id }: { id: ConstellationId }) {
   const input = soloInput(id);
   const landscape = layoutSky({ ...input, threads, orientation: "landscape" });
@@ -104,35 +89,22 @@ function SoloSky({ id }: { id: ConstellationId }) {
 }
 
 function FullSky({ layout }: { layout: SkyLayout }) {
-  const eraInfo: SkyEraInfo[] = eras.map((e) => ({
-    id: e.id,
-    label: e.phase === "nebulosa" || !e.name ? "Nebulosa" : e.name,
-    phase: e.phase,
-    theme: e.theme,
-  }));
-  const labelOf = new Map(eraInfo.map((e) => [e.id, e.label]));
-
-  const timeline = buildTimeline(eras, works);
-  const timelineLabels = Object.fromEntries(
-    timeline.rows.map((row) => {
-      const since = row.since ? monthFormat.format(new Date(`${row.since}T00:00:00Z`)) : null;
-      const label = labelOf.get(row.eraId) ?? "Nebulosa";
-      // Una nebulosa no revela fechas
-      const text =
-        row.phase === "nebulosa"
-          ? "Nebulosa"
-          : `Era ${label}: ${PHASE_LABELS[row.phase]}${since ? ` desde ${since}` : ""}`;
-      return [row.eraId, { ariaLabel: text }];
-    }),
-  );
+  // Cada nebulosa viaja al navegador con un nombre neutro: ni el id de su era ni el de su señal
+  const alias = new Map(getNebulas().map((era, i) => [era.id, `nebulosa-${i + 1}`]));
+  const neutral = (nebulas: SkyNebula[]) =>
+    nebulas.flatMap((n) => {
+      const id = alias.get(n.eraId);
+      return id ? [{ ...n, eraId: id }] : [];
+    });
 
   // La señal se elige en el servidor; solo viaja la de la nebulosa, sin nombre ni obras
   const signals: Record<string, SkySignal | null> = {};
   for (const era of getNebulas()) {
+    const id = alias.get(era.id)!;
     const signal = getActiveSignal(era.id);
-    signals[era.id] = signal
+    signals[id] = signal
       ? {
-          id: signal.id,
+          id: `${id}-senal`,
           kind: signal.kind,
           content: signal.content,
           ...(signal.alt !== undefined ? { alt: signal.alt } : {}),
@@ -143,14 +115,11 @@ function FullSky({ layout }: { layout: SkyLayout }) {
   return (
     <SkyInteractive
       variants={{
-        landscape: { layout, nebulas: layoutNebulas(eras, "landscape") },
-        portrait: { layout: defaultLayout("portrait"), nebulas: layoutNebulas(eras, "portrait") },
+        landscape: { layout, nebulas: neutral(layoutNebulas(eras, "landscape")) },
+        portrait: { layout: defaultLayout("portrait"), nebulas: neutral(layoutNebulas(eras, "portrait")) },
       }}
       starInfo={buildStarInfo(layout)}
-      eras={eraInfo}
       signals={signals}
-      timeline={timeline}
-      timelineLabels={timelineLabels}
       constellationColors={Object.fromEntries(constellations.map((c) => [c.id, c.color]))}
     />
   );

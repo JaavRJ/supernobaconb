@@ -292,55 +292,7 @@
   padding: 0.25rem;
 }
 
-/* ---- Vista por era ---- */
-
-.controls {
-  display: flex;
-  font-family: var(--font-ui);
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.eraSelector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  min-width: 0;
-}
-
-.viewToggle {
-  flex: none;
-}
-
-.eraButton {
-  padding: 0.4rem 0.9rem;
-  border: 1px solid var(--era-line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--era-fg);
-  font: inherit;
-  font-size: 0.8125rem;
-  cursor: pointer;
-  transition:
-    box-shadow 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.eraButton:hover {
-  border-color: color-mix(in srgb, var(--era-fg) 40%, transparent);
-}
-
-.eraButton[aria-pressed="true"] {
-  border-color: color-mix(in srgb, var(--era-accent) 60%, transparent);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--era-accent) 15%, transparent);
-}
-
-.eraButton:focus-visible,
-.timelineRow:focus-visible,
+.cardLink:focus-visible,
 .nebulaButton:focus-visible,
 .signalClose:focus-visible {
   outline: 2px solid var(--era-accent);
@@ -360,19 +312,10 @@
   color: var(--era-fg);
   /* Desvanecido arriba y abajo para fundirse con la página */
   mask-image: linear-gradient(to bottom, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent);
-  transition:
-    background-color var(--duration-theme) var(--ease-out),
-    color var(--duration-theme) var(--ease-out);
-}
-
-/* El cielo base es transparente (se ve el cosmos de la página); una era elegida pone su fondo */
-.stage[data-era] {
-  background-color: var(--era-bg);
 }
 
 /* Contenido del cielo alineado a la columna de la página */
-.stage > .scene,
-.stage > .list {
+.stage > .scene {
   box-sizing: border-box;
   width: min(70rem, calc(100% - 2rem));
   margin-inline: auto;
@@ -383,10 +326,6 @@
 .nebulaWrap {
   transition: opacity 0.25s ease;
   pointer-events: none;
-}
-
-.nebulaWrap.dim {
-  opacity: 0.18;
 }
 
 /* La nube es una textura fotográfica (feTurbulence), estática para no repintar el filtro */
@@ -407,9 +346,6 @@
   transition: opacity 0.25s ease;
 }
 
-.nebulaButton.dim {
-  opacity: 0.4;
-}
 
 /* ---- Transmisión interceptada ---- */
 
@@ -558,262 +494,10 @@
   }
 }
 
-/* ---- Línea de tiempo ---- */
-
-.timeline {
-  margin-top: 1.25rem;
-  font-family: var(--font-ui);
-}
-
-.timelineTitle {
-  margin: 0 0 0.5rem;
-  font-family: var(--font-ui);
-  color: var(--era-fg-muted);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.timelineRows {
-  display: grid;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.timelineRow,
-.timelineAxis {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0.25rem;
-  width: 100%;
-}
-
-@media (min-width: 40rem) {
-  .timelineRow,
-  .timelineAxis {
-    grid-template-columns: 11rem minmax(0, 1fr);
-    align-items: center;
-    gap: 0.75rem;
-  }
-}
-
-.timelineRow {
-  padding: 0.25rem 0;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--era-fg);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-/* El nombre de la era es la píldora; la elegida lleva borde cálido */
-.timelineName {
-  justify-self: start;
-  min-width: 0;
-  padding: 0.35rem 0.9rem;
-  border: 1px solid var(--era-line);
-  border-radius: 999px;
-  font-size: 0.8125rem;
-  overflow-wrap: anywhere;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.timelineRow:hover .timelineName {
-  border-color: color-mix(in srgb, var(--era-fg) 40%, transparent);
-}
-
-.timelineRow[aria-pressed="true"] .timelineName {
-  border-color: color-mix(in srgb, var(--era-accent) 60%, transparent);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--era-accent) 15%, transparent);
-}
-
-/* Línea fina con puntos: el tramo de la era en cálido, la nebulosa con punto apagado */
-.timelineTrack {
-  position: relative;
-  height: 1.25rem;
-}
-
-.timelineTrack::before {
-  content: "";
-  position: absolute;
-  inset: 50% 0 auto;
-  height: 1px;
-  background: var(--era-line);
-}
-
-.segment {
-  position: absolute;
-  top: 50%;
-  height: 9px;
-  transform: translateY(-50%);
-  background: linear-gradient(var(--era-accent), var(--era-accent)) center / 100% 2px no-repeat;
-}
-
-.segment[data-phase="nebulosa"] {
-  background:
-    radial-gradient(circle 4.5px at calc(100% - 4.5px) 50%, #5a6078 98%, transparent) no-repeat,
-    repeating-linear-gradient(90deg, var(--era-fg-muted) 0 2px, transparent 2px 5px) center / 100% 1px no-repeat;
-  opacity: 0.7;
-}
-
-.segment[data-fuzzy] {
-  mask-image: linear-gradient(90deg, transparent, #000 35%);
-}
-
-.segment[data-phase="orbita"] {
-  opacity: 0.6;
-}
-
-.segment[data-phase="cerrada"] {
-  opacity: 0.25;
-}
-
-.marker {
-  position: absolute;
-  top: 50%;
-  width: 9px;
-  height: 9px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: var(--era-accent);
-  box-shadow: 0 0 12px var(--era-accent);
-}
-
-.axisTrack {
-  position: relative;
-  height: 1rem;
-  color: var(--era-fg-muted);
-  font-size: 0.75rem;
-}
-
-.timelineAxis > .timelineName {
-  display: none;
-  padding: 0;
-  border: 0;
-}
-
-@media (min-width: 40rem) {
-  .timelineAxis > .timelineName {
-    display: block;
-  }
-}
-
-.tick {
-  position: absolute;
-  top: 0;
-  padding-left: 0.25rem;
-  border-left: 1px solid var(--era-line);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .caret,
   .scan,
   .signalBody {
     animation: none;
   }
-}
-
-/* ---- Vista de lista ---- */
-
-.list {
-  display: grid;
-  gap: 1.5rem;
-  padding: 1rem;
-  min-width: 0;
-}
-
-.listGroup {
-  min-width: 0;
-}
-
-.listHeading {
-  margin: 0 0 0.5rem;
-  font-family: var(--era-font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.listFacet {
-  color: var(--era-fg-muted);
-  font-family: var(--era-font-body);
-  font-size: 0.9375rem;
-  font-weight: 400;
-}
-
-.listWorks,
-.listThreads {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.listWorks {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.listWork {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.listOff {
-  color: var(--era-fg-muted);
-}
-
-.listOff .listLink {
-  color: var(--era-fg-muted);
-}
-
-.listLink {
-  color: var(--era-fg);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.listLink:focus-visible,
-.listSignalButton:focus-visible,
-.cardLink:focus-visible,
-.viewToggle:focus-visible {
-  outline: 2px solid var(--era-accent);
-  outline-offset: 2px;
-}
-
-.listMeta {
-  margin: 0.15rem 0 0;
-  color: var(--era-fg-muted);
-  font-size: 0.875rem;
-}
-
-.listThreads {
-  margin-top: 0.3rem;
-  padding-left: 0.75rem;
-  border-left: 1px solid var(--era-line);
-  color: var(--era-fg-muted);
-  font-size: 0.875rem;
-}
-
-.listSignalButton {
-  font-family: var(--font-ui);
-  padding: 0.35rem 0.9rem;
-  border: 1px solid var(--era-accent);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--era-fg);
-  font: inherit;
-  font-size: 0.875rem;
-  cursor: pointer;
-}
-
-.listSignalText {
-  margin: 0.5rem 0 0;
-  font-family: var(--era-font-display);
-  font-size: 1.125rem;
 }
