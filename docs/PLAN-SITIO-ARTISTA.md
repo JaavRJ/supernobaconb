@@ -98,8 +98,7 @@ La portada es un **mapa del cielo** con las tres constelaciones.
 
 - **Líneas de constelación**: unen las obras de un mismo ámbito, en orden cronológico.
 - **Hilos**: líneas distintas (por ejemplo, punteadas o de luz) que cruzan entre constelaciones.
-- **Vista por era**: al elegir una era, su libro y las obras que orbitan a su alrededor se encienden en las tres constelaciones y el resto se atenúa.
-- **Línea de tiempo**: abajo del cielo, cada era es una franja con sus fases; las franjas se enciman cuando las eras se superponen (por ejemplo, la era BDUEM en órbita mientras la era 2 es nebulosa).
+- ~~**Vista por era** y **línea de tiempo**~~: descartadas (decisión del artista, 2026-10-25). Las eras **no se nombran ni se presentan como tales** en el sitio: quedan implícitas por cómo está acomodado el mapa y por la estética de cada obra. El concepto se queda en los datos para elegir el tema visual de cada obra.
 - **Nebulosas**: las eras en escritura aparecen como nubes tenues en el cielo, sin revelar todavía su contenido.
 - **Brillo por fecha**: lo más nuevo brilla más; lo anterior se ve más tenue, como estrellas lejanas (guiño al título del libro).
 - **Estrellas por publicar**: punto apagado o silueta con cuenta regresiva (como las fechas de publicación de las partes de hoy).
@@ -124,7 +123,6 @@ La portada es un **mapa del cielo** con las tres constelaciones.
 | `/libros/bduem` | Página del libro con su estética espacial actual |
 | `/libros/bduem/leer/[parte]` | El lector actual (KindleReader) migrado |
 | `/proyectos` y `/proyectos/[slug]` | Constelación Jabi: proyectos de software con stack, capturas, repositorio y demo |
-| `/eras/[slug]` | Una era: todas sus obras de las tres constelaciones y los hilos entre ellas |
 | `/videos` | Videoclips y galería de fotos |
 | `/tienda` | Merch, libro físico, discos |
 | `/sobre-mi` | Biografía, fotos y kit de prensa descargable |
@@ -203,7 +201,7 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 
 ### Fase 4 — Jabi, videos, tienda y sobre mí
 - [ ] Página de proyectos de software y detalle de cada proyecto
-- [ ] Páginas de era y sección "Conectado con" en cada obra
+- [ ] Sección "Conectado con" en cada obra (las eras no tienen página propia)
 - [ ] Galería de videos y fotos
 - [ ] Tienda con links externos (pagos integrados más adelante si hace falta)
 - [ ] Biografía y kit de prensa

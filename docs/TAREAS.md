@@ -441,7 +441,7 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 ## Fases siguientes (se detallan al empezar)
 
 ### Fase 4 — Jabi, videos, tienda y sobre mí
-Proyectos de software · páginas de era y "Conectado con" · videos y fotos · tienda con links · biografía y kit de prensa.
+Proyectos de software · "Conectado con" en cada obra (sin páginas de era) · videos y fotos · tienda con links · biografía y kit de prensa.
 
 ### Pase de diseño con materiales reales
 Cuando lleguen portadas, fotos y la estética de cada era (se adelanta si llegan antes): reemplazar portadas generadas y textos de relleno · ajustar el tema definitivo de cada era · revisar portada, cielo y páginas de obra con imágenes reales en escritorio y celular.
@@ -508,3 +508,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F3-07 | Verificación del orquestador: tipos, lint y build sin errores; en producción `/musica`, `/musica/rulos` y `/musica/nohablobien-part3` dan 200, `/musica/nada` 404, audios y portadas 200; el HTML trae las letras y el enlace a la Parte 3 y ningún iframe; en el navegador, antes de pulsar solo se piden miniaturas de `i.ytimg.com`, y Spotify carga al pulsar. Consola limpia. Servidor de prueba detenido. **Fase 3 terminada.** Para revisar con el artista: un video grande por canción en la página del sencillo y el selector Constelación/Lista de `/musica`. ✅ |
 | 2026-10-25 | F3 | Ajustes pedidos por el artista: en la página del sencillo se ven hasta dos videos y, si hay más, un botón "Ver más videos (N)" muestra el resto; en `/musica` se quita el selector Constelación/Lista (siempre se ven los dos, el cielo arriba en escritorio y la lista primero en celular). Verificado en el navegador. |
 | 2026-10-25 | — | Pedido del artista: la portada no debe dejar ver que viene una nueva era. Worker quitó del cielo el selector de eras, "Ver como lista" y la línea de tiempo (que mostraba una segunda franja), y borró `SkyList`, `Timeline` y `eraTimeline`. El orquestador hizo que la nebulosa viaje con un nombre neutro (`nebulosa-1`) en vez del id de su era. Se conserva la nebulosa con su señal. Verificado en el navegador a 1440 y 390 px y que el HTML de `/` no contiene "era-2". |
+| 2026-10-25 | — | Decisión del artista: las eras no se presentan como "eras" en el sitio, quedan implícitas en el mapa y la estética. Orquestador quitó "ERA · … · EN ÓRBITA" de la página del libro, "Era …" de la página del sencillo (ahora solo el libro, con enlace), "guiño a la era" → "guiño al libro", y borró la ruta `/eras/[slug]` (`/eras/bduem` y `/eras/era-2` dan 404). Verificado: ninguna página muestra la palabra "era" salvo el propio texto del libro. Plan e identidad visual actualizados. |

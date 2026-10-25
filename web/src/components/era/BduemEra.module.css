@@ -4,20 +4,6 @@
   color: var(--era-fg);
 }
 
-.back {
-  margin: 0;
-  padding: var(--space-5) var(--space-4) 0;
-  color: var(--era-fg-muted);
-  font-family: var(--font-inter, system-ui, sans-serif);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-align: center;
-}
-
-.back b {
-  color: var(--era-fg);
-  font-weight: 500;
-}
 
 .panel {
   display: flex;
@@ -178,15 +164,6 @@
 }
 
 @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
-  .back {
-    position: absolute;
-    top: 24px;
-    right: 28px;
-    z-index: 3;
-    padding: 0;
-    text-align: right;
-  }
-
   .panel {
     flex-direction: row;
     height: 100%;

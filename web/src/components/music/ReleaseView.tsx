@@ -103,7 +103,8 @@ export function ReleaseView({ work, era, tracks }: ReleaseViewProps) {
   if (workVideo && !seen.has(workVideo)) videos.push({ url: workVideo, title: work.title });
 
   const connections = getConnections(work);
-  const eraName = era?.name ? `Era ${era.name}` : null;
+  // La era no se nombra: la obra solo se liga al libro del que nace
+  const book = era?.coreWorkId ? getWork(era.coreWorkId) : undefined;
 
   return (
     <div className={styles.stage} data-era-page>
@@ -133,11 +134,9 @@ export function ReleaseView({ work, era, tracks }: ReleaseViewProps) {
           )}
         </p>
         <StarWord as="h1" text={work.title} className={styles.title} />
-        {era && eraName && (
+        {book?.href && (
           <p className={styles.era}>
-            <Link href={era.coreWorkId ? (getWork(era.coreWorkId)?.href ?? "/libros/bduem") : "/libros/bduem"}>
-              {eraName}
-            </Link>
+            <Link href={book.href}>{book.title}</Link>
           </p>
         )}
 

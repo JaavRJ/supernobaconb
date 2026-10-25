@@ -14,13 +14,6 @@ import { VerticalLabel } from "./VerticalLabel";
 const INTRO =
   "Todas esas perlas brillantes que adornan el cielo nocturno son estrellas tan lejanas que, incluso si una persona dedicara toda su vida a intentar alcanzar una de ellas, no recorrería ni siquiera una trillonésima parte de la distancia que nos separa. Son, en esencia, inalcanzables.";
 
-const PHASE_LABEL: Record<Era["phase"], string> = {
-  nebulosa: "NEBULOSA",
-  encendida: "ENCENDIDA",
-  orbita: "EN ÓRBITA",
-  cerrada: "CERRADA",
-};
-
 const TYPE_LABEL: Record<Work["type"], string> = {
   libro: "LIBRO",
   sencillo: "SENCILLO",
@@ -46,7 +39,7 @@ function threadText(work: Work, core: Work): string | null {
     return part ? `inspirada en la Parte ${part.number}: ${part.title}` : "inspirada en el libro";
   }
   if (between.some((t) => t.kind === "construye")) return "construido para el libro";
-  if (between.some((t) => t.kind === "guino")) return "guiño a la era";
+  if (between.some((t) => t.kind === "guino")) return "guiño al libro";
   if (between.some((t) => t.kind === "continua")) return "continúa el libro";
   if (between.some((t) => t.kind === "comparte-universo")) return "comparte universo con el libro";
   return null;
@@ -129,11 +122,8 @@ export function BduemEra({ era }: { era: Era }) {
   return (
     <div className={styles.stage} data-era-page>
       <VerticalLabel />
-      <p className={styles.back}>
-        ERA · <b>{(era.name ?? "").toLocaleUpperCase("es")}</b> · {PHASE_LABEL[era.phase]}
-      </p>
 
-      <HorizontalScroll label={`Recorrido de la era ${era.name ?? ""}`}>
+      <HorizontalScroll label={`Recorrido de ${book.title}`}>
         <section className={`${styles.panel} ${styles.intro}`} aria-label="Título">
           <div>
             <StarWord
@@ -171,7 +161,7 @@ export function BduemEra({ era }: { era: Era }) {
         </section>
 
         {satellites.length > 0 && (
-          <section className={`${styles.panel} ${styles.works}`} aria-label="Obras de la era">
+          <section className={`${styles.panel} ${styles.works}`} aria-label="Obras que nacen del libro">
             {satellites.map((w, i) => {
               const thread = threadText(w, book);
               const year = yearOf(w);

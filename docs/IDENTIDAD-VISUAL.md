@@ -44,6 +44,7 @@ Lo que **no** tomamos de Gemini: el azul marino, el dorado como color dominante,
 - **El monocromo es de la era BDUEM**: negro puro, luz blanca, Uncial Antiqua y polaroids, exactamente como el sitio original. Entrar a BDUEM debe sentirse como entrar a ese mundo.
 - **La estrella-brújula** (`logo512.png`) reemplaza la "O" también en **SUPERN✦BA**: es la firma de la marca.
 - **Scroll horizontal** en las páginas de era y del libro; la portada es vertical.
+- **Las eras no se nombran** (2026-10-25): ni la palabra "era", ni sus fases ("en órbita", "nebulosa"), ni páginas `/eras`. Se sienten por el acomodo del cielo y por la estética de cada obra; una obra se liga, como mucho, al libro del que nace.
 
 ### Portada radiante (cielo base)
 - Fondo: espacio profundo, negro azulado (`#04060d` a `#0a1022` en un degradado muy suave), con polvo de estrellas blanco y algunas estrellas de 4 puntas que destellan.
