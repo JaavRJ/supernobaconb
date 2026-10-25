@@ -39,7 +39,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 1 / 13 |
+| 1 — Base | 🔨 En curso | 2 / 13 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
@@ -53,8 +53,8 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | ID | Tarea | Quién | Depende de | Estado |
 |---|---|---|---|---|
 | F1-01 | Rama `artista` y proyecto Next.js en `web/` | Worker | — | ✅ |
-| F1-02 | Conexión con Firebase | Worker | F1-01 | ⬜ |
-| F1-03 | Tipos y datos iniciales | Worker | F1-01 | ⬜ |
+| F1-02 | Conexión con Firebase | Worker | F1-01 | ✅ |
+| F1-03 | Tipos y datos iniciales | Worker | F1-01 | 🔁 |
 | F1-04 | Sistema de temas por era | Orquestador diseña, worker implementa | F1-01 | ⬜ |
 | F1-05 | Layout raíz, menú y pie de página | Worker | F1-04 | ⬜ |
 | F1-06 | Páginas provisionales de cada ruta | Worker | F1-05 | ⬜ |
@@ -100,7 +100,25 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
   - Un componente `EraTheme` aplica las variables de una era a su contenido.
   - Existe el tema de la era BDUEM.
   - El cambio de tema tiene transición suave y respeta `prefers-reduced-motion`.
-- **Nota:** el orquestador define los nombres de tokens y la API del componente antes de asignarla.
+- **Diseño (orquestador):**
+  - **Tipo:** `EraThemeTokens` en `web/src/types/theme.ts` (ya existe). Cada campo, salvo `backdrop`, se mapea a una variable CSS con `ERA_THEME_VARS`: `--era-bg`, `--era-bg-elevated`, `--era-fg`, `--era-fg-muted`, `--era-accent`, `--era-accent-contrast`, `--era-line`, `--era-glow`, `--era-font-display`, `--era-font-body`.
+  - **`web/src/styles/tokens.css`** (importado una vez desde `globals.css`):
+    - En `:root`, el tema base **cielo** como valores por defecto de las `--era-*`: bg `#07080d`, bg-elevated `#11131b`, fg `#e9e9ef`, fg-muted `#8b8d99`, accent `#a9b4ff`, accent-contrast `#07080d`, line `rgba(233,233,239,0.14)`, glow `rgba(169,180,255,0.35)`, font-display y font-body `var(--font-inter), system-ui, sans-serif`.
+    - Escalas fijas que no cambian por era: `--space-1…8` (4, 8, 12, 16, 24, 32, 48, 64 px), `--radius-sm/md/lg/full` (4, 8, 16, 9999 px), `--text-xs…3xl` con `clamp()` fluido, `--ease-out`, `--duration-theme: 600ms`.
+    - `body` usa `background: var(--era-bg)`, `color: var(--era-fg)` y `font-family: var(--era-font-body)`. Los títulos `h1–h3` usan `var(--era-font-display)`.
+    - Con `@media (prefers-reduced-motion: reduce)`, `--duration-theme: 0ms`.
+  - **`web/src/lib/theme.ts`:** `eraThemeStyle(tokens): React.CSSProperties`, que convierte los tokens en un objeto `{ "--era-bg": … }`.
+  - **`web/src/components/theme/EraTheme.tsx`:** componente de servidor `<EraTheme era={era} as?="div" className?>`.
+    - Renderiza el contenedor con `data-era={era.id}`, `data-backdrop={tokens.backdrop}` y el `style` de `eraThemeStyle`.
+    - Pinta su propio `background` y `color`, y hace transición de `background-color` y `color` con `--duration-theme`.
+    - Si `era` es `null`, no aplica variables y hereda el cielo.
+  - **`web/src/components/theme/Backdrop.tsx`** (+ `.module.css`): fondo decorativo según `data-backdrop`.
+    - `stars`: campo de estrellas con CSS puro (gradientes radiales repetidos), sin JS.
+    - `grain`: ruido sutil con un SVG inline como `background-image`.
+    - `none`: nada.
+    - Va en `position: fixed` detrás del contenido, con `pointer-events: none` y `aria-hidden`.
+  - **Fuentes:** las variables `--font-inter`, `--font-cinzel` y `--font-crimson` las define F1-05 con `next/font`. En F1-04 los tokens ya las referencian con fallback (`system-ui`, `serif`, `Georgia`).
+  - **Prueba:** página temporal `web/src/app/temas/page.tsx` que muestra el cielo y debajo cada era de `content/eras.ts` envuelta en `<EraTheme>`, con un título, un párrafo, un botón con acento y una línea. Se borra en F1-13.
 
 ### F1-05 — Layout raíz, menú y pie de página
 - **Archivos:** `web/src/app/layout.tsx`, `web/src/components/layout/`.
@@ -192,3 +210,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | — | Tablero creado |
 | 2026-10-25 | — | Agentes worker y reviewer creados en `.claude/agents/` |
 | 2026-10-25 | F1-01 | Worker creó Next.js 16.4.3 en `web/`. Reviewer pidió fijar la raíz del workspace (media); lo corrigió el orquestador en `next.config.ts`. Lint y build pasan. ✅ |
+| 2026-10-25 | F1-02 | Worker conectó Firebase (`firebase` 13.1, `web/src/lib/firebase.ts`, `.env.example`). Reviewer: aprobada. ✅ |
+| 2026-10-25 | F1-03 | Reviewer pidió correcciones: quitar la obra del libro 2 (una nebulosa no revela obras), `getLatestRelease` con fecha explícita y zona horaria de México, `hidden` en `getWorksByEra`. 🔁 |
