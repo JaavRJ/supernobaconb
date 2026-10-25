@@ -1,4 +1,4 @@
-import type { Constellation, ConstellationId, Thread, ThreadKind, Work } from "@/types/content";
+import type { Constellation, ConstellationId, Era, Thread, ThreadKind, Work } from "@/types/content";
 
 /** Sistema de coordenadas del cielo (viewBox) */
 export const SKY_WIDTH = 1000;
@@ -89,7 +89,7 @@ function clamp(n: number, min: number, max: number): number {
 }
 
 /** Fecha ISO → días desde 1970 (UTC), sin usar Date */
-function isoToDays(iso: string): number {
+export function isoToDays(iso: string): number {
   const [y, m, d] = iso.split("-").map(Number);
   const a = Math.floor((14 - m) / 12);
   const yy = y + 4800 - a;
@@ -280,4 +280,26 @@ export function layoutSky({ constellations, works, threads = [] }: SkyInput): Sk
   }
 
   return { stars, lines, threads: layoutThreads(threads, stars), labels };
+}
+
+export interface SkyNebula {
+  eraId: string;
+  x: number;
+  y: number;
+  /** Radio de la nube en unidades del viewBox */
+  r: number;
+}
+
+const NEBULA_Y = 0.16;
+const NEBULA_RADIUS = 64;
+
+/** Una nebulosa por era en fase `nebulosa`, repartidas en horizontal arriba del cielo */
+export function layoutNebulas(eras: Era[]): SkyNebula[] {
+  const nebulas = eras.filter((e) => e.phase === "nebulosa");
+  return nebulas.map((e, i) => ({
+    eraId: e.id,
+    x: round(((i + 1) / (nebulas.length + 1)) * SKY_WIDTH),
+    y: round(NEBULA_Y * SKY_HEIGHT),
+    r: NEBULA_RADIUS,
+  }));
 }

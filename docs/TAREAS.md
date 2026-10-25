@@ -39,7 +39,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 10 / 13 |
+| 1 — Base | 🔨 En curso | 11 / 13 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
@@ -61,7 +61,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | F1-07 | Bloque "Lo último" en la portada | Worker | F1-03, F1-05 | ✅ |
 | F1-08 | Cielo: dibujo de constelaciones y estrellas | Worker | F1-03, F1-04 | ✅ |
 | F1-09 | Cielo: interacción e hilos | Worker | F1-08 | ✅ |
-| F1-10 | Cielo: vista por era, línea de tiempo y nebulosas | Worker | F1-09 | ⬜ |
+| F1-10 | Cielo: vista por era, línea de tiempo y nebulosas | Worker | F1-09 | ✅ |
 | F1-11 | Cielo: versión para celular y lista accesible | Worker | F1-10 | ⬜ |
 | F1-12 | Reproductor persistente (versión inicial) | Worker | F1-03, F1-05 | ✅ |
 | F1-13 | Verificación final de la fase | Orquestador | todas | ⬜ |
@@ -226,3 +226,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-08 | Worker dibujó el cielo (`layoutSky` pura y determinista + SVG). Reviewer: aprobada; se corrigió que el parpadeo pisaba el brillo por fecha. Notas para F1-09 y F1-11 anotadas en sus secciones. Orquestador lo revisó en el navegador. ✅ |
 | 2026-10-25 | F1-12 | Worker hizo el reproductor (provider con un solo `<audio>`, mini reproductor, Media Session, audio de prueba generado). Reviewer: aprobada; ajustes de robustez (errores de carga, Media Session, volumen). Orquestador verificó en el navegador que sigue sonando al navegar y que avanza de pista. ✅ |
 | 2026-10-25 | F1-09 | Worker hizo la interacción (tarjeta en hover y foco, navegación del lado del cliente, flechas) y los hilos con estilo por tipo. Reviewer pidió correcciones (flechas bloqueaban Alt+←, tarjeta fuera del cielo a 375 px, foco por ratón pegado) y detectó un aviso de navegación instantánea en las rutas dinámicas, resuelto con `instant = false` (documentado en Next 16) sin perder el 404 real. Orquestador verificó en el navegador, también a 375 px. ✅ |
+| 2026-10-25 | F1-10 | Worker hizo el selector de era (el cielo toma el tema de la era con transición), la línea de tiempo con fases encimadas y la nebulosa con su señal como "transmisión interceptada". Reviewer pidió correcciones: la nebulosa no se atenuaba (también visto por el orquestador), el panel podía recortarse en celular, y la línea de tiempo revelaba la fecha de inicio de la era 2. Decisión del orquestador: una nebulosa no muestra fechas; su franja empieza difuminada. Orquestador verificó en el navegador y que el HTML no contiene datos de la era 2. ✅ |

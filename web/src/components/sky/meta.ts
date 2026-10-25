@@ -1,4 +1,5 @@
-import type { ThreadKind, WorkType } from "@/types/content";
+import type { EraPhase, SignalKind, ThreadKind, WorkType } from "@/types/content";
+import type { EraThemeTokens } from "@/types/theme";
 
 export const THREAD_LABELS: Record<ThreadKind, string> = {
   inspira: "inspira",
@@ -38,7 +39,31 @@ export interface SkyStarInfo {
   /** Fecha ISO si existe, para `<time>` */
   dateIso?: string;
   eraName: string | null;
+  /** Id de la era a la que pertenece la obra */
+  eraId: string;
   constellationName: string;
   coverUrl?: string;
+  ariaLabel: string;
+}
+
+/** Era tal como la necesita el cliente; una nebulosa no lleva nombre */
+export interface SkyEraInfo {
+  id: string;
+  /** Nombre de la era, o "Nebulosa" mientras no se revela */
+  label: string;
+  phase: EraPhase;
+  theme: EraThemeTokens;
+}
+
+/** Señal activa de una nebulosa, lista para mostrarse */
+export interface SkySignal {
+  id: string;
+  kind: SignalKind;
+  content: string;
+  alt?: string;
+}
+
+/** Textos de una fila de la línea de tiempo */
+export interface SkyTimelineLabels {
   ariaLabel: string;
 }

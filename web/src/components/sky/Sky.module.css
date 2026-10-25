@@ -238,3 +238,394 @@
 .cardCover span {
   padding: 0.25rem;
 }
+
+/* ---- Vista por era ---- */
+
+.eraSelector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.eraButton {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--era-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--era-fg-muted);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.eraButton:hover {
+  color: var(--era-fg);
+}
+
+.eraButton[aria-pressed="true"] {
+  border-color: var(--accent, var(--era-accent));
+  background: color-mix(in srgb, var(--accent, var(--era-accent)) 18%, transparent);
+  color: var(--era-fg);
+}
+
+.eraButton:focus-visible,
+.timelineRow:focus-visible,
+.nebulaButton:focus-visible,
+.signalClose:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+.stage {
+  isolation: isolate;
+  overflow: clip;
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-md);
+  background-color: var(--era-bg);
+  color: var(--era-fg);
+  transition:
+    background-color var(--duration-theme) var(--ease-out),
+    color var(--duration-theme) var(--ease-out),
+    border-color var(--duration-theme) var(--ease-out);
+}
+
+/* ---- Nebulosa ---- */
+
+.nebulaWrap {
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.nebulaWrap.dim {
+  opacity: 0.18;
+}
+
+.nebula {
+  filter: blur(6px);
+  animation: nebula-pulse 7s ease-in-out infinite;
+}
+
+@keyframes nebula-pulse {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.nebulaButton {
+  position: absolute;
+  z-index: 1;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.nebulaButton.dim {
+  opacity: 0.4;
+}
+
+/* ---- Transmisión interceptada ---- */
+
+.signal {
+  position: absolute;
+  z-index: 3;
+  width: 20rem;
+  max-width: calc(100% - 1rem);
+  /* Nunca más alto que lo que queda del escenario bajo la nebulosa */
+  max-height: calc(100% - var(--top, 0%) - 0.5rem);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-50%);
+  padding: 0.75rem 1rem 1rem;
+  border: 1px solid var(--era-accent);
+  border-radius: var(--radius-md);
+  background: var(--era-bg-elevated, var(--era-bg));
+  box-shadow: 0 0 28px var(--era-glow);
+  color: var(--era-fg);
+  animation: signal-fade 0.2s ease-out;
+}
+
+.signalTitle {
+  flex: none;
+  margin: 0 0 0.5rem;
+  color: var(--era-accent);
+  font-family: var(--era-font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.signalBody {
+  position: relative;
+  flex: 0 1 auto;
+  min-height: 3rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  animation: glitch-reveal 0.7s steps(1, end) both;
+}
+
+.signalText {
+  margin: 0;
+  font-family: var(--era-font-display);
+  font-size: 1.125rem;
+  line-height: 1.35;
+  text-shadow:
+    1px 0 color-mix(in srgb, var(--era-accent) 70%, transparent),
+    -1px 0 rgba(90, 200, 255, 0.5);
+}
+
+.caret {
+  animation: blink 0.8s steps(1, end) infinite;
+}
+
+.signalMedia {
+  display: block;
+  width: 100%;
+  max-height: 14rem;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0, 0, 0, 0.28) 2px 3px);
+  animation: scan-move 4s linear infinite;
+}
+
+.signalClose {
+  flex: none;
+  align-self: flex-start;
+  margin-top: 0.75rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--era-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--era-fg);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes signal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-reveal {
+  0% {
+    opacity: 0;
+    transform: translateX(-6px) skewX(8deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(5px);
+    clip-path: inset(10% 0 55% 0);
+  }
+  30% {
+    opacity: 0.3;
+    transform: translateX(-3px);
+    clip-path: inset(50% 0 10% 0);
+  }
+  45% {
+    opacity: 1;
+    transform: translateX(3px) skewX(-6deg);
+    clip-path: inset(0);
+  }
+  60% {
+    opacity: 0.5;
+    transform: translateX(-2px);
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes scan-move {
+  to {
+    transform: translateY(3px);
+  }
+}
+
+/* ---- Línea de tiempo ---- */
+
+.timeline {
+  margin-top: 1.25rem;
+}
+
+.timelineTitle {
+  margin: 0 0 0.5rem;
+  color: var(--era-fg-muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.timelineRows {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timelineRow,
+.timelineAxis {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.25rem;
+  width: 100%;
+}
+
+@media (min-width: 40rem) {
+  .timelineRow,
+  .timelineAxis {
+    grid-template-columns: 11rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+.timelineRow {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--era-fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.timelineRow:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.timelineRow[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.timelineName {
+  min-width: 0;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.timelineTrack {
+  position: relative;
+  height: 1.25rem;
+}
+
+.segment {
+  position: absolute;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.segment[data-phase="nebulosa"] {
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent) 45%, transparent) 0 2px,
+    transparent 2px 5px
+  );
+  opacity: 0.6;
+}
+
+.segment[data-fuzzy] {
+  mask-image: linear-gradient(90deg, transparent, #000 35%);
+}
+
+.segment[data-phase="orbita"] {
+  opacity: 0.65;
+}
+
+.segment[data-phase="cerrada"] {
+  opacity: 0.25;
+}
+
+.marker {
+  position: absolute;
+  top: 50%;
+  width: 0.6rem;
+  height: 0.6rem;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--era-bg);
+  border-radius: 50%;
+  background: var(--era-fg);
+}
+
+.axisTrack {
+  position: relative;
+  height: 1rem;
+  color: var(--era-fg-muted);
+  font-size: 0.75rem;
+}
+
+.timelineAxis > .timelineName {
+  display: none;
+}
+
+@media (min-width: 40rem) {
+  .timelineAxis > .timelineName {
+    display: block;
+  }
+}
+
+.tick {
+  position: absolute;
+  top: 0;
+  padding-left: 0.25rem;
+  border-left: 1px solid var(--era-line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nebula,
+  .caret,
+  .scan,
+  .signalBody {
+    animation: none;
+  }
+}
