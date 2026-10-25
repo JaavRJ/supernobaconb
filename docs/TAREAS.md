@@ -39,7 +39,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 13 / 14 |
+| 1 — Base | ✅ Hecha | 14 / 14 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
@@ -66,7 +66,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | F1-11 | Cielo: versión para celular y lista accesible | Worker | F1-10 | ✅ |
 | F1-12 | Reproductor persistente (versión inicial) | Worker | F1-03, F1-05 | ✅ |
 | F1-13 | Verificación final de la fase | Orquestador | todas | ✅ |
-| F1-14 | Recorrido de diseño con el artista | Orquestador + artista | F1-13 | 🔨 |
+| F1-14 | Recorrido de diseño con el artista | Orquestador + artista | F1-13 | ✅ |
 
 ### F1-01 — Rama `artista` y proyecto Next.js en `web/`
 - **Objetivo:** crear la base del nuevo sitio sin tocar el sitio actual.
@@ -215,7 +215,7 @@ Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y 
 | ID-03 | Cielo radiante: núcleo con la estrella-brújula, íconos de faceta, nebulosa fotográfica, eras | Worker | ID-01 | ✅ |
 | ID-04 | Era BDUEM en monocromo con scroll horizontal | Worker | ID-01 | ✅ |
 | ID-05 | Reproductor y pie con la nueva estética | Worker | ID-01 | ✅ |
-| ID-06 | Limpieza y verificación final | Orquestador | todas | ⬜ |
+| ID-06 | Limpieza y verificación final | Orquestador | todas | ✅ |
 
 #### ID-01 — Base
 - **Archivos:** `web/src/styles/tokens.css`, `web/src/app/layout.tsx`, `web/src/app/globals.css`, `web/public/brand/` (nuevo), `web/src/components/brand/` (nuevo), `web/src/components/theme/Backdrop*`, `web/src/components/layout/SiteHeader*`.
@@ -298,3 +298,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | ID-05 | Worker hizo el reproductor flotante del mockup (altura reservada medida con ResizeObserver) y el pie mínimo con íconos. Reviewer: aprobada. Orquestador verificó en el navegador que se ve como el mockup y sigue sonando al navegar. ✅ |
 | 2026-10-25 | ID-04 | Worker hizo la era BDUEM en monocromo: tema negro y blanco con Uncial y Cormorant, `HorizontalScroll` (rueda → avance horizontal sin secuestrar la página), etiqueta vertical, índice poético, polaroids en B/N y panel del sitio original. Reviewer pidió correcciones (arrastre que impedía seleccionar texto, eras sin libro, botón deshabilitado que parecía activo, accesibilidad de imágenes, Firefox). Orquestador hizo que el header y el fondo de página sean negros en páginas de era, y verificó en el navegador a 1440 y 390 px. ✅ |
 | 2026-10-25 | ID-03 | Worker hizo el cielo radiante: escenario transparente sobre el cosmos, estrellas blancas, núcleo con la estrella-brújula y resplandor cálido, íconos de faceta, hilos por trazo con `inspira` cálido, nebulosa fotográfica con `feTurbulence` y eras en píldoras. Reviewer: aprobada. Pendiente para Fase 6: medir el costo de repintado del filtro de la nebulosa junto al parpadeo de estrellas en celulares de gama baja. ✅ |
+| 2026-10-25 | ID-06 | Orquestador: borró `/temas`, `/reproductor-prueba`, el audio de prueba y los mockups, y quitó Crimson Pro (sin uso). Tipos, lint y build sin errores; en producción todas las rutas dan 200, los slugs inexistentes y las páginas borradas 404, y el HTML no tiene datos de la era 2. Revisado en el navegador a 1440 y 390 px. Se detuvieron servidores de prueba que dejaron los agentes. ✅ |
+| 2026-10-25 | F1-14 | Identidad visual aplicada. **Fase 1 terminada.** Nota: el reproductor ya no tiene página de prueba; se podrá probar cuando haya audios reales (Fase 3). ✅ |

@@ -3,7 +3,6 @@ import {
   Cinzel,
   Cinzel_Decorative,
   Cormorant_Garamond,
-  Crimson_Pro,
   Inter,
   Uncial_Antiqua,
 } from "next/font/google";
@@ -42,7 +41,6 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
   variable: "--font-cormorant",
 });
-const crimson = Crimson_Pro({ subsets: ["latin"], display: "swap", variable: "--font-crimson" });
 
 export const metadata: Metadata = {
   title: { default: site.name, template: `%s · ${site.name}` },
@@ -55,7 +53,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         inter.variable,
         cinzel.variable,
         cinzelText.variable,
-        crimson.variable,
         uncial.variable,
         cormorant.variable,
       ].join(" ")}

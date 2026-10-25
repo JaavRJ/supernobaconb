@@ -186,7 +186,7 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - [x] **Portada**: acceso directo a lo último + mapa del cielo con las tres constelaciones, hilos y vista por era (con versión para celular)
 - [x] Reproductor persistente (versión inicial)
 - [x] Contenido de relleno donde aún falten datos
-- [ ] **Recorrido de diseño con el artista**: revisar juntos el sitio en el navegador, anotar qué funciona y qué no, y ajustar tipografía, espacios, colores y la composición de la portada
+- [x] **Recorrido de diseño con el artista** (resultado: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md)): revisar juntos el sitio en el navegador, anotar qué funciona y qué no, y ajustar tipografía, espacios, colores y la composición de la portada
 
 ### Fase 2 — Libro
 - [ ] Migrar el lector (paginado y vertical), resaltados, citas, marcadores y notas del autor
