@@ -5,10 +5,183 @@
   max-width: 100%;
 }
 
+.wrapper {
+  width: 100%;
+}
+
+.stage {
+  position: relative;
+}
+
 .lines line {
   stroke-width: 1;
   stroke-opacity: 0.35;
   vector-effect: non-scaling-stroke;
+  transition: opacity 0.25s ease;
+}
+
+.thread {
+  stroke-width: 1.5;
+  stroke-opacity: 0.7;
+  vector-effect: non-scaling-stroke;
+  transition:
+    opacity 0.25s ease,
+    stroke-opacity 0.25s ease;
+}
+
+.thread[data-kind="inspira"] {
+  stroke-width: 2;
+  stroke-opacity: 0.9;
+}
+
+.thread[data-kind="continua"] {
+  stroke-opacity: 0.75;
+}
+
+.thread[data-kind="comparte-universo"] {
+  stroke-dasharray: 8 5;
+}
+
+.thread[data-kind="construye"] {
+  stroke-dasharray: 10 4 2 4;
+}
+
+.thread[data-kind="guino"] {
+  stroke-width: 1;
+  stroke-opacity: 0.35;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+}
+
+.threads .thread.lit {
+  stroke-opacity: 1;
+  stroke-width: 2.5;
+}
+
+.link {
+  outline: none;
+  cursor: pointer;
+}
+
+.hit {
+  fill: transparent;
+}
+
+.ring {
+  fill: none;
+  stroke: var(--era-accent);
+  stroke-width: 2;
+  opacity: 0;
+}
+
+.link:focus-visible .ring {
+  opacity: 1;
+}
+
+.stars > g {
+  transition: opacity 0.25s ease;
+}
+
+.stars > g.dim,
+.lines line.dim,
+.threads .thread.dim {
+  opacity: 0.18;
+}
+
+.card {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  gap: 0.75rem;
+  width: 15rem;
+  max-width: 100%;
+  padding: 0.75rem;
+  transform: translateX(var(--card-x, -50%));
+  background: var(--era-bg-elevated, var(--era-bg));
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 24px var(--era-glow);
+  color: var(--era-fg);
+  pointer-events: none;
+  animation: card-in 0.15s ease-out;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.cardCover {
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  width: 4rem;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background:
+    radial-gradient(circle at 70% 25%, color-mix(in srgb, var(--c) 70%, transparent), transparent 65%),
+    linear-gradient(160deg, color-mix(in srgb, var(--c) 30%, var(--era-bg)), var(--era-bg));
+  border: 1px solid color-mix(in srgb, var(--c) 50%, transparent);
+  color: var(--era-fg);
+  font-family: var(--era-font-display);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardText {
+  min-width: 0;
+}
+
+.cardText p {
+  margin: 0;
+}
+
+.cardTitle {
+  font-family: var(--era-font-display);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.cardMeta,
+.cardEra {
+  margin-top: 0.15rem;
+  color: var(--era-fg-muted);
+  font-size: 0.8125rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--era-fg-muted);
+  font-size: 0.875rem;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendSample {
+  width: 2.5rem;
+  height: 0.5rem;
+  color: var(--era-fg-muted);
 }
 
 .star .core {
@@ -46,8 +219,22 @@
   .star .core {
     animation: none;
   }
+
+  .lines line,
+  .thread,
+  .stars > g {
+    transition: none;
+  }
+
+  .card {
+    animation: none;
+  }
 }
 
 .unreleased {
   opacity: 0.8;
+}
+
+.cardCover span {
+  padding: 0.25rem;
 }

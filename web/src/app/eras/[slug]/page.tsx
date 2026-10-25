@@ -7,6 +7,9 @@ import { eras, getEra, getWorksByEra } from "@/content";
 /** La primera visita a un slug no listado espera la página completa (y su 404) */
 export const ensureStatic = "navigation";
 
+/** Los slugs se conocen de antemano y el 404 de los desconocidos depende de `params`, así que la ruta puede bloquear al navegar */
+export const instant = false;
+
 export function generateStaticParams() {
   return eras.map((e) => ({ slug: e.id }));
 }

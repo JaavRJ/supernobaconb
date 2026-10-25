@@ -1,4 +1,4 @@
-import type { Constellation, ConstellationId, Work } from "@/types/content";
+import type { Constellation, ConstellationId, Thread, ThreadKind, Work } from "@/types/content";
 
 /** Sistema de coordenadas del cielo (viewBox) */
 export const SKY_WIDTH = 1000;
@@ -17,6 +17,8 @@ export interface SkyInput {
   constellations: Constellation[];
   /** Obras visibles (sin `hidden`) */
   works: Work[];
+  /** Hilos entre obras; se omiten los que no unen dos estrellas visibles */
+  threads?: Thread[];
 }
 
 export interface SkyStar {
@@ -42,6 +44,17 @@ export interface SkyLine {
   y2: number;
 }
 
+export interface SkyThread {
+  id: string;
+  kind: ThreadKind;
+  /** Ids de las obras de origen y destino */
+  from: string;
+  to: string;
+  /** Curva cuadrática `M … Q … …` entre las dos estrellas */
+  path: string;
+  fromPart?: number;
+}
+
 export interface SkyLabel {
   constellation: ConstellationId;
   name: string;
@@ -53,6 +66,7 @@ export interface SkyLabel {
 export interface SkyLayout {
   stars: SkyStar[];
   lines: SkyLine[];
+  threads: SkyThread[];
   labels: SkyLabel[];
 }
 
@@ -119,7 +133,43 @@ function isFarEnough(x: number, y: number, placed: { x: number; y: number }[]): 
   return placed.every((p) => Math.hypot(p.x - x, p.y - y) >= MIN_STAR_DISTANCE);
 }
 
-export function layoutSky({ constellations, works }: SkyInput): SkyLayout {
+/** Desplazamientos del punto de control (fracción de la distancia) para hilos entre el mismo par */
+const THREAD_CURVES = [0.22, -0.22, 0.4, -0.4, 0.56, -0.56];
+
+function layoutThreads(threads: Thread[], stars: SkyStar[]): SkyThread[] {
+  const byId = new Map(stars.map((s) => [s.workId, s]));
+  const perPair = new Map<string, number>();
+  const result: SkyThread[] = [];
+
+  for (const t of threads) {
+    const a = byId.get(t.from);
+    const b = byId.get(t.to);
+    if (!a || !b) continue;
+    const pair = [t.from, t.to].sort().join("|");
+    const index = perPair.get(pair) ?? 0;
+    perPair.set(pair, index + 1);
+
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    // Perpendicular respecto al sentido origen → destino; la curvatura la fija el índice
+    const offset = THREAD_CURVES[index % THREAD_CURVES.length] * dist;
+    const cx = (a.x + b.x) / 2 + (-dy / dist) * offset;
+    const cy = (a.y + b.y) / 2 + (dx / dist) * offset;
+
+    result.push({
+      id: t.id,
+      kind: t.kind,
+      from: t.from,
+      to: t.to,
+      path: `M ${round(a.x)} ${round(a.y)} Q ${round(cx)} ${round(cy)} ${round(b.x)} ${round(b.y)}`,
+      ...(t.fromPart !== undefined ? { fromPart: t.fromPart } : {}),
+    });
+  }
+  return result;
+}
+
+export function layoutSky({ constellations, works, threads = [] }: SkyInput): SkyLayout {
   const brightness = computeBrightness(works);
   const stars: SkyStar[] = [];
   const lines: SkyLine[] = [];
@@ -229,5 +279,5 @@ export function layoutSky({ constellations, works }: SkyInput): SkyLayout {
     stars.push(...constellationStars);
   }
 
-  return { stars, lines, labels };
+  return { stars, lines, threads: layoutThreads(threads, stars), labels };
 }
