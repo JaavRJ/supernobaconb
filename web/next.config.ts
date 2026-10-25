@@ -7,7 +7,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com", pathname: "/dgrhyyuef/**" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "res.cloudinary.com", pathname: "/dgrhyyuef/**" },
+      { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" },
+    ],
   },
   // URLs del sitio viejo: /parte1 … /parte4 ahora viven en el lector
   async redirects() {

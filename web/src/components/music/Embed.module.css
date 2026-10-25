@@ -1,0 +1,95 @@
+.card {
+  width: 100%;
+  max-width: 560px;
+  box-sizing: border-box;
+  border: 1px solid var(--era-line);
+  border-radius: 14px;
+  background: var(--era-bg-elevated);
+  color: var(--era-fg);
+  overflow: hidden;
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--era-bg);
+}
+
+.thumb img {
+  object-fit: cover;
+}
+
+.body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  flex-wrap: wrap;
+}
+
+.icon {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  color: var(--era-fg);
+}
+
+.text {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.kind {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.title {
+  margin: 2px 0 0;
+  font-family: var(--era-font-display);
+  font-size: 20px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.button,
+.link {
+  min-height: 44px;
+  padding: 10px 18px;
+  box-sizing: border-box;
+  border: 1px solid var(--era-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--era-fg);
+  font: inherit;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover,
+.link:hover {
+  background: var(--era-line);
+}
+
+.button:focus-visible,
+.link:focus-visible,
+.frame:focus-visible {
+  outline: 2px solid var(--era-fg);
+  outline-offset: 2px;
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  background: var(--era-bg-elevated);
+}
+
+.frame16x9 {
+  aspect-ratio: 16 / 9;
+}
