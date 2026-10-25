@@ -39,7 +39,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 2 / 13 |
+| 1 — Base | 🔨 En curso | 3 / 13 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
@@ -54,7 +54,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 |---|---|---|---|---|
 | F1-01 | Rama `artista` y proyecto Next.js en `web/` | Worker | — | ✅ |
 | F1-02 | Conexión con Firebase | Worker | F1-01 | ✅ |
-| F1-03 | Tipos y datos iniciales | Worker | F1-01 | 🔁 |
+| F1-03 | Tipos y datos iniciales | Worker | F1-01 | ✅ |
 | F1-04 | Sistema de temas por era | Orquestador diseña, worker implementa | F1-01 | ⬜ |
 | F1-05 | Layout raíz, menú y pie de página | Worker | F1-04 | ⬜ |
 | F1-06 | Páginas provisionales de cada ruta | Worker | F1-05 | ⬜ |
@@ -212,3 +212,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-01 | Worker creó Next.js 16.4.3 en `web/`. Reviewer pidió fijar la raíz del workspace (media); lo corrigió el orquestador en `next.config.ts`. Lint y build pasan. ✅ |
 | 2026-10-25 | F1-02 | Worker conectó Firebase (`firebase` 13.1, `web/src/lib/firebase.ts`, `.env.example`). Reviewer: aprobada. ✅ |
 | 2026-10-25 | F1-03 | Reviewer pidió correcciones: quitar la obra del libro 2 (una nebulosa no revela obras), `getLatestRelease` con fecha explícita y zona horaria de México, `hidden` en `getWorksByEra`. 🔁 |
+| 2026-10-25 | F1-03 | Correcciones aplicadas y verificadas por el orquestador (tsc, lint, build). Pendiente confirmar con el artista la fecha exacta de Rulos (hoy aproximada: 2026-03-01). ✅ |
