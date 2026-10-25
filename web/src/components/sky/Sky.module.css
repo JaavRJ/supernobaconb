@@ -215,6 +215,55 @@
   font-size: 18px;
 }
 
+/* Cielo vertical (viewBox 600×1000): a 343 px de ancho la escala es ~0.57,
+   así que 32 y 24 unidades dan ~18 px y ~14 px reales */
+.namePortrait {
+  fill: var(--era-fg);
+  font-family: var(--era-font-display);
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.facetPortrait {
+  fill: var(--era-fg-muted);
+  font-family: var(--era-font-body);
+  font-size: 24px;
+}
+
+/* Las dos escenas están en el DOM; CSS muestra una (la oculta sale del árbol de accesibilidad) */
+.scene {
+  position: relative;
+}
+
+.scenePortrait {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .sceneLandscape {
+    display: none;
+  }
+
+  .scenePortrait {
+    display: block;
+  }
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  box-sizing: border-box;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--era-accent);
+  border-radius: 999px;
+  color: var(--era-fg);
+  font-size: 0.875rem;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .star .core {
     animation: none;
@@ -241,11 +290,24 @@
 
 /* ---- Vista por era ---- */
 
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
 .eraSelector {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  min-width: 0;
+}
+
+.viewToggle {
+  flex: none;
 }
 
 .eraButton {
@@ -344,8 +406,8 @@
 .signal {
   position: absolute;
   z-index: 3;
-  width: 20rem;
-  max-width: calc(100% - 1rem);
+  --signal-w: min(20rem, calc(100% - 1rem));
+  width: var(--signal-w);
   /* Nunca más alto que lo que queda del escenario bajo la nebulosa */
   max-height: calc(100% - var(--top, 0%) - 0.5rem);
   display: flex;
@@ -628,4 +690,102 @@
   .signalBody {
     animation: none;
   }
+}
+
+/* ---- Vista de lista ---- */
+
+.list {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.listGroup {
+  min-width: 0;
+}
+
+.listHeading {
+  margin: 0 0 0.5rem;
+  font-family: var(--era-font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.listFacet {
+  color: var(--era-fg-muted);
+  font-family: var(--era-font-body);
+  font-size: 0.9375rem;
+  font-weight: 400;
+}
+
+.listWorks,
+.listThreads {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listWorks {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.listWork {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.listOff {
+  color: var(--era-fg-muted);
+}
+
+.listOff .listLink {
+  color: var(--era-fg-muted);
+}
+
+.listLink {
+  color: var(--era-fg);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.listLink:focus-visible,
+.listSignalButton:focus-visible,
+.cardLink:focus-visible,
+.viewToggle:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+.listMeta {
+  margin: 0.15rem 0 0;
+  color: var(--era-fg-muted);
+  font-size: 0.875rem;
+}
+
+.listThreads {
+  margin-top: 0.3rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid var(--era-line);
+  color: var(--era-fg-muted);
+  font-size: 0.875rem;
+}
+
+.listSignalButton {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--era-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--era-fg);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.listSignalText {
+  margin: 0.5rem 0 0;
+  font-family: var(--era-font-display);
+  font-size: 1.125rem;
 }

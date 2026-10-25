@@ -1,8 +1,16 @@
 import type { Constellation, ConstellationId, Era, Thread, ThreadKind, Work } from "@/types/content";
 
-/** Sistema de coordenadas del cielo (viewBox) */
+export type SkyOrientation = "landscape" | "portrait";
+
+/** Sistema de coordenadas del cielo (viewBox): apaisado 1000×600, vertical 600×1000 */
 export const SKY_WIDTH = 1000;
 export const SKY_HEIGHT = 600;
+
+export function skySize(orientation: SkyOrientation): { width: number; height: number } {
+  return orientation === "portrait"
+    ? { width: SKY_HEIGHT, height: SKY_WIDTH }
+    : { width: SKY_WIDTH, height: SKY_HEIGHT };
+}
 /** Margen interior: ninguna estrella (con su radio) queda más cerca del borde */
 export const SKY_MARGIN = 56;
 /** Separación mínima entre centros de estrellas */
@@ -14,6 +22,8 @@ const BRIGHTNESS_OLDEST = 0.45;
 const BRIGHTNESS_UNRELEASED = 0.2;
 
 export interface SkyInput {
+  /** Por defecto `landscape` */
+  orientation?: SkyOrientation;
   constellations: Constellation[];
   /** Obras visibles (sin `hidden`) */
   works: Work[];
@@ -64,6 +74,10 @@ export interface SkyLabel {
 }
 
 export interface SkyLayout {
+  orientation: SkyOrientation;
+  /** Tamaño del viewBox */
+  width: number;
+  height: number;
   stars: SkyStar[];
   lines: SkyLine[];
   threads: SkyThread[];
@@ -169,7 +183,36 @@ function layoutThreads(threads: Thread[], stars: SkyStar[]): SkyThread[] {
   return result;
 }
 
-export function layoutSky({ constellations, works, threads = [] }: SkyInput): SkyLayout {
+/**
+ * Región de cada constelación en el cielo vertical: se ordenan por su x apaisada y se reparten
+ * en zigzag de arriba abajo (izquierda, derecha, izquierda…). Deja libre la franja de la nebulosa.
+ */
+function portraitRegions(constellations: Constellation[]): Map<ConstellationId, { x: number; y: number }> {
+  const ordered = [...constellations].sort(
+    (a, b) => a.skyRegion.x - b.skyRegion.x || a.id.localeCompare(b.id),
+  );
+  const n = ordered.length;
+  return new Map(
+    ordered.map((c, i) => [
+      c.id,
+      { x: i % 2 === 0 ? 0.36 : 0.64, y: n === 1 ? 0.55 : 0.3 + (0.52 * i) / (n - 1) },
+    ]),
+  );
+}
+
+export function layoutSky({
+  constellations,
+  works,
+  threads = [],
+  orientation = "landscape",
+}: SkyInput): SkyLayout {
+  const portrait = orientation === "portrait";
+  const { width: skyW, height: skyH } = skySize(orientation);
+  const regions = portrait ? portraitRegions(constellations) : null;
+  // Elipse de las órbitas: ancha en apaisado, casi redonda en vertical
+  const orbitX = portrait ? 0.9 : 1.25;
+  const orbitY = portrait ? 1 : 0.8;
+  const labelHalf = portrait ? 120 : 90;
   const brightness = computeBrightness(works);
   const stars: SkyStar[] = [];
   const lines: SkyLine[] = [];
@@ -177,17 +220,18 @@ export function layoutSky({ constellations, works, threads = [] }: SkyInput): Sk
   const placed: { x: number; y: number }[] = [];
 
   const minX = SKY_MARGIN;
-  const maxX = SKY_WIDTH - SKY_MARGIN;
+  const maxX = skyW - SKY_MARGIN;
   const minY = SKY_MARGIN;
-  const maxY = SKY_HEIGHT - SKY_MARGIN;
+  const maxY = skyH - SKY_MARGIN;
 
   // Primero las posiciones manuales, para que las automáticas las esquiven
   const manual = new Map<string, { x: number; y: number }>();
+  // Las posiciones manuales se pensaron para el cielo apaisado; en vertical se ignoran
   for (const w of works) {
-    if (w.skyPosition) {
+    if (w.skyPosition && !portrait) {
       const p = {
-        x: clamp(w.skyPosition.x * SKY_WIDTH, minX, maxX),
-        y: clamp(w.skyPosition.y * SKY_HEIGHT, minY, maxY),
+        x: clamp(w.skyPosition.x * skyW, minX, maxX),
+        y: clamp(w.skyPosition.y * skyH, minY, maxY),
       };
       manual.set(w.id, p);
       placed.push(p);
@@ -196,8 +240,9 @@ export function layoutSky({ constellations, works, threads = [] }: SkyInput): Sk
 
   for (const c of constellations) {
     const own = works.filter((w) => w.constellation === c.id).sort(byReleaseDate);
-    const cx = c.skyRegion.x * SKY_WIDTH;
-    const cy = c.skyRegion.y * SKY_HEIGHT;
+    const region = regions?.get(c.id) ?? c.skyRegion;
+    const cx = region.x * skyW;
+    const cy = region.y * skyH;
     const constellationStars: SkyStar[] = [];
     // Sin núcleo, la primera obra ocupa el centro de la constelación
     const hasCore = own.some((w) => w.role === "nucleo");
@@ -225,8 +270,8 @@ export function layoutSky({ constellations, works, threads = [] }: SkyInput): Sk
             const ring = Math.floor(attempt / 24);
             const angle = baseAngle + (attempt % 24) * (Math.PI / 12) * (attempt % 2 ? 1 : -1);
             const radius = baseRadius + ring * 24;
-            const x = cx + Math.cos(angle) * radius * 1.25;
-            const y = cy + Math.sin(angle) * radius * 0.8;
+            const x = cx + Math.cos(angle) * radius * orbitX;
+            const y = cy + Math.sin(angle) * radius * orbitY;
             if (x < minX || x > maxX || y < minY || y > maxY) continue;
             if (isFarEnough(x, y, placed)) found = { x, y };
           }
@@ -272,14 +317,22 @@ export function layoutSky({ constellations, works, threads = [] }: SkyInput): Sk
         constellation: c.id,
         name: c.name,
         facet: c.facet,
-        x: round(clamp((Math.min(...xs) + Math.max(...xs)) / 2, 90, SKY_WIDTH - 90)),
-        y: round(Math.min(lowest + 44, SKY_HEIGHT - 28)),
+        x: round(clamp((Math.min(...xs) + Math.max(...xs)) / 2, labelHalf, skyW - labelHalf)),
+        y: round(Math.min(lowest + 44, skyH - 28)),
       });
     }
     stars.push(...constellationStars);
   }
 
-  return { stars, lines, threads: layoutThreads(threads, stars), labels };
+  return {
+    orientation,
+    width: skyW,
+    height: skyH,
+    stars,
+    lines,
+    threads: layoutThreads(threads, stars),
+    labels,
+  };
 }
 
 export interface SkyNebula {
@@ -290,16 +343,17 @@ export interface SkyNebula {
   r: number;
 }
 
-const NEBULA_Y = 0.16;
+const NEBULA_Y = { landscape: 0.16, portrait: 0.1 };
 const NEBULA_RADIUS = 64;
 
-/** Una nebulosa por era en fase `nebulosa`, repartidas en horizontal arriba del cielo */
-export function layoutNebulas(eras: Era[]): SkyNebula[] {
+/** Una nebulosa por era en fase `nebulosa`, repartidas en horizontal arriba del cielo (en ambas orientaciones) */
+export function layoutNebulas(eras: Era[], orientation: SkyOrientation = "landscape"): SkyNebula[] {
+  const { width, height } = skySize(orientation);
   const nebulas = eras.filter((e) => e.phase === "nebulosa");
   return nebulas.map((e, i) => ({
     eraId: e.id,
-    x: round(((i + 1) / (nebulas.length + 1)) * SKY_WIDTH),
-    y: round(NEBULA_Y * SKY_HEIGHT),
+    x: round(((i + 1) / (nebulas.length + 1)) * width),
+    y: round(NEBULA_Y[orientation] * height),
     r: NEBULA_RADIUS,
   }));
 }

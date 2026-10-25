@@ -39,7 +39,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 11 / 14 |
+| 1 — Base | 🔨 En curso | 12 / 14 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
@@ -63,7 +63,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | F1-08 | Cielo: dibujo de constelaciones y estrellas | Worker | F1-03, F1-04 | ✅ |
 | F1-09 | Cielo: interacción e hilos | Worker | F1-08 | ✅ |
 | F1-10 | Cielo: vista por era, línea de tiempo y nebulosas | Worker | F1-09 | ✅ |
-| F1-11 | Cielo: versión para celular y lista accesible | Worker | F1-10 | ⬜ |
+| F1-11 | Cielo: versión para celular y lista accesible | Worker | F1-10 | ✅ |
 | F1-12 | Reproductor persistente (versión inicial) | Worker | F1-03, F1-05 | ✅ |
 | F1-13 | Verificación final de la fase | Orquestador | todas | ⬜ |
 | F1-14 | Recorrido de diseño con el artista | Orquestador + artista | F1-13 | ⬜ |
@@ -240,3 +240,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-09 | Worker hizo la interacción (tarjeta en hover y foco, navegación del lado del cliente, flechas) y los hilos con estilo por tipo. Reviewer pidió correcciones (flechas bloqueaban Alt+←, tarjeta fuera del cielo a 375 px, foco por ratón pegado) y detectó un aviso de navegación instantánea en las rutas dinámicas, resuelto con `instant = false` (documentado en Next 16) sin perder el 404 real. Orquestador verificó en el navegador, también a 375 px. ✅ |
 | 2026-10-25 | F1-10 | Worker hizo el selector de era (el cielo toma el tema de la era con transición), la línea de tiempo con fases encimadas y la nebulosa con su señal como "transmisión interceptada". Reviewer pidió correcciones: la nebulosa no se atenuaba (también visto por el orquestador), el panel podía recortarse en celular, y la línea de tiempo revelaba la fecha de inicio de la era 2. Decisión del orquestador: una nebulosa no muestra fechas; su franja empieza difuminada. Orquestador verificó en el navegador y que el HTML no contiene datos de la era 2. ✅ |
 | 2026-10-25 | — | Se agregan dos momentos de diseño: F1-14 (recorrido de diseño con el artista al cerrar la fase 1) y el "Pase de diseño con materiales reales". |
+| 2026-10-25 | F1-11 | Worker hizo el cielo vertical para pantallas angostas (dos SVG, uno visible por CSS), el toque en dos pasos y la vista "Ver como lista". Reviewer detectó una regresión: el panel de señal se cerraba al tocarlo porque había dos montados; ahora tarjeta y panel solo se montan en la escena visible. También áreas de toque de 44 px y contraste de la lista. Orquestador verificó a 375 px y en escritorio. Para F1-14: los hilos cruzan las etiquetas "Jabi" y "noba" a 375 px. ✅ |

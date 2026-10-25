@@ -1,12 +1,12 @@
 import { constellations, eras, getActiveSignal, getNebulas, threads, works } from "@/content";
 import type { EraPhase } from "@/types/content";
-import { layoutNebulas, layoutSky, type SkyLayout } from "./layout";
+import { layoutNebulas, layoutSky, type SkyLayout, type SkyOrientation } from "./layout";
 import { TYPE_LABELS, type SkyEraInfo, type SkySignal, type SkyStarInfo } from "./meta";
 import { buildTimeline } from "./eraTimeline";
 import { SkyInteractive } from "./SkyInteractive";
 
 interface SkyProps {
-  /** Layout ya calculado; por defecto se calcula con los datos de `@/content` */
+  /** Cielo apaisado ya calculado; por defecto se calcula con los datos de `@/content` */
   layout?: SkyLayout;
 }
 
@@ -30,8 +30,8 @@ const PHASE_LABELS: Record<EraPhase, string> = {
   cerrada: "cerrada",
 };
 
-function defaultLayout(): SkyLayout {
-  return layoutSky({ constellations, works: works.filter((w) => !w.hidden), threads });
+function defaultLayout(orientation: SkyOrientation): SkyLayout {
+  return layoutSky({ constellations, works: works.filter((w) => !w.hidden), threads, orientation });
 }
 
 function buildStarInfo(layout: SkyLayout): SkyStarInfo[] {
@@ -65,7 +65,7 @@ function buildStarInfo(layout: SkyLayout): SkyStarInfo[] {
   });
 }
 
-export function Sky({ layout = defaultLayout() }: SkyProps) {
+export function Sky({ layout = defaultLayout("landscape") }: SkyProps) {
   const eraInfo: SkyEraInfo[] = eras.map((e) => ({
     id: e.id,
     label: e.phase === "nebulosa" || !e.name ? "Nebulosa" : e.name,
@@ -104,10 +104,12 @@ export function Sky({ layout = defaultLayout() }: SkyProps) {
 
   return (
     <SkyInteractive
-      layout={layout}
+      variants={{
+        landscape: { layout, nebulas: layoutNebulas(eras, "landscape") },
+        portrait: { layout: defaultLayout("portrait"), nebulas: layoutNebulas(eras, "portrait") },
+      }}
       starInfo={buildStarInfo(layout)}
       eras={eraInfo}
-      nebulas={layoutNebulas(eras)}
       signals={signals}
       timeline={timeline}
       timelineLabels={timelineLabels}

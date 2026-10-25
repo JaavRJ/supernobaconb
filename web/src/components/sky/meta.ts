@@ -9,6 +9,15 @@ export const THREAD_LABELS: Record<ThreadKind, string> = {
   construye: "construye",
 };
 
+/** Cómo se lee un hilo desde la obra de destino */
+export const INCOMING_THREAD_LABELS: Record<ThreadKind, string> = {
+  inspira: "Inspirada por",
+  continua: "Continuación de",
+  "comparte-universo": "Comparte universo con",
+  guino: "Guiño de",
+  construye: "Construida por",
+};
+
 /** Orden en que aparecen en la leyenda */
 export const THREAD_ORDER: ThreadKind[] = [
   "inspira",

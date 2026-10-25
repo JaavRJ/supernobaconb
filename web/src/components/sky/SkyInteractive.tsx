@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent } from "react";
 import { Backdrop } from "@/components/theme/Backdrop";
 import { eraThemeStyle } from "@/lib/theme";
-import { SKY_HEIGHT, SKY_WIDTH, type SkyLayout, type SkyNebula } from "./layout";
+import type { SkyLayout, SkyNebula, SkyOrientation } from "./layout";
 import {
   THREAD_LABELS,
   THREAD_ORDER,
@@ -15,17 +15,24 @@ import {
   type SkyTimelineLabels,
 } from "./meta";
 import { SignalPanel } from "./SignalPanel";
+import { SkyList } from "./SkyList";
 import styles from "./Sky.module.css";
 import { Timeline } from "./Timeline";
 import type { TimelineData } from "./eraTimeline";
 
-interface SkyInteractiveProps {
+/** Cielo y nebulosas calculados para una orientación */
+export interface SkyVariant {
   layout: SkyLayout;
+  nebulas: SkyNebula[];
+}
+
+interface SkyInteractiveProps {
+  /** El cielo apaisado y el vertical; CSS muestra uno según el ancho */
+  variants: Record<SkyOrientation, SkyVariant>;
   starInfo: SkyStarInfo[];
   /** Color de cada constelación, por id */
   constellationColors: Record<string, string>;
   eras: SkyEraInfo[];
-  nebulas: SkyNebula[];
   /** Señal activa de cada nebulosa (null si no hay) */
   signals: Record<string, SkySignal | null>;
   timeline: TimelineData;
@@ -36,45 +43,76 @@ function classes(...names: (string | false | undefined)[]): string {
   return names.filter(Boolean).join(" ");
 }
 
+const ORIENTATIONS: SkyOrientation[] = ["landscape", "portrait"];
+const NARROW_QUERY = "(max-width: 639px)";
+
+function subscribeNarrow(onChange: () => void) {
+  const media = window.matchMedia(NARROW_QUERY);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+}
+
+/** Orientación del cielo visible; antes de montar (y en el servidor) es apaisada */
+function useVisibleOrientation(): SkyOrientation {
+  return useSyncExternalStore<SkyOrientation>(
+    subscribeNarrow,
+    () => (window.matchMedia(NARROW_QUERY).matches ? "portrait" : "landscape"),
+    () => "landscape",
+  );
+}
+
+/** Tipo de puntero del evento de clic, o el último que se vio si el navegador no lo da */
+function clickPointerType(event: MouseEvent, fallback: string): string {
+  const native = event.nativeEvent as Partial<PointerEvent>;
+  return typeof native.pointerType === "string" ? native.pointerType : fallback;
+}
+
 export function SkyInteractive({
-  layout,
+  variants,
   starInfo,
   constellationColors,
   eras,
-  nebulas,
   signals,
   timeline,
   timelineLabels,
 }: SkyInteractiveProps) {
   const router = useRouter();
+  const visible = useVisibleOrientation();
   // Los ids de useId llevan ":"; se limpian para poder usarlos en url(#…)
-  const prefix = `sky${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const basePrefix = `sky${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const [hovered, setHovered] = useState<string | null>(null);
   const [focused, setFocused] = useState<string | null>(null);
-  const anchors = useRef<(HTMLAnchorElement | null)[]>([]);
+  // Estrella activada con un toque: el siguiente toque en ella navega
+  const [touched, setTouched] = useState<string | null>(null);
+  const lastPointer = useRef("");
+  const anchors = useRef<Record<SkyOrientation, (HTMLAnchorElement | null)[]>>({
+    landscape: [],
+    portrait: [],
+  });
   const [selectedEra, setSelectedEra] = useState<string | null>(null);
   const [openNebula, setOpenNebula] = useState<string | null>(null);
+  const [listMode, setListMode] = useState(false);
   const nebulaButtons = useRef(new Map<string, HTMLButtonElement>());
 
-  const activeId = hovered ?? focused;
+  const activeId = hovered ?? focused ?? touched;
   const infoById = useMemo(() => new Map(starInfo.map((i) => [i.workId, i])), [starInfo]);
-  const starById = useMemo(() => new Map(layout.stars.map((s) => [s.workId, s])), [layout.stars]);
+  // Las obras y los hilos son los mismos en las dos orientaciones; solo cambian las posiciones
+  const { layout: baseLayout, nebulas: baseNebulas } = variants.landscape;
   const selected = selectedEra ? eras.find((e) => e.id === selectedEra) : undefined;
   const eraFilter = selected !== undefined;
   const inEra = (workId: string) => infoById.get(workId)?.eraId === selected?.id;
-  const active = activeId ? starById.get(activeId) : undefined;
   const activeInfo = activeId ? infoById.get(activeId) : undefined;
 
   const connected = useMemo(() => {
     const ids = new Set<string>();
     if (activeId) {
-      for (const t of layout.threads) {
+      for (const t of baseLayout.threads) {
         if (t.from === activeId) ids.add(t.to);
         if (t.to === activeId) ids.add(t.from);
       }
     }
     return ids;
-  }, [activeId, layout.threads]);
+  }, [activeId, baseLayout.threads]);
 
   useEffect(() => {
     if (!activeId) return;
@@ -82,15 +120,37 @@ export function SkyInteractive({
       if (event.key === "Escape") {
         setHovered(null);
         setFocused(null);
+        setTouched(null);
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [activeId]);
 
+  useEffect(() => {
+    if (!touched) return;
+    // Tocar fuera de una estrella (o del enlace de la tarjeta) cierra la tarjeta
+    const onPointerDown = (event: PointerEvent) => {
+      if ((event.target as Element).closest("[data-sky-keep]")) return;
+      setTouched(null);
+      setHovered(null);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [touched]);
+
   function selectEra(id: string | null) {
     setSelectedEra(id);
     setOpenNebula(null);
+    setTouched(null);
+  }
+
+  function toggleList() {
+    setListMode((on) => !on);
+    setOpenNebula(null);
+    setTouched(null);
+    setHovered(null);
+    setFocused(null);
   }
 
   function navigate(event: MouseEvent<HTMLAnchorElement>, href: string) {
@@ -108,67 +168,66 @@ export function SkyInteractive({
     router.push(href);
   }
 
-  const presentKinds = THREAD_ORDER.filter((k) => layout.threads.some((t) => t.kind === k));
-
-  function cardPlacement(): CSSProperties {
-    if (!active) return {};
-    const fx = active.x / SKY_WIDTH;
-    // Cerca de un borde la tarjeta se alinea hacia dentro
-    const x = fx < 0.35 ? "-14px" : fx > 0.65 ? "calc(-100% + 14px)" : "-50%";
-    return { left: `${fx * 100}%`, "--card-x": x } as CSSProperties;
+  /** Con el dedo, el primer toque activa la estrella y el segundo navega */
+  function onStarClick(event: MouseEvent<HTMLAnchorElement>, workId: string, href: string) {
+    if (clickPointerType(event, lastPointer.current) === "touch" && touched !== workId) {
+      event.preventDefault();
+      setTouched(workId);
+      return;
+    }
+    navigate(event, href);
   }
 
-  /** Coloca la tarjeta arriba o abajo según el espacio medido y la mantiene dentro del escenario */
-  function placeCard(node: HTMLDivElement | null) {
-    const stage = node?.parentElement;
-    if (!node || !stage || !active) return;
-    const stageHeight = stage.clientHeight;
+  const presentKinds = THREAD_ORDER.filter((k) => baseLayout.threads.some((t) => t.kind === k));
+
+  /** Coloca la tarjeta arriba o abajo según el espacio medido y la mantiene dentro de la escena */
+  function placeCard(node: HTMLDivElement | null, starY: number, height: number) {
+    const scene = node?.parentElement;
+    if (!node || !scene) return;
+    const sceneHeight = scene.clientHeight;
     const cardHeight = node.offsetHeight;
-    const starY = (active.y / SKY_HEIGHT) * stageHeight;
-    const below = starY + 22;
-    const above = starY - 22 - cardHeight;
-    const fitsBelow = below + cardHeight <= stageHeight;
-    const top = fitsBelow || (above < 0 && below <= stageHeight - above - cardHeight) ? below : above;
-    const max = Math.max(0, stageHeight - cardHeight);
+    const y = (starY / height) * sceneHeight;
+    const below = y + 22;
+    const above = y - 22 - cardHeight;
+    const fitsBelow = below + cardHeight <= sceneHeight;
+    const top = fitsBelow || (above < 0 && below <= sceneHeight - above - cardHeight) ? below : above;
+    const max = Math.max(0, sceneHeight - cardHeight);
     node.style.top = `${Math.min(max, Math.max(0, top))}px`;
   }
 
-  return (
-    <div className={styles.wrapper}>
-      <div className={styles.eraSelector} role="group" aria-label="Ver el cielo por era">
-        <button
-          type="button"
-          className={styles.eraButton}
-          aria-pressed={selectedEra === null}
-          onClick={() => selectEra(null)}
-        >
-          Todas
-        </button>
-        {eras.map((era) => (
-          <button
-            key={era.id}
-            type="button"
-            className={styles.eraButton}
-            style={{ "--accent": era.theme.accent } as CSSProperties}
-            aria-pressed={selectedEra === era.id}
-            onClick={() => selectEra(era.id)}
-          >
-            {era.label}
-          </button>
-        ))}
-      </div>
+  /** Un SVG con sus estrellas, la tarjeta y las nebulosas; se llama una vez por orientación */
+  function renderScene(orientation: SkyOrientation) {
+    const { layout, nebulas } = variants[orientation];
+    const { width, height } = layout;
+    const portrait = orientation === "portrait";
+    const prefix = `${basePrefix}-${orientation}`;
+    const starById = new Map(layout.stars.map((s) => [s.workId, s]));
+    const active = activeId ? starById.get(activeId) : undefined;
+    // Área de toque: hasta la mitad de la distancia al vecino más cercano, sin que se solapen
+    const hitBase = portrait ? 30 : 22;
+    const hitMax = portrait ? 39 : 30;
+    const hitRadius = (star: (typeof layout.stars)[number]) => {
+      const nearest = Math.min(
+        ...layout.stars.filter((o) => o !== star).map((o) => Math.hypot(o.x - star.x, o.y - star.y)),
+      );
+      return Math.min(hitMax, Math.max(hitBase, nearest / 2));
+    };
+    // La tarjeta y el panel solo existen en la escena visible
+    const isVisible = orientation === visible;
 
-      <div
-        className={styles.stage}
-        data-era={selected?.id}
-        style={selected ? eraThemeStyle(selected.theme) : undefined}
-      >
-        {selected && selected.theme.backdrop !== "none" && (
-          <Backdrop variant={selected.theme.backdrop} />
-        )}
+    function cardPlacement(): CSSProperties {
+      if (!active) return {};
+      const fx = active.x / width;
+      // Cerca de un borde la tarjeta se alinea hacia dentro
+      const x = fx < 0.35 ? "-14px" : fx > 0.65 ? "calc(-100% + 14px)" : "-50%";
+      return { left: `${fx * 100}%`, "--card-x": x } as CSSProperties;
+    }
+
+    return (
+      <>
         <svg
           className={styles.sky}
-          viewBox={`0 0 ${SKY_WIDTH} ${SKY_HEIGHT}`}
+          viewBox={`0 0 ${width} ${height}`}
           preserveAspectRatio="xMidYMid meet"
           role="group"
           aria-label="Mapa del cielo de Supernoba"
@@ -290,7 +349,7 @@ export function SkyInteractive({
                   : eraFilter && !inEra(s.workId);
               const content = (
                 <>
-                  <circle className={styles.hit} cx={s.x} cy={s.y} r={22} />
+                  <circle className={styles.hit} cx={s.x} cy={s.y} r={hitRadius(s)} />
                   <circle className={styles.ring} cx={s.x} cy={s.y} r={s.r + 9} />
                   {s.unreleased ? (
                     <circle
@@ -336,13 +395,17 @@ export function SkyInteractive({
                   {info ? (
                     <a
                       ref={(node) => {
-                        anchors.current[i] = node;
+                        anchors.current[orientation][i] = node;
                       }}
                       href={info.href}
                       tabIndex={0}
                       className={styles.link}
                       aria-label={info.ariaLabel}
-                      onClick={(e) => navigate(e, info.href)}
+                      data-sky-keep=""
+                      onPointerDown={(e) => {
+                        lastPointer.current = e.pointerType;
+                      }}
+                      onClick={(e) => onStarClick(e, s.workId, info.href)}
                       onMouseEnter={() => setHovered(s.workId)}
                       onMouseLeave={() => setHovered(null)}
                       onFocus={(e) => {
@@ -351,12 +414,13 @@ export function SkyInteractive({
                       }}
                       onBlur={() => setFocused((cur) => (cur === s.workId ? null : cur))}
                       onKeyDown={(e) => {
+                        lastPointer.current = "";
                         const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
                         if (!step || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
                         const total = layout.stars.length;
                         // Salta las estrellas sin enlace hasta la siguiente válida
                         for (let n = 1; n < total; n++) {
-                          const next = anchors.current[(i + step * n + total * n) % total];
+                          const next = anchors.current[orientation][(i + step * n + total * n) % total];
                           if (next) {
                             e.preventDefault();
                             next.focus();
@@ -378,8 +442,12 @@ export function SkyInteractive({
           <g className={styles.labels}>
             {layout.labels.map((l) => (
               <text key={l.constellation} x={l.x} y={l.y} textAnchor="middle">
-                <tspan className={styles.name}>{l.name}</tspan>
-                <tspan className={styles.facet} x={l.x} dy={22}>
+                <tspan className={portrait ? styles.namePortrait : styles.name}>{l.name}</tspan>
+                <tspan
+                  className={portrait ? styles.facetPortrait : styles.facet}
+                  x={l.x}
+                  dy={portrait ? 30 : 22}
+                >
                   {l.facet}
                 </tspan>
               </text>
@@ -387,8 +455,13 @@ export function SkyInteractive({
           </g>
         </svg>
 
-        {active && activeInfo && (
-          <div ref={placeCard} className={styles.card} style={cardPlacement()} aria-hidden="true">
+        {isVisible && active && activeInfo && (
+          <div
+            ref={(node) => placeCard(node, active.y, height)}
+            className={styles.card}
+            style={cardPlacement()}
+            aria-hidden="true"
+          >
             <div className={styles.cardCover} style={{ "--c": active.color } as CSSProperties}>
               {activeInfo.coverUrl ? (
                 <Image
@@ -409,56 +482,143 @@ export function SkyInteractive({
                 {activeInfo.typeLabel} · {activeInfo.dateLabel}
               </p>
               {activeInfo.eraName && <p className={styles.cardEra}>{activeInfo.eraName}</p>}
+              {touched === active.workId && (
+                // El acceso accesible es el enlace de la propia estrella; este es solo para el dedo
+                <a
+                  href={activeInfo.href}
+                  tabIndex={-1}
+                  className={styles.cardLink}
+                  data-sky-keep=""
+                  onClick={(e) => navigate(e, activeInfo.href)}
+                >
+                  Ver obra
+                </a>
+              )}
             </div>
           </div>
         )}
 
         {nebulas.map((n) => {
           const isOpen = openNebula === n.eraId;
+          const left = `${(n.x / width) * 100}%`;
+          const buttonKey = `${orientation}:${n.eraId}`;
           return (
             <div key={n.eraId}>
               <button
                 type="button"
                 id={`${prefix}-nebula-btn-${n.eraId}`}
                 ref={(node) => {
-                  if (node) nebulaButtons.current.set(n.eraId, node);
-                  else nebulaButtons.current.delete(n.eraId);
+                  if (node) nebulaButtons.current.set(buttonKey, node);
+                  else nebulaButtons.current.delete(buttonKey);
                 }}
                 className={classes(
                   styles.nebulaButton,
                   eraFilter && selected?.id !== n.eraId && styles.dim,
                 )}
                 style={{
-                  left: `${(n.x / SKY_WIDTH) * 100}%`,
-                  top: `${(n.y / SKY_HEIGHT) * 100}%`,
-                  width: `${((n.r * 2) / SKY_WIDTH) * 100}%`,
+                  left,
+                  top: `${(n.y / height) * 100}%`,
+                  width: `${((n.r * 2) / width) * 100}%`,
                 }}
                 aria-label="Una nebulosa. Ver señal"
                 aria-expanded={isOpen}
                 aria-controls={isOpen ? `${prefix}-signal-${n.eraId}` : undefined}
                 onClick={() => setOpenNebula(isOpen ? null : n.eraId)}
               />
-              {isOpen && (
+              {isOpen && isVisible && (
                 <SignalPanel
                   id={`${prefix}-signal-${n.eraId}`}
                   signal={signals[n.eraId] ?? null}
                   style={
                     {
-                      left: `${(n.x / SKY_WIDTH) * 100}%`,
-                      top: `${((n.y + n.r) / SKY_HEIGHT) * 100}%`,
-                      "--top": `${((n.y + n.r) / SKY_HEIGHT) * 100}%`,
+                      left: `clamp(calc(var(--signal-w) / 2), ${left}, calc(100% - var(--signal-w) / 2))`,
+                      top: `${((n.y + n.r) / height) * 100}%`,
+                      "--top": `${((n.y + n.r) / height) * 100}%`,
                     } as CSSProperties
                   }
                   triggerId={`${prefix}-nebula-btn-${n.eraId}`}
                   onClose={(returnFocus) => {
                     setOpenNebula(null);
-                    if (returnFocus) nebulaButtons.current.get(n.eraId)?.focus();
+                    if (returnFocus) nebulaButtons.current.get(buttonKey)?.focus();
                   }}
                 />
               )}
             </div>
           );
         })}
+      </>
+    );
+  }
+
+  return (
+    <div className={styles.wrapper}>
+      <div className={styles.controls}>
+        <div className={styles.eraSelector} role="group" aria-label="Ver el cielo por era">
+          <button
+            type="button"
+            className={styles.eraButton}
+            aria-pressed={selectedEra === null}
+            onClick={() => selectEra(null)}
+          >
+            Todas
+          </button>
+          {eras.map((era) => (
+            <button
+              key={era.id}
+              type="button"
+              className={styles.eraButton}
+              style={{ "--accent": era.theme.accent } as CSSProperties}
+              aria-pressed={selectedEra === era.id}
+              onClick={() => selectEra(era.id)}
+            >
+              {era.label}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          className={classes(styles.eraButton, styles.viewToggle)}
+          aria-pressed={listMode}
+          onClick={toggleList}
+        >
+          {listMode ? "Ver como cielo" : "Ver como lista"}
+        </button>
+      </div>
+
+      <div
+        className={styles.stage}
+        data-era={selected?.id}
+        style={selected ? eraThemeStyle(selected.theme) : undefined}
+      >
+        {selected && selected.theme.backdrop !== "none" && (
+          <Backdrop variant={selected.theme.backdrop} />
+        )}
+        {listMode ? (
+          <SkyList
+            layout={baseLayout}
+            infoById={infoById}
+            nebulas={baseNebulas}
+            signals={signals}
+            selectedEra={selectedEra}
+            openNebula={openNebula}
+            onToggleNebula={(eraId) => setOpenNebula((cur) => (cur === eraId ? null : eraId))}
+            onNavigate={navigate}
+            idPrefix={basePrefix}
+          />
+        ) : (
+          ORIENTATIONS.map((orientation) => (
+            <div
+              key={orientation}
+              className={classes(
+                styles.scene,
+                orientation === "portrait" ? styles.scenePortrait : styles.sceneLandscape,
+              )}
+              data-orientation={orientation}
+            >
+              {renderScene(orientation)}
+            </div>
+          ))
+        )}
       </div>
 
       <Timeline
@@ -469,7 +629,7 @@ export function SkyInteractive({
         onSelect={(id) => selectEra(selectedEra === id ? null : id)}
       />
 
-      {presentKinds.length > 0 && (
+      {!listMode && presentKinds.length > 0 && (
         <ul className={styles.legend} aria-label="Tipos de hilo">
           {presentKinds.map((kind) => (
             <li key={kind}>
