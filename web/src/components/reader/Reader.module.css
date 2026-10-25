@@ -1,0 +1,369 @@
+/* Lector de la parte: negro puro, luz blanca, columna de libro */
+.stage {
+  position: relative;
+  color: var(--era-fg);
+}
+
+/* Riel fijo que lleva la etiqueta vertical al centro de la pantalla mientras se lee */
+.labelRail {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Barra fija bajo el header global */
+.bar {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 25;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.barInner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 72rem;
+  min-height: 44px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.barBack {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  min-height: 44px;
+  color: var(--era-fg);
+  text-decoration: none;
+}
+
+.barBack:hover {
+  color: #fff;
+}
+
+.barTitle {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--era-fg-muted);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barTime {
+  flex: none;
+  margin: 0;
+  color: var(--era-fg-muted);
+  white-space: nowrap;
+}
+
+.barSlot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls {
+  display: contents;
+}
+
+.progress {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  transform-origin: left;
+}
+
+.bar a:focus-visible,
+.toc a:focus-visible,
+.btn:focus-visible,
+.btnGhost:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+/* Primera pantalla */
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100svh - var(--header-height) - 46px);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 22px;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+}
+
+.title {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--era-font-display);
+  font-size: clamp(2rem, 10vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0.05em;
+  color: #fff;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.subtitle {
+  margin: 26px 0 0;
+  color: var(--era-fg);
+  font-family: var(--era-font-body);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.minutes {
+  margin: 14px 0 0;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Índice de capítulos */
+.toc {
+  margin-top: 48px;
+}
+
+.toc ol {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc a {
+  display: inline-block;
+  padding: 6px 10px;
+  color: var(--era-fg-muted);
+  font-family: var(--era-font-body);
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  color: #fff;
+}
+
+/* No publicada */
+.release {
+  margin: 40px 0 0;
+  color: var(--era-fg);
+  font-size: 1.25rem;
+}
+
+.countdown {
+  display: flex;
+  gap: 22px;
+  margin: 26px 0 36px;
+}
+
+.countUnit {
+  display: grid;
+  gap: 4px;
+  min-width: 3.2rem;
+}
+
+.countUnit b {
+  color: #fff;
+  font-family: var(--era-font-display);
+  font-size: 1.9rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.countUnit small {
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Texto */
+.text {
+  max-width: 34em;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-8);
+  color: #e0e0e0;
+  font-family: var(--era-font-body);
+  font-size: 1.25rem;
+  line-height: 1.7;
+}
+
+.chapter + .chapter {
+  margin-top: 8rem;
+}
+
+.chapterHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3.5rem;
+  text-align: center;
+}
+
+.chapterHead h2 {
+  scroll-margin-top: calc(var(--header-height) + 60px);
+}
+
+.chapterNo {
+  margin: 0 0 12px;
+  color: var(--era-fg-muted);
+  font-family: var(--era-font-display);
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+}
+
+.chapterTitle {
+  margin: 0 0 22px;
+  color: #fff;
+  font-family: var(--era-font-display);
+  font-size: clamp(1.5rem, 6vw, 2.1rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.ornament {
+  width: 96px;
+  height: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Párrafos como en un libro: sangría, sin espacio entre ellos */
+.body {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.body p {
+  margin: 0;
+  text-indent: 1.5em;
+}
+
+.body p:first-child {
+  text-indent: 0;
+}
+
+.body em {
+  font-style: italic;
+}
+
+.body strong {
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Marcas de notas del autor: la interacción llega con F2-08 */
+.body [data-note-id] {
+  text-decoration: underline dotted rgba(255, 255, 255, 0.28);
+  text-underline-offset: 0.25em;
+}
+
+/* Final */
+.end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: var(--space-8) var(--space-4) calc(var(--space-8) * 1.5);
+  text-align: center;
+}
+
+.endTitle {
+  margin: 0;
+  color: #fff;
+  font-family: var(--era-font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+}
+
+.endLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 22px;
+  border: 1px solid #fff;
+  border-radius: 999px;
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 13px;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.btn {
+  background: #fff;
+  color: #000;
+}
+
+.btnGhost {
+  background: transparent;
+  color: #fff;
+}
+
+.btnGhost:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 600px) {
+  .text {
+    padding-inline: 20px;
+  }
+
+  .barInner {
+    gap: 10px;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .progress span {
+    transition: transform 0.1s linear;
+  }
+}
