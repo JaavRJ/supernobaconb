@@ -1,70 +1,23 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { getEra, getWork } from "@/content";
 import { eraThemeStyle } from "@/lib/theme";
+import { FullPlayer } from "./FullPlayer";
+import {
+  ChevronUpIcon,
+  NextIcon,
+  PauseIcon,
+  PlayIcon,
+  PrevIcon,
+  VolumeIcon,
+  formatTime,
+} from "./PlayerIcons";
 import { usePlayer } from "./PlayerProvider";
 import styles from "./MiniPlayer.module.css";
 
 /** Margen entre la barra flotante y el borde inferior (px); debe coincidir con el CSS */
 const PLAYER_MARGIN = 18;
-
-/** m:ss */
-function formatTime(seconds: number): string {
-  const total = Math.max(0, Math.floor(seconds));
-  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
-}
-
-function PrevIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor">
-      <path d="M6 5h2v14H6zM20 5v14L9.5 12z" />
-    </svg>
-  );
-}
-
-function NextIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor">
-      <path d="M16 5h2v14h-2zM4 5l10.5 7L4 19z" />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="currentColor">
-      <path d="M7 4.5v15l13-7.5z" />
-    </svg>
-  );
-}
-
-function PauseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="currentColor">
-      <path d="M6 4.5h4v15H6zM14 4.5h4v15h-4z" />
-    </svg>
-  );
-}
-
-function VolumeIcon({ muted }: { muted: boolean }) {
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor">
-      <path d="M3 9v6h4l5 4V5L7 9z" />
-      {muted ? (
-        <path d="M15 9.5l5 5m0-5l-5 5" stroke="currentColor" strokeWidth="2" fill="none" />
-      ) : (
-        <path
-          d="M15.5 8.5a5 5 0 010 7M18 6a8.5 8.5 0 010 12"
-          stroke="currentColor"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-        />
-      )}
-    </svg>
-  );
-}
 
 export function MiniPlayer() {
   const {
@@ -87,6 +40,18 @@ export function MiniPlayer() {
   const visible = Boolean(currentTrack);
 
   const barRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+  const [expanded, setExpanded] = useState(false);
+
+  // Sin canción no hay vista completa que mantener abierta
+  if (!currentTrack && expanded) setExpanded(false);
+
+  const closeFull = useCallback(() => setExpanded(false), []);
+
+  const openFull = (e: MouseEvent<HTMLElement>) => {
+    openerRef.current = e.currentTarget;
+    setExpanded(true);
+  };
 
   // Reserva espacio al final de la página: alto real de la barra + su margen inferior
   useEffect(() => {
@@ -115,20 +80,30 @@ export function MiniPlayer() {
   const progressText = `${formatTime(currentTime)} de ${formatTime(total)}`;
 
   return (
+    <>
     <div
       ref={barRef}
       className={styles.player}
       style={era ? eraThemeStyle(era.theme) : undefined}
     >
-      <div
-        className={styles.thumb}
-        style={work?.coverSmallUrl ? { background: `url("${work.coverSmallUrl}") center / cover no-repeat` } : undefined}
-        aria-hidden="true"
-      />
-      <div className={styles.info}>
-        <span className={styles.title}>{currentTrack.title}</span>
-        {work && <span className={styles.work}>{work.title}</span>}
-      </div>
+      <button
+        type="button"
+        className={styles.open}
+        onClick={openFull}
+        aria-label={`Abrir el reproductor completo: ${currentTrack.title}`}
+        aria-haspopup="dialog"
+        aria-expanded={expanded}
+      >
+        <span
+          className={styles.thumb}
+          style={work?.coverSmallUrl ? { background: `url("${work.coverSmallUrl}") center / cover no-repeat` } : undefined}
+          aria-hidden="true"
+        />
+        <span className={styles.info}>
+          <span className={styles.title}>{currentTrack.title}</span>
+          {work && <span className={styles.work}>{work.title}</span>}
+        </span>
+      </button>
 
       <div className={styles.controls}>
         <button
@@ -155,6 +130,16 @@ export function MiniPlayer() {
           aria-label="Canción siguiente"
         >
           <NextIcon />
+        </button>
+        <button
+          type="button"
+          className={`${styles.button} ${styles.expand}`}
+          onClick={openFull}
+          aria-label="Abrir el reproductor completo"
+          aria-haspopup="dialog"
+          aria-expanded={expanded}
+        >
+          <ChevronUpIcon />
         </button>
       </div>
 
@@ -198,5 +183,12 @@ export function MiniPlayer() {
         />
       </div>
     </div>
+    <FullPlayer
+      open={expanded}
+      onClose={closeFull}
+      openerRef={openerRef}
+      track={currentTrack}
+    />
+    </>
   );
 }
