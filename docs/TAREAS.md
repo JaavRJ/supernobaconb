@@ -40,7 +40,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | Fase | Estado | Progreso |
 |---|---|---|
 | 1 — Base | ✅ Hecha | 14 / 14 |
-| 2 — Libro | ⬜ Pendiente | se detalla al empezar |
+| 2 — Libro | 🔨 En curso | 0 / 9 |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
@@ -254,10 +254,107 @@ Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y 
 
 ---
 
-## Fases siguientes (se detallan al empezar)
+## Fase 2 — Libro
 
-### Fase 2 — Libro
-Migrar el lector, resaltados, citas, marcadores y notas del autor · página de la era BDUEM · publicación escalonada y redirecciones de `/parteN` · puzzles.
+**Decisiones técnicas de la fase 2**
+- **El texto del libro sale de Firestore**, no de archivos locales. Medido el 2026-10-25: `parts/{1..4}/chapters/0` tiene el texto completo de cada parte (17 000 a 69 000 caracteres de HTML pegado desde Word, con `MsoNormal`, `<o:p>` y estilos en línea) y `authorNotes` tiene 23 notas del autor; los dos se pueden leer sin sesión. `src/data/sampleChapters.ts` es texto de relleno viejo y `src/components/texts/*` son solo los fragmentos poéticos de las páginas de cada parte.
+- El servidor de Next lee Firestore por su API REST con `"use cache"` y `cacheLife("hours")`, limpia el HTML (lista blanca de etiquetas) y lo parte en capítulos por sus títulos en negritas (cada parte tiene de 3 a 5). Así el texto llega ya renderizado, sin esperar a Firebase en el navegador, y lo que el artista edite en el admin aparece en unas horas. Si faltan las variables de Firebase, el build no falla y la página dice que el texto no está disponible.
+- **Datos del lector** (resaltados, citas, marcadores, progreso y preferencias): mismas rutas de Firestore que el sitio viejo (`users/{uid}/highlights|quotes|bookmarks|readingProgress/part-N|preferences/settings`) para conservar lo que ya guardaron los lectores; sin sesión se guardan en el navegador y se suben al iniciar sesión con Google.
+- Los fragmentos poéticos y las polaroids de las páginas viejas de cada parte se conservan como la **antesala** de la parte, en scroll horizontal, antes del texto.
+- **Fuera de esta fase** (quedan anotados para después): reacciones, tarjeta de cita para Instagram, descarga en PDF, tutorial y aviso de newsletter del lector viejo.
+- `web/.env.local` (ignorado por git) tiene la configuración pública de Firebase copiada del `.env` del sitio viejo.
+
+| ID | Tarea | Quién | Depende de | Estado |
+|---|---|---|---|---|
+| F2-01 | Contenido del libro desde Firestore | Worker | — | ⬜ |
+| F2-02 | Sesión y datos del lector | Worker | — | ⬜ |
+| F2-03 | Puzzles `/0618am` y `/0618am/030806` | Worker | — | ⬜ |
+| F2-04 | Lector: página de la parte y lectura continua | Worker | F2-01 | ⬜ |
+| F2-05 | Publicación escalonada, redirecciones y "Leer la Parte 1" | Worker | F2-01 | ⬜ |
+| F2-06 | Antesala de cada parte: fragmentos y polaroids | Worker | F2-04 | ⬜ |
+| F2-07 | Modo páginas y configuración de lectura | Worker | F2-02, F2-04 | ⬜ |
+| F2-08 | Resaltados, citas, marcadores y notas del autor | Worker | F2-02, F2-07 | ⬜ |
+| F2-09 | Verificación final de la fase | Orquestador | todas | ⬜ |
+
+Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM" de [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y los componentes de `web/src/components/era/` (`VerticalLabel`, `Polaroid`, `EraPanel`, `HorizontalScroll`) y `web/src/components/brand/StarWord`. Negro puro, luz blanca, Uncial Antiqua en títulos y Cormorant Garamond en el texto; nada de color.
+
+### F2-01 — Contenido del libro desde Firestore
+- **Archivos:** `web/src/types/book.ts` (nuevo), `web/src/lib/book/` (nuevo), `web/package.json` y `web/package-lock.json` (solo para agregar `sanitize-html` y `@types/sanitize-html`).
+- **Terminado cuando:**
+  - `getBookPart(partNumber)` (servidor, `"use cache"` + `cacheLife("hours")`) devuelve la parte con sus capítulos `{ index, title, html }` leída de `parts/{n}/chapters` por la API REST de Firestore (proyecto de `NEXT_PUBLIC_FIREBASE_PROJECT_ID`), o `null` si no hay configuración o falla la red, sin romper el build.
+  - El HTML se limpia con lista blanca (`p`, `br`, `em`, `i`, `strong`, `b`, `h2`, `h3`, `blockquote`), sin clases ni estilos de Word ni `<o:p>`; los párrafos vacíos (`&nbsp;`) se quitan; los títulos en negritas se vuelven `<h2>` y separan los capítulos.
+  - `getAuthorNotes(partNumber)` devuelve las notas de `authorNotes` de esa parte, y el HTML del capítulo marca la primera aparición de cada `triggerText` con `<span data-note-id>` (sin romper etiquetas si el texto cruza una cursiva; si no se encuentra, la nota se omite y se avisa en el log del servidor).
+  - Funciones puras de publicación en `web/src/lib/book/publication.ts`: `isPartPublished(part, now)`, `partSlug(n)` y `parsePartSlug("parte-3")`, usando `releaseDate` de `web/src/content/works.ts` con la zona horaria de México.
+  - Tiempo de lectura estimado por capítulo y por parte (palabras / 200).
+  - Probado contra Firestore real: las 4 partes con sus capítulos (1: 5, 2: 4, 3: 4, 4: 3) y las notas marcadas.
+
+### F2-02 — Sesión y datos del lector
+- **Archivos:** `web/src/lib/reader/` (nuevo), `web/src/components/auth/` (nuevo).
+- **Terminado cuando:**
+  - Hook `useAuth()` con el usuario actual, `signIn()` (Google, ventana emergente) y `signOut()`, cargando Firebase solo en el navegador (`web/src/lib/firebase.ts`).
+  - Servicio de datos del lector con tipos `Highlight`, `Quote`, `Bookmark`, `ReadingProgress` y `ReaderPreferences` compatibles con los documentos del sitio viejo (`src/services/userDataService.ts`), y funciones para listar, guardar y borrar cada uno.
+  - Con sesión usa las mismas rutas de Firestore del sitio viejo; sin sesión, `localStorage`; al iniciar sesión sube lo local sin duplicar (por `id`).
+  - El progreso guarda capítulo y posición relativa (0–1) además de los campos viejos, y se escribe con espera (no en cada evento de scroll).
+  - Botón `SignInButton` pequeño y accesible con la estética BDUEM (sin dependencias nuevas de íconos).
+  - Nada de esto rompe el build ni el render del servidor si faltan las variables de Firebase.
+
+### F2-03 — Puzzles `/0618am` y `/0618am/030806`
+- **Archivos:** `web/src/app/0618am/` (nuevo), `web/src/components/puzzles/` (nuevo).
+- **Terminado cuando:**
+  - `/0618am` es el puzzle de `src/pages/cifrados/Cuadratico.tsx` con la misma lógica y respuestas, y `/0618am/030806` es el de `PuzzleStars.tsx` (arrastrar estrellas a la constelación).
+  - El arrastre usa Pointer Events, sin `@react-spring` ni `@use-gesture`; funciona con ratón y con el dedo, y a 390 px de ancho.
+  - Estética monocroma (negro, estrellas blancas, serif); las páginas no aparecen en el menú.
+  - Las rutas tienen `robots: noindex` (son secretos).
+
+### F2-04 — Lector: página de la parte y lectura continua
+- **Archivos:** `web/src/app/libros/bduem/leer/` (nuevo), `web/src/components/reader/` (nuevo).
+- **Terminado cuando:**
+  - `/libros/bduem/leer/parte-1` … `parte-4` se generan con `generateStaticParams`; otro slug da 404 real.
+  - La página va dentro de `EraTheme` de BDUEM: etiqueta vertical "SUPERNOBA", encabezado con "Parte N" y el título en Uncial Antiqua (con la estrella en la "O" vía `StarWord` cuando el título la tenga, como "SUPERN✦BA"), el subtítulo poético y el tiempo de lectura.
+  - El texto se lee en una columna de Cormorant Garamond, `#E0E0E0` sobre negro, de unos 34 em de ancho, con títulos de capítulo en Uncial y un índice de capítulos.
+  - Barra superior mínima y fija: volver a BDUEM, nombre de la parte, progreso de lectura y tiempo restante; deja espacio para los controles de F2-07 y F2-08.
+  - Al final: enlace a la parte siguiente (o al libro en la Parte 4) y a la anterior.
+  - Si la parte no está publicada: fecha de publicación y cuenta regresiva, sin el texto. Si Firestore no responde: mensaje claro, sin error.
+  - Metadatos con título y descripción de la parte. Sin scroll horizontal a 390 px; teclado y lector de pantalla bien.
+
+### F2-05 — Publicación escalonada, redirecciones y "Leer la Parte 1"
+- **Archivos:** `web/next.config.ts`, `web/src/components/era/BduemEra.tsx` (+ su `.module.css`).
+- **Terminado cuando:**
+  - `/parte1` … `/parte4` redirigen de forma permanente a `/libros/bduem/leer/parte-1` … `parte-4`; `/pruebas` da 404.
+  - En la era BDUEM, "Leer la Parte 1" es un enlace activo al lector y desaparece "Próximamente".
+  - Cada parte del índice es un enlace al lector si está publicada; si no, se ve apagada con su fecha (usa `isPartPublished` de F2-01).
+
+### F2-06 — Antesala de cada parte: fragmentos y polaroids
+- **Archivos:** `web/src/content/bduemPrelude.ts` (nuevo), `web/src/components/reader/PartPrelude*` (nuevo), la página de F2-04 para insertarla.
+- **Terminado cuando:**
+  - Los fragmentos poéticos de `src/components/texts/ChapterText{N}_*.tsx` y las fotos de Cloudinary de `src/pages/parts/Parte{N}.tsx` están como datos por parte.
+  - Antes del texto, cada parte abre con su antesala en `HorizontalScroll` (escritorio) y vertical en celular: título de la parte, fragmentos alternados con polaroids en blanco y negro con giro fijo (determinista) y un último panel "Empezar a leer" que lleva al primer capítulo.
+  - No atrapa el scroll vertical: al terminar la antesala se puede seguir al texto.
+
+### F2-07 — Modo páginas y configuración de lectura
+- **Archivos:** `web/src/components/reader/*`.
+- **Terminado cuando:**
+  - Dos modos: **continuo** (vertical, el de F2-04) y **páginas** (paginado horizontal con columnas CSS, como el `KindleReader` viejo): flechas del teclado, deslizar en celular, clic en los bordes y número de página.
+  - Panel de configuración: modo, tamaño de letra (5 pasos) e interlineado; se guarda con las preferencias de F2-02.
+  - Al cambiar de modo o de tamaño se conserva el punto de lectura.
+  - Guarda el progreso (F2-02) y ofrece "Continuar donde te quedaste" al volver.
+
+### F2-08 — Resaltados, citas, marcadores y notas del autor
+- **Archivos:** `web/src/components/reader/*`.
+- **Terminado cuando:**
+  - Al seleccionar texto aparece un menú pequeño: **Resaltar**, **Guardar cita**, **Copiar** (y **Compartir** con la API del navegador si existe); también en celular.
+  - Los resaltados se dibujan sobre el texto en blanco translúcido (sin colores) y se pueden quitar; se restauran al volver, también los guardados por el sitio viejo para la misma parte.
+  - Panel "Mis citas y marcadores" con lista, ir al lugar y borrar.
+  - Botón de marcador para el capítulo y la posición actual.
+  - Las notas del autor (`data-note-id`) se ven como una marca discreta y abren una tarjeta con título y texto (con teclado y con toque), con el estilo de `EraPanel`.
+  - Sin sesión funciona en el navegador e invita a iniciar sesión para guardarlo en la cuenta.
+
+### F2-09 — Verificación final de la fase
+- **Terminado cuando:** tipos, lint y build sin errores; en producción `/libros/bduem/leer/parte-1…4` dan 200, otros slugs 404 y `/parte1…4` redirigen; el lector y los puzzles revisados en el navegador a 1440 y 390 px; el plan y este tablero actualizados.
+
+---
+
+## Fases siguientes (se detallan al empezar)
 
 ### Fase 3 — Música
 Discografía · página de sencillo/disco con embeds y reproductor · letras y créditos.
