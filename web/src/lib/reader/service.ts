@@ -186,15 +186,15 @@ export function createProgressWriter(delayMs = 2000) {
 // Preferencias: preferences/settings
 // ---------------------------------------------------------------------------
 
-export function defaultPreferences(): ReaderPreferences {
-  const now = new Date().toISOString();
+export function defaultPreferences(now: Date = new Date()): ReaderPreferences {
+  const stamp = now.toISOString();
   return {
     readingMode: "vertical",
     fontSize: 20,
     hasSeenTutorial: false,
     hasConfigured: false,
-    createdAt: now,
-    updatedAt: now,
+    createdAt: stamp,
+    updatedAt: stamp,
   };
 }
 

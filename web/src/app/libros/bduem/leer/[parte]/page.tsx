@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { PartFallback, PartView } from "@/components/reader/PartView";
 import { EraTheme } from "@/components/theme/EraTheme";
 import { getEra, getWork } from "@/content";
+import { ReaderDataProvider } from "@/lib/reader";
 import { getBookParts, getPartMeta, parsePartSlug, partSlug } from "@/lib/book";
 
 /** La primera visita a un slug no listado espera la página completa (y su 404) */
@@ -38,9 +39,11 @@ export default async function ReadPartPage({ params }: PageProps<"/libros/bduem/
 
   return (
     <EraTheme era={era}>
-      <Suspense fallback={<PartFallback partNumber={n} />}>
-        <PartView partNumber={n} />
-      </Suspense>
+      <ReaderDataProvider>
+        <Suspense fallback={<PartFallback partNumber={n} />}>
+          <PartView partNumber={n} />
+        </Suspense>
+      </ReaderDataProvider>
     </EraTheme>
   );
 }

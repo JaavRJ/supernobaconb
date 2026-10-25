@@ -6,7 +6,7 @@ import { EraPanel } from "@/components/era/EraPanel";
 import { VerticalLabel } from "@/components/era/VerticalLabel";
 import { getBookPart, getBookParts, getPartMeta, isPartPublished, partSlug } from "@/lib/book";
 import { PartCountdown } from "./PartCountdown";
-import { ReaderBar } from "./ReaderBar";
+import { ReaderShell } from "./ReaderShell";
 import styles from "./Reader.module.css";
 import { formatReleaseDate } from "./format";
 
@@ -124,70 +124,70 @@ export async function PartView({ partNumber }: { partNumber: number }) {
 
   return (
     <Stage>
-      <ReaderBar
+      <ReaderShell
         partNumber={part.number}
         partTitle={part.title}
         totalMinutes={part.minutes}
-        targetId={TEXT_ID}
-      >
-        {/* Hueco para los controles de lectura (F2-07) y de marcadores y notas (F2-08) */}
-        <div id="controles-de-lectura" className={styles.controls} />
-      </ReaderBar>
-
-      <PartHeading meta={meta} minutes={part.minutes}>
-        <nav className={styles.toc} aria-label="Capítulos">
-          <ol role="list">
-            {part.chapters.map((c) => (
-              <li key={c.index}>
-                <a href={`#capitulo-${c.index + 1}`}>
-                  {c.index + 1}. {c.title.toLocaleLowerCase("es")}
-                </a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      </PartHeading>
-
-      <article id={TEXT_ID} className={styles.text} aria-label={`Texto de la Parte ${part.number}`}>
-        {part.chapters.map((c) => {
-          const { titleHtml, bodyHtml } = splitChapterHtml(c.html, c.title);
-          return (
-            <section key={c.index} className={styles.chapter} aria-labelledby={`capitulo-${c.index + 1}`}>
-              <header className={styles.chapterHead}>
-                <p className={styles.chapterNo}>{c.index + 1}</p>
-                <h2
-                  id={`capitulo-${c.index + 1}`}
-                  className={styles.chapterTitle}
-                  dangerouslySetInnerHTML={{ __html: titleHtml }}
-                />
-                <Ornament />
-              </header>
-              <div className={styles.body} dangerouslySetInnerHTML={{ __html: bodyHtml }} />
-            </section>
-          );
-        })}
-      </article>
-
-      <footer className={styles.end}>
-        <Ornament />
-        <p className={styles.endTitle}>Fin de la Parte {part.number}</p>
-        <div className={styles.endLinks}>
-          {prev && (
-            <Link href={`/libros/bduem/leer/${partSlug(prev.number)}`} className={styles.btnGhost}>
-              ← Parte {prev.number}
-            </Link>
-          )}
-          {next ? (
-            <Link href={`/libros/bduem/leer/${partSlug(next.number)}`} className={styles.btn}>
-              Parte {next.number} →
-            </Link>
-          ) : (
-            <Link href="/libros/bduem" className={styles.btn}>
-              Volver al libro
-            </Link>
-          )}
-        </div>
-      </footer>
+        chapters={part.chapters.map((c) => ({ index: c.index, title: c.title }))}
+        heading={
+          <PartHeading meta={meta} minutes={part.minutes}>
+            <nav className={styles.toc} aria-label="Capítulos">
+              <ol role="list">
+                {part.chapters.map((c) => (
+                  <li key={c.index}>
+                    <a href={`#capitulo-${c.index + 1}`}>
+                      {c.index + 1}. {c.title.toLocaleLowerCase("es")}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </PartHeading>
+        }
+        text={
+          <article id={TEXT_ID} className={styles.text} aria-label={`Texto de la Parte ${part.number}`}>
+            {part.chapters.map((c) => {
+              const { titleHtml, bodyHtml } = splitChapterHtml(c.html, c.title);
+              return (
+                <section key={c.index} className={styles.chapter} aria-labelledby={`capitulo-${c.index + 1}`}>
+                  <header className={styles.chapterHead}>
+                    <p className={styles.chapterNo}>{c.index + 1}</p>
+                    <h2
+                      id={`capitulo-${c.index + 1}`}
+                      className={styles.chapterTitle}
+                      dangerouslySetInnerHTML={{ __html: titleHtml }}
+                    />
+                    <Ornament />
+                  </header>
+                  <div className={styles.body} dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+                </section>
+              );
+            })}
+          </article>
+        }
+        end={
+          <footer className={styles.end}>
+            <Ornament />
+            <p className={styles.endTitle}>Fin de la Parte {part.number}</p>
+            <div className={styles.endLinks}>
+              {prev && (
+                <Link href={`/libros/bduem/leer/${partSlug(prev.number)}`} className={styles.btnGhost}>
+                  ← Parte {prev.number}
+                </Link>
+              )}
+              {next ? (
+                <Link href={`/libros/bduem/leer/${partSlug(next.number)}`} className={styles.btn}>
+                  Parte {next.number} →
+                </Link>
+              ) : (
+                <Link href="/libros/bduem" className={styles.btn}>
+                  Volver al libro
+                </Link>
+              )}
+            </div>
+          </footer>
+        }
+      />
     </Stage>
   );
 }

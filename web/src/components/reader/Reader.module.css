@@ -12,6 +12,11 @@
   pointer-events: none;
 }
 
+/* Envoltura del lector (cliente): no genera caja, solo lleva las variables de lectura */
+.shell {
+  display: contents;
+}
+
 /* Barra fija bajo el header global */
 .bar {
   position: sticky;
@@ -220,8 +225,8 @@
   padding: var(--space-8) var(--space-4) var(--space-8);
   color: #e0e0e0;
   font-family: var(--era-font-body);
-  font-size: 1.25rem;
-  line-height: 1.7;
+  font-size: var(--reader-font-size, 20px);
+  line-height: var(--reader-line-height, 1.7);
 }
 
 .chapter + .chapter {
@@ -351,6 +356,234 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Botón "Aa" y panel de configuración */
+.barBtn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--era-fg);
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.barBtn:hover,
+.barBtn[aria-expanded="true"] {
+  color: #fff;
+}
+
+.barBtn:focus-visible,
+.choice:focus-visible,
+.settings:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.settings {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 12px;
+  width: min(320px, calc(100vw - 24px));
+  padding: 22px 20px;
+  border: 1px solid var(--era-line);
+  border-radius: 14px;
+  background: var(--era-bg-elevated);
+  color: var(--era-fg);
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.settings {
+  max-height: calc(100svh - var(--header-height) - 80px);
+  overflow-y: auto;
+}
+
+.settingsChapters {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chapterLink {
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--era-fg-muted);
+  font-family: var(--era-font-body);
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.chapterLink:hover {
+  color: #fff;
+}
+
+.chapterLink:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.settingsLabel {
+  margin: 0 0 8px;
+  color: var(--era-fg-muted);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.settingsRow {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.settingsRow:last-child {
+  margin-bottom: 0;
+}
+
+.choice {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 6px;
+  border: 1px solid var(--era-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--era-fg);
+  font-family: var(--era-font-body);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.choice[aria-pressed="true"] {
+  border-color: #fff;
+  background: #fff;
+  color: #000;
+}
+
+/* Aviso de lectura a medias */
+.resume {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: 24;
+  width: min(380px, calc(100vw - 24px));
+  padding: 16px 18px;
+  border: 1px solid var(--era-line);
+  border-radius: 14px;
+  background: var(--era-bg-elevated);
+  color: var(--era-fg);
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.resume p {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.resumeActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.resume button {
+  cursor: pointer;
+}
+
+.resume .btn,
+.resume .btnGhost {
+  min-height: 40px;
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+.resume button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Modo páginas: marco del alto de la pantalla y texto en columnas */
+.shell[data-mode="pages"] {
+  --frame-h: calc(100svh - var(--header-height) - 46px - 12px - 44px);
+}
+
+.shell[data-mode="pages"] .resume {
+  bottom: 56px;
+}
+
+.viewportPages {
+  position: relative;
+  overflow: clip;
+  width: min(34em, calc(100% - 40px));
+  height: var(--frame-h);
+  margin: 12px auto 0;
+  color: #e0e0e0;
+  font-size: var(--reader-font-size, 20px);
+  touch-action: pan-y;
+  cursor: default;
+}
+
+.flowPages {
+  height: 100%;
+  column-fill: auto;
+}
+
+.flowPages .text {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.flowPages .chapter + .chapter {
+  margin-top: 0;
+  break-before: column;
+}
+
+.flowPages .chapterHead {
+  margin-bottom: 2rem;
+  padding-top: 1.5rem;
+}
+
+.flowPages .body p {
+  orphans: 2;
+  widows: 2;
+}
+
+.flowPages .end {
+  height: var(--frame-h);
+  padding: 0;
+  justify-content: center;
+  break-before: column;
+}
+
+.pageNo {
+  margin: 0;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  line-height: 44px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 @media (max-width: 600px) {
   .text {
     padding-inline: 20px;
@@ -363,6 +596,10 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .flowPages {
+    transition: transform 0.3s ease;
+  }
+
   .progress span {
     transition: transform 0.1s linear;
   }

@@ -1,7 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import styles from "./Reader.module.css";
 
 interface ReaderBarProps {
@@ -9,40 +7,14 @@ interface ReaderBarProps {
   partTitle: string;
   /** Minutos de lectura de la parte completa */
   totalMinutes: number;
-  /** id del elemento con el texto, para medir el avance */
-  targetId: string;
+  /** Avance de 0 a 1 (por scroll o por páginas, lo calcula el lector) */
+  progress: number;
   /** Hueco para los controles de lectura (modo, tamaño, marcadores) */
   children?: ReactNode;
 }
 
 /** Barra fija y mínima: volver al libro, nombre de la parte, progreso y tiempo restante */
-export function ReaderBar({ partNumber, partTitle, totalMinutes, targetId, children }: ReaderBarProps) {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const el = document.getElementById(targetId);
-      if (!el) return;
-      const top = el.getBoundingClientRect().top + window.scrollY;
-      const span = el.offsetHeight - window.innerHeight;
-      const value = span > 0 ? (window.scrollY - top) / span : 0;
-      setProgress(Math.min(1, Math.max(0, value)));
-    };
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    schedule();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    return () => {
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, [targetId]);
-
+export function ReaderBar({ partNumber, partTitle, totalMinutes, progress, children }: ReaderBarProps) {
   const remaining = Math.ceil(totalMinutes * (1 - progress));
 
   return (

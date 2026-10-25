@@ -89,12 +89,12 @@ function hasFirebaseConfig(): boolean {
 
 const ReaderContext = createContext<ReaderContextValue | null>(null);
 
-const emptyData = (): DataState => ({
+const emptyData = (now?: Date): DataState => ({
   highlights: [],
   quotes: [],
   bookmarks: [],
   progress: {},
-  preferences: defaultPreferences(),
+  preferences: defaultPreferences(now),
   ready: false,
   error: null,
 });
@@ -112,7 +112,7 @@ export function ReaderDataProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<ReaderUser | null>(null);
   const [authLoading, setAuthLoading] = useState(configured);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<DataState>(emptyData);
+  const [data, setData] = useState<DataState>(() => emptyData(new Date(0)));
   const uid = user?.uid ?? null;
 
   const uidRef = useRef<string | null>(null);
