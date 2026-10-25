@@ -5,6 +5,8 @@ import { VerticalLabel } from "@/components/era/VerticalLabel";
 import { getWork, threads } from "@/content";
 import { partSlug } from "@/lib/book/publication";
 import type { Era, Track, Work, WorkLink } from "@/types/content";
+import { Credits } from "./Credits";
+import { Lyrics } from "./Lyrics";
 import styles from "./Release.module.css";
 import { ReleaseListenButton, ReleaseTrackList } from "./ReleaseTracks";
 import { SpotifyEmbed } from "./SpotifyEmbed";
@@ -180,7 +182,23 @@ export function ReleaseView({ work, era, tracks }: ReleaseViewProps) {
           </section>
         )}
 
-        {/* Aquí entran las letras y los créditos de cada canción (F3-05) */}
+        <Lyrics tracks={tracks} />
+
+        {tracks.some((t) => !t.lyrics?.length && !!t.credits?.length) && (
+          <section className={styles.section} aria-labelledby="release-credits">
+            <h2 id="release-credits" className={styles.heading}>
+              Créditos
+            </h2>
+            {tracks
+              .filter((t) => !t.lyrics?.length && !!t.credits?.length)
+              .map((t) => (
+                <div key={t.id} className={styles.creditsBlock}>
+                  <h3 className={styles.creditsTitle}>{t.title}</h3>
+                  <Credits credits={t.credits ?? []} title={t.title} />
+                </div>
+              ))}
+          </section>
+        )}
 
         {connections.length > 0 && (
           <section className={styles.section} aria-labelledby="release-threads">

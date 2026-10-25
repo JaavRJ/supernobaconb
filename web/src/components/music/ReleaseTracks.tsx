@@ -61,6 +61,11 @@ export function ReleaseTrackList({ tracks, fallbackUrl }: ReleaseTrackListProps)
               {current && (
                 <span className={styles.nowPlaying}>{isPlaying ? "sonando" : "en pausa"}</span>
               )}
+              {!!t.lyrics?.length && (
+                <a className={styles.trackLyrics} href={`#letra-${t.id}`}>
+                  Letra<span className={styles.srOnly}> de {t.title}</span>
+                </a>
+              )}
             </span>
             <span className={styles.trackDuration}>{formatDuration(t.durationSec)}</span>
             {t.audioUrl ? (

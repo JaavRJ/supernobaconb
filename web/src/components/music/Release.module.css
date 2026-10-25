@@ -248,6 +248,59 @@
   text-underline-offset: 4px;
 }
 
+.trackLyrics {
+  display: block;
+  width: fit-content;
+  color: var(--era-fg-muted);
+  font-family: var(--font-inter, system-ui, sans-serif);
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.trackLyrics:hover {
+  color: var(--era-fg);
+}
+
+.trackLyrics:focus-visible {
+  outline: 2px solid var(--era-accent, #fff);
+  outline-offset: 3px;
+}
+
+/* ---- Créditos de canciones sin letra ---- */
+.creditsBlock {
+  margin-bottom: var(--space-5);
+  text-align: center;
+}
+
+.creditsTitle {
+  margin: 0;
+  font-family: var(--era-font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.creditsBlock dl {
+  margin: var(--space-3) 0 0;
+  color: var(--era-fg-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.creditsBlock dl div {
+  margin-bottom: var(--space-2);
+}
+
+.creditsBlock dt,
+.creditsBlock dd {
+  display: inline;
+  margin: 0;
+}
+
+.creditsBlock dt::after {
+  content: " — ";
+}
+
 /* ---- Embeds ---- */
 .embeds {
   display: flex;

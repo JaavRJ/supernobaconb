@@ -1,0 +1,81 @@
+.section {
+  min-width: 0;
+  /* Margen propio: en celular el contenedor de la página no deja aire a los lados */
+  padding-inline: 20px;
+}
+
+.heading {
+  margin: 0 0 var(--space-6);
+  color: var(--era-fg-muted);
+  font-family: var(--font-inter, system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.song {
+  max-width: 32em;
+  margin: 0 auto;
+  padding-top: var(--space-6);
+  scroll-margin-top: calc(var(--header-height) + 32px);
+  font-size: 20px;
+  text-align: center;
+}
+
+.song + .song {
+  margin-top: var(--space-8);
+  border-top: 1px solid var(--era-line, #333);
+}
+
+.title {
+  margin: 0 0 var(--space-5);
+  font-family: var(--era-font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--era-fg);
+  overflow-wrap: anywhere;
+}
+
+.text {
+  font-family: var(--era-font-body);
+  line-height: 1.6;
+}
+
+.stanza {
+  margin: 0 0 1.8em;
+  overflow-wrap: anywhere;
+}
+
+.line {
+  display: inline;
+}
+
+.credits {
+  margin: var(--space-6) 0 0;
+  color: var(--era-fg-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.credit {
+  margin: 0 0 var(--space-2);
+}
+
+.credit dt,
+.credit dd {
+  display: inline;
+  margin: 0;
+}
+
+.credit dt::after {
+  content: " — ";
+}
+
+@media (max-width: 480px) {
+  .song {
+    font-size: 18px;
+  }
+}
