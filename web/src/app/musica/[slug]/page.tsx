@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
-import { ComingSoon } from "@/components/placeholder/ComingSoon";
+import { ReleaseView } from "@/components/music/ReleaseView";
 import { EraTheme } from "@/components/theme/EraTheme";
-import type { WorkType } from "@/types/content";
 import { getEra, getTracksForWork, getWork, getWorksByConstellation } from "@/content";
 
 /** La primera visita a un slug no listado espera la página completa (y su 404) */
@@ -21,19 +20,8 @@ function findSong(slug: string) {
 
 export async function generateMetadata({ params }: PageProps<"/musica/[slug]">) {
   const { slug } = await params;
-  return { title: findSong(slug)?.title };
-}
-
-const TYPE_LABELS: Partial<Record<WorkType, string>> = {
-  sencillo: "sencillo",
-  ep: "EP",
-  album: "álbum",
-};
-
-function formatDuration(totalSec: number): string {
-  const min = Math.floor(totalSec / 60);
-  const sec = String(totalSec % 60).padStart(2, "0");
-  return `${min}:${sec}`;
+  const work = findSong(slug);
+  return { title: work?.title, description: work?.summary };
 }
 
 export default async function MusicaWorkPage({ params }: PageProps<"/musica/[slug]">) {
@@ -41,21 +29,11 @@ export default async function MusicaWorkPage({ params }: PageProps<"/musica/[slu
   const work = findSong(slug);
   if (!work) notFound();
 
-  const tracks = getTracksForWork(work.id);
+  const era = getEra(work.era) ?? null;
 
   return (
-    <EraTheme era={getEra(work.era) ?? null}>
-      <ComingSoon title={work.title} eyebrow={`Supernoba · ${TYPE_LABELS[work.type] ?? work.type}`}>
-        {tracks.length > 0 && (
-          <ol>
-            {tracks.map((t) => (
-              <li key={t.id}>
-                {t.title} ({formatDuration(t.durationSec)})
-              </li>
-            ))}
-          </ol>
-        )}
-      </ComingSoon>
+    <EraTheme era={era}>
+      <ReleaseView work={work} era={era} tracks={getTracksForWork(work.id)} />
     </EraTheme>
   );
 }
