@@ -56,7 +56,10 @@ export interface Work {
   /** La fecha es aproximada */
   dateApproximate?: boolean;
   summary: string;
+  /** Portada real de la obra (1400 px) */
   coverUrl?: string;
+  /** Portada chica (512 px) para el reproductor y la sesión de medios */
+  coverSmallUrl?: string;
   /** Foto para su polaroid en la era (se muestra en blanco y negro) */
   photoUrl?: string;
   links: WorkLink[];
@@ -133,5 +136,8 @@ export interface Track {
   links: WorkLink[];
   /** Audio para el reproductor propio */
   audioUrl?: string;
-  lyrics?: string;
+  /** Letra: estrofas, cada una con sus líneas */
+  lyrics?: string[][];
+  /** Créditos: persona y los roles que tuvo en la canción */
+  credits?: { name: string; roles: string[] }[];
 }

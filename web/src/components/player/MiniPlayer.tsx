@@ -120,7 +120,11 @@ export function MiniPlayer() {
       className={styles.player}
       style={era ? eraThemeStyle(era.theme) : undefined}
     >
-      <div className={styles.thumb} aria-hidden="true" />
+      <div
+        className={styles.thumb}
+        style={work?.coverSmallUrl ? { background: `url("${work.coverSmallUrl}") center / cover no-repeat` } : undefined}
+        aria-hidden="true"
+      />
       <div className={styles.info}>
         <span className={styles.title}>{currentTrack.title}</span>
         {work && <span className={styles.work}>{work.title}</span>}

@@ -23,6 +23,8 @@ export const works: Work[] = [
   },
   {
     id: "rulos",
+    coverUrl: "/musica/rulos.webp",
+    coverSmallUrl: "/musica/rulos-512.jpg",
     photoUrl:
       "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1766454582/supernoba/IMG_20251222_194149_vmyp2z.png",
     title: "Rulos",
@@ -43,6 +45,8 @@ export const works: Work[] = [
   },
   {
     id: "nohablobien-part3",
+    coverUrl: "/musica/nohablobien-part3.webp",
+    coverSmallUrl: "/musica/nohablobien-part3-512.jpg",
     photoUrl:
       "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765760145/supernoba/IMG_20251214_185038_cvsjga.png",
     title: "nohablobien / part3",

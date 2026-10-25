@@ -160,10 +160,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       session.metadata = null;
       return;
     }
+    const work = getWork(currentTrack.workId);
     session.metadata = new MediaMetadata({
       title: currentTrack.title,
       artist: "Supernoba",
-      album: getWork(currentTrack.workId)?.title ?? "",
+      album: work?.title ?? "",
+      artwork: work?.coverSmallUrl
+        ? [{ src: work.coverSmallUrl, sizes: "512x512", type: "image/jpeg" }]
+        : [],
     });
     const handlers: [MediaSessionAction, MediaSessionActionHandler | null][] = [
       ["play", togglePlay],

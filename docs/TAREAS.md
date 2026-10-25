@@ -41,7 +41,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 |---|---|---|
 | 1 — Base | ✅ Hecha | 14 / 14 |
 | 2 — Libro | ✅ Hecha | 9 / 9 |
-| 3 — Música | 🔨 En curso | 2 / 7 |
+| 3 — Música | 🔨 En curso | 3 / 7 |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
@@ -359,14 +359,14 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 **Decisiones de la fase 3**
 - **Letras públicas** (decisión del artista, 2026-10-25): se leen sin sesión y Google las puede indexar.
 - **Material del artista listo**: letras, créditos, audios propios y portadas en alta. Se entrega en `web/materiales/musica/` (carpeta ignorada por git, ver F3-01) y el orquestador lo pasa a datos.
-- **Dónde vive el material en esta fase**: letras y créditos en `web/src/content/` (como el resto del contenido; pasan a Firestore en la Fase 5); portadas optimizadas en `web/public/musica/` y audios en `web/public/audio/` (MP3, ≤ 3 MB por canción). En la Fase 5 los audios pasan a Firebase Storage.
+- **Dónde vive el material en esta fase**: letras y créditos en `web/src/content/` (como el resto del contenido; pasan a Firestore en la Fase 5); portadas optimizadas en `web/public/musica/` y audios en `web/public/audio/` (MP3 a 128 kbps, ≤ 4 MB por canción). En la Fase 5 los audios pasan a Firebase Storage.
 - **Estética**: `/musica` es parte del cielo base (radiante). La página de cada sencillo toma el tema de su era: Rulos y nohablobien / part3 son de la era BDUEM, así que van en monocromo con Uncial y Cormorant. **Las portadas se muestran a color** (son la obra), con el marco fino de las polaroids, sin giro; es la única excepción al blanco y negro de la era y se confirma con el artista al revisarla en el navegador.
 - **Embeds de Spotify y YouTube con fachada**: no se cargan hasta que alguien pulsa "Escuchar en Spotify" o "Ver video", para no meter cookies de terceros ni pesar en la carga.
 - **Reproductor propio** con los audios del artista, sin etiquetas de "adelanto" o "exclusiva" (decisión del artista, 2026-10-25); las canciones publicadas también enlazan a las plataformas.
 
 | ID | Tarea | Quién | Depende de | Estado |
 |---|---|---|---|---|
-| F3-01 | Material: letras, créditos, portadas y audios | Artista entrega, orquestador + worker | — | ⬜ |
+| F3-01 | Material: letras, créditos, portadas y audios | Artista entrega, orquestador + worker | — | ✅ |
 | F3-02 | Fachada para embeds de Spotify y YouTube | Worker | — | ✅ |
 | F3-03 | Discografía `/musica`: constelación y lista | Worker | — (usa F3-01 si ya está) | ✅ |
 | F3-04 | Página de sencillo `/musica/[slug]` | Worker | F3-01, F3-02 | ⬜ |
@@ -386,7 +386,7 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 - **Terminado cuando:**
   - Cada canción tiene su letra, créditos y audio; cada sencillo, su portada.
   - Portadas en WebP o JPEG de hasta 1400 px y ≤ 300 KB, más una de 512 px para el reproductor y la sesión de medios.
-  - Audios en MP3 de ≤ 3 MB; si son más pesados, se acortan o se recomprimen y se avisa al artista.
+  - Audios en MP3 a 128 kbps (≤ 4 MB); si son más pesados, se recomprimen y se avisa al artista.
   - El aviso "Nuevo" de la portada y el reproductor ya usan la portada real.
   - Nada de `web/materiales/` entra a git.
 
@@ -501,3 +501,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F3-02 | Worker hizo `SpotifyEmbed` y `YouTubeEmbed` con fachada (iframe solo al pulsar, IDs validados, `youtube-nocookie`, foco al iframe). Reviewer: solo bajas; el orquestador agregó `referrerPolicy`, enlace de respaldo solo `https` y más contraste en el tipo. La revisión visual queda para F3-04, donde se usan. ✅ |
 | 2026-10-25 | F3-03 | Worker hizo `/musica`: constelación Supernoba sola (opción `only` en `Sky`, sin selector de eras, línea de tiempo ni nebulosas) y lista de sencillos con portada, fecha, era, canciones, "Escuchar" y plataformas; obras por publicar apagadas. Reviewer: sin problemas en el cielo de la portada; el orquestador corrigió el nombre accesible de los enlaces a plataformas. Verificado en el navegador a 1440 y 390 px, y la portada sin cambios. Para revisar con el artista: en escritorio "Constelación" muestra el cielo y la lista, y "Lista" oculta el cielo. ✅ |
 | 2026-10-25 | F3 | Artista: los audios del reproductor propio no llevan etiqueta de "adelanto" o "exclusiva"; se quita `audio.txt` de la entrega. |
+| 2026-10-25 | F3-01 | El artista entregó letras, créditos, audios (MP3, WAV de 86 MB y FLAC) y portadas en PNG de 3500 px. El orquestador convirtió los audios a MP3 de 128 kbps (2.7, 3.9 y 2.6 MB; duraciones iguales a Spotify) y las portadas a WebP de 1400 px (175 y 231 KB) más JPEG de 512 px, sin instalar nada en el sistema. Worker pasó letras por estrofas, créditos, audios y portadas a los datos; el reproductor y la sesión de medios usan la portada real. Orquestador comprobó que las 96 líneas de letra coinciden con los archivos del artista y, en el navegador, que "Escuchar" en `/musica` reproduce el audio propio y sigue sonando al navegar. Sin reviewer: cambio de datos verificado línea por línea. ✅ |
