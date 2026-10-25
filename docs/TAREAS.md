@@ -39,7 +39,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 3 / 13 |
+| 1 — Base | 🔨 En curso | 4 / 13 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
@@ -55,7 +55,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | F1-01 | Rama `artista` y proyecto Next.js en `web/` | Worker | — | ✅ |
 | F1-02 | Conexión con Firebase | Worker | F1-01 | ✅ |
 | F1-03 | Tipos y datos iniciales | Worker | F1-01 | ✅ |
-| F1-04 | Sistema de temas por era | Orquestador diseña, worker implementa | F1-01 | ⬜ |
+| F1-04 | Sistema de temas por era | Orquestador diseña, worker implementa | F1-01 | ✅ |
 | F1-05 | Layout raíz, menú y pie de página | Worker | F1-04 | ⬜ |
 | F1-06 | Páginas provisionales de cada ruta | Worker | F1-05 | ⬜ |
 | F1-07 | Bloque "Lo último" en la portada | Worker | F1-03, F1-05 | ⬜ |
@@ -128,6 +128,8 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
   - Pie de página con links a Spotify, Apple Music y YouTube.
   - Metadatos base (título, descripción, idioma `es`).
   - Hay un espacio reservado para el reproductor persistente.
+  - Las fuentes Inter, Cinzel Decorative y Crimson Pro se cargan con `next/font` y definen `--font-inter`, `--font-cinzel` y `--font-crimson`.
+- **Notas de F1-04:** el `body` siempre usa el color del cielo, así que el rebote de scroll de una página dentro de `EraTheme` lo muestra; hay que resolverlo aquí. La transición de tema solo se ve si el mismo contenedor cambia de era sin volver a montarse.
 
 ### F1-06 — Páginas provisionales de cada ruta
 - **Objetivo:** que ningún link del menú dé error 404.
@@ -213,3 +215,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-02 | Worker conectó Firebase (`firebase` 13.1, `web/src/lib/firebase.ts`, `.env.example`). Reviewer: aprobada. ✅ |
 | 2026-10-25 | F1-03 | Reviewer pidió correcciones: quitar la obra del libro 2 (una nebulosa no revela obras), `getLatestRelease` con fecha explícita y zona horaria de México, `hidden` en `getWorksByEra`. 🔁 |
 | 2026-10-25 | F1-03 | Correcciones aplicadas y verificadas por el orquestador (tsc, lint, build). Pendiente confirmar con el artista la fecha exacta de Rulos (hoy aproximada: 2026-03-01). ✅ |
+| 2026-10-25 | — | Fecha de Rulos confirmada por el artista: 2026-03-13 (también inicio de la fase "en órbita" de BDUEM) |
+| 2026-10-25 | F1-04 | Worker implementó los temas; contraste WCAG AA verificado en los tres. Reviewer pidió correcciones (fuente del cuerpo por era, contexto de apilamiento del fondo, fallbacks de fuente); `EraTheme` ahora renderiza el `Backdrop`. Orquestador revisó `/temas` en escritorio y a 375 px. ✅ |

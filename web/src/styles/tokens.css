@@ -1,0 +1,56 @@
+/* Tokens base (tema "cielo"). Cada era los sobrescribe con <EraTheme>. */
+:root {
+  --era-bg: #07080d;
+  --era-bg-elevated: #11131b;
+  --era-fg: #e9e9ef;
+  --era-fg-muted: #8b8d99;
+  --era-accent: #a9b4ff;
+  --era-accent-contrast: #07080d;
+  --era-line: rgba(233, 233, 239, 0.14);
+  --era-glow: rgba(169, 180, 255, 0.35);
+  --era-font-display: var(--font-inter, system-ui, sans-serif);
+  --era-font-body: var(--font-inter, system-ui, sans-serif);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --text-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.3125rem);
+  --text-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.625rem);
+  --text-2xl: clamp(1.5rem, 1.3rem + 1vw, 2.125rem);
+  --text-3xl: clamp(1.875rem, 1.5rem + 1.9vw, 3rem);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-theme: 600ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-theme: 0ms;
+  }
+}
+
+body {
+  background: var(--era-bg);
+  color: var(--era-fg);
+  font-family: var(--era-font-body);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--era-font-display);
+}

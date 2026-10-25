@@ -1,0 +1,28 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.stars {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 90px 120px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 160px 60px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 230px 180px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 300px 90px, rgba(255, 255, 255, 0.7), transparent);
+  background-size:
+    317px 251px,
+    229px 283px,
+    401px 313px,
+    263px 197px,
+    347px 229px;
+  background-repeat: repeat;
+}
+
+.grain {
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}

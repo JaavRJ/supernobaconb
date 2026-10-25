@@ -26,8 +26,7 @@ export const works: Work[] = [
     type: "sencillo",
     era: "bduem",
     role: "orbita",
-    releaseDate: "2026-03-01",
-    dateApproximate: true,
+    releaseDate: "2026-03-13",
     summary: "Sencillo de la era BDUEM.",
     links: [
       { platform: "spotify", url: "https://open.spotify.com/album/3vixCWmufO5Wv8LcvefZGw" },

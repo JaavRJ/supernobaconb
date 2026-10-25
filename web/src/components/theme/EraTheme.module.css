@@ -1,0 +1,10 @@
+.root {
+  /* Contexto de apilamiento propio: el Backdrop (z-index -1) queda sobre el fondo de la era */
+  isolation: isolate;
+  background-color: var(--era-bg);
+  color: var(--era-fg);
+  font-family: var(--era-font-body);
+  transition:
+    background-color var(--duration-theme) var(--ease-out),
+    color var(--duration-theme) var(--ease-out);
+}

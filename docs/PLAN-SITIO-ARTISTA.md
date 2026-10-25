@@ -236,7 +236,7 @@ Las tres facetas son las tres constelaciones del cielo (ver sección 2). Jabi in
 
 ### Lanzamientos (todos de 2026, distribuidos por Too Lost)
 
-**Rulos** — sencillo
+**Rulos** — sencillo (13 de marzo de 2026)
 | # | Canción | Duración | Spotify | YouTube |
 |---|---|---|---|---|
 | 1 | Rulos | 2:47 | [track](https://open.spotify.com/track/3opJtdXpDlA3PiqjjTd3zK) | [video](https://www.youtube.com/watch?v=xeutQrT_9Zo) |
@@ -272,7 +272,6 @@ Las tres facetas son las tres constelaciones del cielo (ver sección 2). Jabi in
 - Lector de BDUEM / este sitio → `construye` → BDUEM
 
 ### Aún falta
-- [ ] Fecha exacta de publicación de Rulos (en los datos está como aproximada: 2026-03-01)
 - [ ] Portadas en alta calidad (las de Too Lost son links temporales)
 - [ ] Fotos para la portada, sobre mí y prensa
 - [ ] Biografía larga
