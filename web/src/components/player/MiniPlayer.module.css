@@ -11,7 +11,7 @@
   background: var(--era-bg-elevated);
   border-top: 1px solid var(--era-line);
   color: var(--era-fg);
-  font-family: var(--era-font-body);
+  font-family: var(--font-ui);
   animation: enter 300ms var(--ease-out);
 }
 

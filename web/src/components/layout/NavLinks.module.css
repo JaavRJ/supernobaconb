@@ -8,6 +8,7 @@
 
 .link {
   display: flex;
+  font-family: var(--font-ui);
   align-items: center;
   min-height: 48px;
   padding: 0 var(--space-3);

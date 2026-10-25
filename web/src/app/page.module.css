@@ -1,26 +1,8 @@
-.intro {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: var(--space-5) var(--space-4) var(--space-4);
-}
-
-.title {
-  margin: 0;
-  font-size: var(--text-3xl);
-  line-height: 1.1;
-}
-
-.tagline {
-  margin: var(--space-2) 0 0;
-  color: var(--era-fg-muted);
-  font-size: var(--text-base);
-}
-
 .sky {
   max-width: 72rem;
   margin: 0 auto;
   padding: var(--space-4);
-  overflow-x: clip;
+  overflow-x: visible;
 }
 
 .visuallyHidden {

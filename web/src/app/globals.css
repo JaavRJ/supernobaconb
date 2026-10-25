@@ -9,3 +9,8 @@
 body {
   margin: 0;
 }
+
+/* El cielo va de borde a borde con 100vw; esto evita el scroll horizontal por la barra */
+main {
+  overflow-x: clip;
+}

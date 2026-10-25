@@ -1,140 +1,114 @@
-.section {
-  border-block: 1px solid var(--era-line);
-}
-
-.inner {
-  display: grid;
-  gap: var(--space-4);
-  max-width: 72rem;
+.strip {
+  position: relative;
+  width: min(100%, 41rem);
   margin: 0 auto;
-  padding: var(--space-5) var(--space-4);
+  border-top: 1px solid var(--era-line);
+  padding-top: var(--space-4);
 }
 
-.cover {
-  width: min(50vw, 200px);
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
 }
 
-.coverImage,
-.coverFallback {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: var(--radius-md);
-  box-shadow: 0 0 40px var(--era-glow);
+.info {
+  min-width: 0;
 }
 
-.coverImage {
-  object-fit: cover;
-}
-
-.coverFallback {
-  display: flex;
-  align-items: flex-end;
-  padding: var(--space-3);
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 70% 25%, var(--era-glow), transparent 60%),
-    linear-gradient(160deg, var(--era-bg-elevated), var(--era-bg));
-  border: 1px solid var(--era-line);
-  color: var(--era-accent);
-  font-family: var(--era-font-display);
-  font-size: var(--text-base);
-  font-weight: 700;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-}
-
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
-  margin: 0;
+.label {
+  margin: 0 0 var(--space-1);
   color: var(--era-fg-muted);
-  font-size: var(--text-sm);
-}
-
-.kicker {
-  color: var(--era-accent);
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 .title {
-  margin: var(--space-2) 0 0;
-  font-size: var(--text-2xl);
-  line-height: 1.15;
-}
-
-.titleLink {
+  margin: 0;
   color: var(--era-fg);
-  text-decoration: none;
-}
-
-.titleLink:hover {
-  text-decoration: underline;
+  font-family: var(--font-title);
+  font-size: clamp(1.25rem, 1rem + 1.2vw, 1.75rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .era {
   margin: var(--space-1) 0 0;
-  color: var(--era-fg-muted);
+  font-family: var(--era-font-body);
   font-size: var(--text-sm);
 }
 
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: var(--space-4) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.primary,
-.secondary {
+.eraLink {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 var(--space-4);
-  border: 1px solid var(--era-accent);
-  border-radius: var(--radius-full);
-  font-size: var(--text-sm);
-  font-weight: 600;
+  color: var(--era-accent);
   text-decoration: none;
 }
 
-.primary {
+.eraLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 1px solid var(--era-accent);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--era-accent);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.play:hover {
   background: var(--era-accent);
   color: var(--era-accent-contrast);
 }
 
-.secondary {
-  border-color: var(--era-line);
-  color: var(--era-fg);
-}
-
-.secondary:hover {
-  border-color: var(--era-accent);
-}
-
-.primary:focus-visible,
-.secondary:focus-visible,
-.titleLink:focus-visible {
+.eraLink:focus-visible,
+.play:focus-visible,
+.platformLink:focus-visible {
   outline: 2px solid var(--era-accent);
   outline-offset: 2px;
 }
 
-@media (min-width: 48rem) {
-  .inner {
-    grid-template-columns: 320px 1fr;
-    align-items: center;
-    gap: var(--space-7);
-    padding-block: var(--space-7);
-  }
+.platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-  .cover {
-    width: 320px;
-  }
+.platformLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.platformLink:hover {
+  color: var(--era-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .srOnly {

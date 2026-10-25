@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cinzel_Decorative, Crimson_Pro, Inter } from "next/font/google";
+import { Cinzel, Cinzel_Decorative, Crimson_Pro, Inter } from "next/font/google";
 import { PlayerProvider } from "@/components/player/PlayerProvider";
 import { PlayerSlot } from "@/components/layout/PlayerSlot";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -15,6 +15,12 @@ const cinzel = Cinzel_Decorative({
   display: "swap",
   variable: "--font-cinzel",
 });
+const cinzelText = Cinzel({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  variable: "--font-cinzel-text",
+});
 const crimson = Crimson_Pro({ subsets: ["latin"], display: "swap", variable: "--font-crimson" });
 
 export const metadata: Metadata = {
@@ -24,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${inter.variable} ${cinzel.variable} ${crimson.variable}`}>
+    <html lang="es" className={`${inter.variable} ${cinzel.variable} ${cinzelText.variable} ${crimson.variable}`}>
       <body>
         <PlayerProvider>
           <SkipLink />

@@ -29,6 +29,7 @@
 
 /* Panel móvil: cerrado queda invisible y fuera del orden de tabulación */
 .nav {
+  font-family: var(--font-ui);
   position: absolute;
   top: 100%;
   right: 0;

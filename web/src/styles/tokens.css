@@ -1,15 +1,17 @@
 /* Tokens base (tema "cielo"). Cada era los sobrescribe con <EraTheme>. */
 :root {
-  --era-bg: #07080d;
-  --era-bg-elevated: #11131b;
-  --era-fg: #e9e9ef;
-  --era-fg-muted: #8b8d99;
-  --era-accent: #a9b4ff;
-  --era-accent-contrast: #07080d;
-  --era-line: rgba(233, 233, 239, 0.14);
-  --era-glow: rgba(169, 180, 255, 0.35);
-  --era-font-display: var(--font-inter, system-ui, sans-serif);
-  --era-font-body: var(--font-inter, system-ui, sans-serif);
+  --era-bg: #0c1412;
+  --era-bg-elevated: #13201c;
+  --era-fg: #efe6d6;
+  --era-fg-muted: #a39d8e;
+  --era-accent: #d6bc86;
+  --era-accent-contrast: #0c1412;
+  --era-line: rgba(239, 230, 214, 0.14);
+  --era-glow: rgba(214, 188, 134, 0.35);
+  --era-font-display: var(--font-cinzel, 'Cinzel Decorative', serif);
+  --era-font-body: var(--font-crimson, 'Crimson Pro', Georgia, serif);
+  --font-ui: var(--font-inter, system-ui, sans-serif);
+  --font-title: var(--font-cinzel-text, 'Cinzel', serif);
 
   --space-1: 4px;
   --space-2: 8px;

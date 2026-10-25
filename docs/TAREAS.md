@@ -195,6 +195,12 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 - **Terminado cuando:**
   - Hay una lista de cambios de diseño acordados, anotada en este tablero.
   - Los ajustes acordados de tipografía, espacios, colores y composición de la portada están aplicados (con el mismo ciclo worker → reviewer).
+- **Cambios acordados en el recorrido (2026-10-25):**
+  1. **Portada:** se mantiene el orden ("Lo último" primero, el cielo después), pero con un encabezado con más presencia y "Lo último" más grande y equilibrado.
+  2. **Cielo:** quitar el marco; el cielo va de borde a borde.
+  3. **Eras:** que el cambio se note más: cielo base más azul noche y BDUEM más cálida y dorada.
+  4. **Tipografía de la marca:** el artista descartó las cuatro opciones propuestas (Syne, Unbounded, Michroma, Instrument Serif) por no tener identidad, y eligió la de su mockup: **Cinzel Decorative** (nombre y títulos destacados), **Crimson Pro** (texto) e **Inter** (interfaz).
+  5. **Portada como el mockup del artista:** nombre enorme y centrado, ilustración de eclipse con órbita, "Lo último" como franja minimalista con botón de play, y fondo verde-negro con crema y dorado para el cielo base (reemplaza al azul noche del cambio 3).
   - Al terminar, se borran las páginas de prueba `/temas` y `/reproductor-prueba` y el audio `web/public/audio/prueba.wav` (se conservaron para usarlas en el recorrido).
 
 ---
