@@ -35,6 +35,10 @@
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-theme: 600ms;
+
+  /* Altura del reproductor persistente; F1-12 la cambia cuando exista */
+  --player-height: 0px;
+  --header-height: 64px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -43,7 +47,12 @@
   }
 }
 
+html {
+  overscroll-behavior-y: none;
+}
+
 body {
+  padding-bottom: var(--player-height);
   background: var(--era-bg);
   color: var(--era-fg);
   font-family: var(--era-font-body);

@@ -1,0 +1,98 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--era-fg);
+  list-style: none;
+  cursor: pointer;
+}
+
+.toggle::-webkit-details-marker {
+  display: none;
+}
+
+.toggle:hover {
+  color: var(--era-accent);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+/* Panel móvil: cerrado queda invisible y fuera del orden de tabulación */
+.nav {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  padding: var(--space-2) var(--space-4) var(--space-4);
+  border-bottom: 1px solid var(--era-line);
+  background: var(--era-bg-elevated);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(calc(var(--space-2) * -1));
+  transition:
+    opacity 200ms var(--ease-out),
+    transform 200ms var(--ease-out),
+    visibility 200ms;
+}
+
+.open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .toggle {
+    display: none;
+  }
+
+  .nav {
+    position: static;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    margin-left: auto;
+  }
+}
+
+/* Fallback de Suspense sin JavaScript: <details> con el mismo botón y panel */
+.fallback {
+  margin-left: auto;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  /* En escritorio los links se ven siempre, aunque el <details> esté cerrado */
+  .fallback::details-content {
+    content-visibility: visible;
+  }
+}
