@@ -9,21 +9,37 @@ interface EraThemeProps {
   era: Era | null;
   as?: ElementType;
   className?: string;
+  "aria-labelledby"?: string;
   children: ReactNode;
 }
 
 /** Aplica las variables de tema de una era a su contenido */
-export function EraTheme({ era, as: Tag = "div", className, children }: EraThemeProps) {
+export function EraTheme({
+  era,
+  as: Tag = "div",
+  className,
+  "aria-labelledby": labelledBy,
+  children,
+}: EraThemeProps) {
   const classes = className ? `${styles.root} ${className}` : styles.root;
 
   if (!era) {
-    return <Tag className={classes}>{children}</Tag>;
+    return (
+      <Tag className={classes} aria-labelledby={labelledBy}>
+        {children}
+      </Tag>
+    );
   }
 
   const { backdrop } = era.theme;
 
   return (
-    <Tag className={classes} data-era={era.id} style={eraThemeStyle(era.theme)}>
+    <Tag
+      className={classes}
+      aria-labelledby={labelledBy}
+      data-era={era.id}
+      style={eraThemeStyle(era.theme)}
+    >
       {backdrop !== "none" && <Backdrop variant={backdrop} />}
       {children}
     </Tag>

@@ -1,7 +1,5 @@
 .section {
   position: relative;
-  /* Solo para acotar el fondo fijo a cada sección de la demo */
-  clip-path: inset(0);
   padding: var(--space-7) var(--space-4);
 }
 

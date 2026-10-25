@@ -1,4 +1,6 @@
 .root {
+  /* Ancla el fondo (absolute) a esta era */
+  position: relative;
   /* Contexto de apilamiento propio: el Backdrop (z-index -1) queda sobre el fondo de la era */
   isolation: isolate;
   background-color: var(--era-bg);
