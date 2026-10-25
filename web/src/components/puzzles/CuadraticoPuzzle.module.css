@@ -1,0 +1,170 @@
+.puzzle {
+  color: #e0e0e0;
+  font-family: var(--era-font-body);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.title {
+  font-family: var(--era-font-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  letter-spacing: 0.08em;
+  color: #fff;
+  margin: 0 0 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.subtitle {
+  font-family: var(--era-font-display);
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0 0 0.6rem;
+}
+
+.panel {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.left {
+  flex: 1;
+  min-width: 0;
+}
+
+.right {
+  width: 380px;
+  max-width: 100%;
+}
+
+.instruction {
+  color: #9a9a9a;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.block {
+  margin: 1rem 0;
+}
+
+.clue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  background: #0b0b0b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 1rem;
+}
+
+.encodedList {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.encodedItem {
+  background: #0b0b0b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.5rem;
+  min-width: 4.5rem;
+  text-align: center;
+}
+
+.encodedItem small {
+  display: block;
+  color: #9a9a9a;
+  margin-bottom: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.num {
+  font-family: ui-monospace, monospace;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.7rem;
+  font-size: 1.05rem;
+  color: #e0e0e0;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  color: #fff;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+}
+
+.input:focus-visible,
+.button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.button {
+  margin-top: 0.4rem;
+  padding: 0.65rem 1.4rem;
+  font: inherit;
+  color: #000;
+  background: #fff;
+  border: 0;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #e0e0e0;
+}
+
+.feedback {
+  min-height: 1.5em;
+  margin: 0.75rem 0 0;
+  color: #fff;
+  font-weight: 600;
+}
+
+.preview {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  min-height: 5rem;
+  background: #0b0b0b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cover {
+  margin: 0;
+  color: #9a9a9a;
+}
+
+.content {
+  margin: 0;
+  color: #fff;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .panel {
+    flex-direction: column;
+  }
+
+  .right {
+    width: 100%;
+  }
+}

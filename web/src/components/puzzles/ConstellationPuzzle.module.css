@@ -1,0 +1,97 @@
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  color: #e0e0e0;
+  font-family: var(--era-font-body);
+}
+
+.title {
+  font-family: var(--era-font-display);
+  font-weight: 400;
+  font-size: clamp(1.3rem, 5vw, 2.2rem);
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+.hint {
+  margin: 0 0 1.25rem;
+  color: #9a9a9a;
+  font-size: 1.05rem;
+}
+
+.board {
+  position: relative;
+  width: 100%;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  touch-action: none;
+}
+
+.target {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Área de toque de 44px; la estrella visible es el pseudo-elemento */
+.star {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  touch-action: none;
+  display: grid;
+  place-items: center;
+  outline: none;
+}
+
+.star::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px #fff;
+}
+
+.star:active {
+  cursor: grabbing;
+}
+
+.star:focus-visible::before {
+  box-shadow:
+    0 0 0 4px #000,
+    0 0 0 6px #fff,
+    0 0 14px #fff;
+}
+
+.done {
+  cursor: default;
+}
+
+.done::before {
+  box-shadow: 0 0 22px 4px #fff;
+}
+
+.final {
+  min-height: 3.5rem;
+  margin-top: 1.25rem;
+  text-align: center;
+  font-family: var(--era-font-display);
+  font-size: clamp(1.2rem, 5vw, 2.4rem);
+  color: #fff;
+  text-shadow: 0 0 20px #fff;
+}
+
+.final span {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--era-font-body);
+  font-size: clamp(1rem, 3.5vw, 1.5rem);
+}
