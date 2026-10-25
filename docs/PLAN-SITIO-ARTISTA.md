@@ -186,6 +186,7 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - [ ] **Portada**: acceso directo a lo último + mapa del cielo con las tres constelaciones, hilos y vista por era (con versión para celular)
 - [ ] Reproductor persistente (versión inicial)
 - [ ] Contenido de relleno donde aún falten datos
+- [ ] **Recorrido de diseño con el artista**: revisar juntos el sitio en el navegador, anotar qué funciona y qué no, y ajustar tipografía, espacios, colores y la composición de la portada
 
 ### Fase 2 — Libro
 - [ ] Migrar el lector (paginado y vertical), resaltados, citas, marcadores y notas del autor
@@ -204,6 +205,12 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - [ ] Galería de videos y fotos
 - [ ] Tienda con links externos (pagos integrados más adelante si hace falta)
 - [ ] Biografía y kit de prensa
+
+### Pase de diseño con materiales reales
+Se hace cuando lleguen las portadas, fotos y la estética de cada era; si llegan antes, se adelanta.
+- [ ] Reemplazar portadas generadas y textos de relleno por el material real
+- [ ] Ajustar el tema de cada era (colores, tipografía, fondo) a su estética definitiva
+- [ ] Revisar la portada, el cielo y las páginas de obra con imágenes reales, en escritorio y celular
 
 ### Fase 5 — Admin ampliado
 - [ ] Gestión de obras, eras (con editor de tema) e hilos, y posición de cada estrella en el cielo

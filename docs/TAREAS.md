@@ -39,10 +39,11 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 
 | Fase | Estado | Progreso |
 |---|---|---|
-| 1 — Base | 🔨 En curso | 11 / 13 |
+| 1 — Base | 🔨 En curso | 11 / 14 |
 | 2 — Libro | ⬜ Pendiente | se detalla al empezar |
 | 3 — Música | ⬜ Pendiente | se detalla al empezar |
 | 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
+| Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
 
@@ -65,6 +66,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | F1-11 | Cielo: versión para celular y lista accesible | Worker | F1-10 | ⬜ |
 | F1-12 | Reproductor persistente (versión inicial) | Worker | F1-03, F1-05 | ✅ |
 | F1-13 | Verificación final de la fase | Orquestador | todas | ⬜ |
+| F1-14 | Recorrido de diseño con el artista | Orquestador + artista | F1-13 | ⬜ |
 
 ### F1-01 — Rama `artista` y proyecto Next.js en `web/`
 - **Objetivo:** crear la base del nuevo sitio sin tocar el sitio actual.
@@ -187,6 +189,13 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
   - Navegar entre páginas no corta el reproductor.
   - El plan y este tablero están actualizados.
 
+### F1-14 — Recorrido de diseño con el artista
+- **Objetivo:** el diseño de la fase 1 es un primer pase funcional; aquí se define la dirección visual con el artista.
+- **Cómo:** recorrer juntos el sitio en el navegador (escritorio y celular) y anotar qué funciona y qué no, en la portada, el cielo, el menú, el reproductor y los temas de cada era.
+- **Terminado cuando:**
+  - Hay una lista de cambios de diseño acordados, anotada en este tablero.
+  - Los ajustes acordados de tipografía, espacios, colores y composición de la portada están aplicados (con el mismo ciclo worker → reviewer).
+
 ---
 
 ## Fases siguientes (se detallan al empezar)
@@ -199,6 +208,9 @@ Discografía · página de sencillo/disco con embeds y reproductor · letras y c
 
 ### Fase 4 — Jabi, videos, tienda y sobre mí
 Proyectos de software · páginas de era y "Conectado con" · videos y fotos · tienda con links · biografía y kit de prensa.
+
+### Pase de diseño con materiales reales
+Cuando lleguen portadas, fotos y la estética de cada era (se adelanta si llegan antes): reemplazar portadas generadas y textos de relleno · ajustar el tema definitivo de cada era · revisar portada, cielo y páginas de obra con imágenes reales en escritorio y celular.
 
 ### Fase 5 — Admin ampliado
 Obras, eras, hilos, señales y posiciones en el cielo · canciones y audios · videos y productos · newsletter con intereses · migrar los datos locales a Firestore.
@@ -227,3 +239,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F1-12 | Worker hizo el reproductor (provider con un solo `<audio>`, mini reproductor, Media Session, audio de prueba generado). Reviewer: aprobada; ajustes de robustez (errores de carga, Media Session, volumen). Orquestador verificó en el navegador que sigue sonando al navegar y que avanza de pista. ✅ |
 | 2026-10-25 | F1-09 | Worker hizo la interacción (tarjeta en hover y foco, navegación del lado del cliente, flechas) y los hilos con estilo por tipo. Reviewer pidió correcciones (flechas bloqueaban Alt+←, tarjeta fuera del cielo a 375 px, foco por ratón pegado) y detectó un aviso de navegación instantánea en las rutas dinámicas, resuelto con `instant = false` (documentado en Next 16) sin perder el 404 real. Orquestador verificó en el navegador, también a 375 px. ✅ |
 | 2026-10-25 | F1-10 | Worker hizo el selector de era (el cielo toma el tema de la era con transición), la línea de tiempo con fases encimadas y la nebulosa con su señal como "transmisión interceptada". Reviewer pidió correcciones: la nebulosa no se atenuaba (también visto por el orquestador), el panel podía recortarse en celular, y la línea de tiempo revelaba la fecha de inicio de la era 2. Decisión del orquestador: una nebulosa no muestra fechas; su franja empieza difuminada. Orquestador verificó en el navegador y que el HTML no contiene datos de la era 2. ✅ |
+| 2026-10-25 | — | Se agregan dos momentos de diseño: F1-14 (recorrido de diseño con el artista al cerrar la fase 1) y el "Pase de diseño con materiales reales". |
