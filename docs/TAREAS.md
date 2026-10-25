@@ -212,8 +212,8 @@ Referencia obligatoria para todas: [IDENTIDAD-VISUAL.md](IDENTIDAD-VISUAL.md) y 
 |---|---|---|---|---|
 | ID-01 | Base: paleta radiante, fuentes, logo, marca SUPERN✦BA y fondo cósmico | Worker | — | ✅ |
 | ID-02 | Portada: aviso "Nuevo" y composición del mockup | Worker | ID-01 | ✅ |
-| ID-03 | Cielo radiante: núcleo con la estrella-brújula, íconos de faceta, nebulosa fotográfica, eras | Worker | ID-01 | 🔨 |
-| ID-04 | Era BDUEM en monocromo con scroll horizontal | Worker | ID-01 | 🔨 |
+| ID-03 | Cielo radiante: núcleo con la estrella-brújula, íconos de faceta, nebulosa fotográfica, eras | Worker | ID-01 | 👀 |
+| ID-04 | Era BDUEM en monocromo con scroll horizontal | Worker | ID-01 | ✅ |
 | ID-05 | Reproductor y pie con la nueva estética | Worker | ID-01 | ✅ |
 | ID-06 | Limpieza y verificación final | Orquestador | todas | ⬜ |
 
@@ -296,3 +296,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | ID-01 | Worker hizo la base: paleta radiante, fuentes (Cinzel Decorative, Uncial Antiqua, Cormorant Garamond, Inter), `StarWord` con la estrella-brújula en la "O" (máscara de luminancia, probada en Chromium, Firefox y WebKit), header SUPERN✦BA y fondo `cosmos`. Reviewer pidió legibilidad del header al hacer scroll, logo con su formato real (JPEG) y subrayado del enlace activo; corregido y revisado en el navegador. ✅ |
 | 2026-10-25 | ID-02 | Worker hizo el aviso "Nuevo" del mockup (Escuchar con Spotify o el reproductor, Ver en el cielo) y borró la portada del eclipse. Reviewer: aprobada, casi idéntica al mockup a 1440 px y sin scroll horizontal a 390 px. ✅ |
 | 2026-10-25 | ID-05 | Worker hizo el reproductor flotante del mockup (altura reservada medida con ResizeObserver) y el pie mínimo con íconos. Reviewer: aprobada. Orquestador verificó en el navegador que se ve como el mockup y sigue sonando al navegar. ✅ |
+| 2026-10-25 | ID-04 | Worker hizo la era BDUEM en monocromo: tema negro y blanco con Uncial y Cormorant, `HorizontalScroll` (rueda → avance horizontal sin secuestrar la página), etiqueta vertical, índice poético, polaroids en B/N y panel del sitio original. Reviewer pidió correcciones (arrastre que impedía seleccionar texto, eras sin libro, botón deshabilitado que parecía activo, accesibilidad de imágenes, Firefox). Orquestador hizo que el header y el fondo de página sean negros en páginas de era, y verificó en el navegador a 1440 y 390 px. ✅ |

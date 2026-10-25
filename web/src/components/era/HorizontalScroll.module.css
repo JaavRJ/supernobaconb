@@ -1,0 +1,42 @@
+.scroller {
+  position: relative;
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-4);
+}
+
+@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .scroller {
+    height: calc(100svh - var(--header-height));
+    min-height: 34rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--era-line) transparent;
+    cursor: grab;
+  }
+
+  .scroller[data-dragging="true"] {
+    cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .scroller:focus-visible {
+    outline: 2px solid var(--era-accent);
+    outline-offset: -4px;
+  }
+
+  .track {
+    flex-direction: row;
+    gap: 0;
+    width: max-content;
+    height: 100%;
+    padding: 0;
+  }
+}

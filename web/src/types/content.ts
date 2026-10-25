@@ -57,13 +57,15 @@ export interface Work {
   dateApproximate?: boolean;
   summary: string;
   coverUrl?: string;
+  /** Foto para su polaroid en la era (se muestra en blanco y negro) */
+  photoUrl?: string;
   links: WorkLink[];
   /** Ruta interna del sitio */
   href: string;
   /** Canciones de la obra (ids de Track) */
   trackIds?: string[];
   /** Partes (solo libros) */
-  parts?: { number: number; title: string; releaseDate: string }[];
+  parts?: { number: number; title: string; subtitle?: string; releaseDate: string }[];
   /** Posición manual en el cielo, normalizada 0–1 */
   skyPosition?: { x: number; y: number };
   /** Estrella oculta (secreto) */

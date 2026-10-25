@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: __dirname,
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com", pathname: "/dgrhyyuef/**" }],
+  },
 };
 
 export default nextConfig;

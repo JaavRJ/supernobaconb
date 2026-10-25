@@ -1,0 +1,23 @@
+.panel {
+  width: min(420px, 100%);
+  padding: 34px 32px;
+  border: 1px solid var(--era-line);
+  border-radius: 14px;
+  background: var(--era-bg-elevated);
+  color: var(--era-fg);
+  text-align: center;
+}
+
+.title {
+  margin: 0 0 12px;
+  font-family: var(--era-font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.panel p {
+  margin: 0 0 14px;
+  font-size: 18px;
+  line-height: 1.45;
+}

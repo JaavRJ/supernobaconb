@@ -14,3 +14,8 @@ body {
 main {
   overflow-x: clip;
 }
+
+/* En una página de era el cielo base no debe asomarse detrás del header */
+html:has(main [data-era-page]) body {
+  background: var(--era-page-bg, #000);
+}

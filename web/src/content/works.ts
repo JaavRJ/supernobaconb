@@ -3,6 +3,8 @@ import type { Work } from "@/types/content";
 export const works: Work[] = [
   {
     id: "bduem",
+    photoUrl:
+      "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763189290/supernoba/IMG_20251113_152021_xzy1ze.png",
     title: "Brillo de una Estrella Muerta",
     constellation: "noba",
     type: "libro",
@@ -13,14 +15,16 @@ export const works: Work[] = [
     links: [],
     href: "/libros/bduem",
     parts: [
-      { number: 1, title: "Nebulosa", releaseDate: "2025-12-01" },
-      { number: 2, title: "Gigante Roja", releaseDate: "2025-12-08" },
-      { number: 3, title: "Supernoba", releaseDate: "2025-12-15" },
-      { number: 4, title: "Enana Blanca", releaseDate: "2025-12-22" },
+      { number: 1, title: "Nebulosa", subtitle: "nacimiento de la idea del arte", releaseDate: "2025-12-01" },
+      { number: 2, title: "Gigante Roja", subtitle: "crecimiento de la idea del amor", releaseDate: "2025-12-08" },
+      { number: 3, title: "Supernoba", subtitle: "muerte de la idea del soñar", releaseDate: "2025-12-15" },
+      { number: 4, title: "Enana Blanca", subtitle: "sacrificio de la idea del recuerdo", releaseDate: "2025-12-22" },
     ],
   },
   {
     id: "rulos",
+    photoUrl:
+      "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1766454582/supernoba/IMG_20251222_194149_vmyp2z.png",
     title: "Rulos",
     constellation: "supernoba",
     type: "sencillo",
@@ -39,6 +43,8 @@ export const works: Work[] = [
   },
   {
     id: "nohablobien-part3",
+    photoUrl:
+      "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1765760145/supernoba/IMG_20251214_185038_cvsjga.png",
     title: "nohablobien / part3",
     constellation: "supernoba",
     type: "sencillo",
@@ -71,6 +77,8 @@ export const works: Work[] = [
   },
   {
     id: "sitio-supernoba",
+    photoUrl:
+      "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763505974/supernoba/IMG_20251118_111352_m7qf2r.png",
     title: "Este sitio",
     constellation: "jabi",
     type: "proyecto",

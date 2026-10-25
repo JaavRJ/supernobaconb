@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BduemEra, getEraBook } from "@/components/era/BduemEra";
 import { ComingSoon } from "@/components/placeholder/ComingSoon";
 import { EraTheme } from "@/components/theme/EraTheme";
-import { eras, getEra, getWorksByEra } from "@/content";
+import { eras, getEra } from "@/content";
 
 /** La primera visita a un slug no listado espera la página completa (y su 404) */
 export const ensureStatic = "navigation";
@@ -37,21 +37,17 @@ export default async function EraPage({ params }: PageProps<"/eras/[slug]">) {
     );
   }
 
-  const works = getWorksByEra(era.id);
+  if (!getEraBook(era)) {
+    return (
+      <EraTheme era={era}>
+        <ComingSoon title={era.name ?? "Nebulosa"} eyebrow="Era" />
+      </EraTheme>
+    );
+  }
 
   return (
     <EraTheme era={era}>
-      <ComingSoon title={era.name ?? "Nebulosa"} eyebrow="Era">
-        {works.length > 0 && (
-          <ul>
-            {works.map((w) => (
-              <li key={w.id}>
-                <Link href={w.href}>{w.title}</Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </ComingSoon>
+      <BduemEra era={era} />
     </EraTheme>
   );
 }

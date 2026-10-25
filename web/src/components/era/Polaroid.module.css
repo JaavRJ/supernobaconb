@@ -1,0 +1,27 @@
+.frame {
+  display: inline-block;
+  padding: 12px 12px 44px;
+  background: #f2f2f2;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.small {
+  padding: 10px 10px 34px;
+}
+
+.photo {
+  display: block;
+  width: min(360px, 78vw);
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #2a2a2a;
+  filter: grayscale(1) contrast(1.05);
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.small .photo {
+  width: min(220px, 62vw);
+  aspect-ratio: 1;
+}
