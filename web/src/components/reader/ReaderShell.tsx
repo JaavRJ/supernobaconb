@@ -106,7 +106,8 @@ export function ReaderShell({
 
   const advanced =
     saved !== null && ((saved.chapterIndex ?? 0) > 0 || (saved.progress ?? 0) > 0.02);
-  const showNotice = ready && !dismissed && advanced;
+  // El progreso guardado solo existe en el navegador: el aviso espera a la hidratación
+  const showNotice = hydrated && ready && !dismissed && advanced;
   const noticeRef = useRef(false);
   const canSaveRef = useRef(false);
 
