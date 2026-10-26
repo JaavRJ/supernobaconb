@@ -200,11 +200,11 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - [x] Reproductor a pantalla completa con portada y letra
 
 ### Fase 4 — Jabi, videos, tienda y sobre mí
-- [ ] Página de proyectos de software y detalle de cada proyecto
-- [ ] Sección "Conectado con" en cada obra (las eras no tienen página propia)
-- [ ] Galería de videos y fotos
-- [ ] Tienda con links externos (pagos integrados más adelante si hace falta)
-- [ ] Biografía y kit de prensa
+- [x] Página de proyectos de software y detalle de cada proyecto
+- [x] Sección "Conectado con" en cada obra (las eras no tienen página propia)
+- [x] Galería de videos y fotos
+- [x] Tienda con links externos (pagos integrados más adelante si hace falta)
+- [x] Biografía y kit de prensa (borrador en español e inglés, pendiente de aprobación del artista y del correo de prensa)
 
 ### Pase de diseño con materiales reales
 Se hace cuando lleguen las portadas, fotos y la estética de cada era; si llegan antes, se adelanta.
@@ -239,6 +239,7 @@ Las tres facetas son las tres constelaciones del cielo (ver sección 2). Jabi in
 | Spotify | https://open.spotify.com/artist/3DYjzvSLoweDPSqo7hJUMb |
 | Apple Music | https://music.apple.com/es/artist/supernoba/1885508885 |
 | YouTube | https://www.youtube.com/@supernobaconb |
+| Instagram | https://www.instagram.com/supernobaconb/ |
 | Playlist del artista | [si noba se vuelve realidad](https://open.spotify.com/playlist/1Iq2f9Kj9EyHxFluGJpEKj) |
 
 ### Lanzamientos (todos de 2026, distribuidos por Too Lost)
@@ -280,13 +281,13 @@ Las tres facetas son las tres constelaciones del cielo (ver sección 2). Jabi in
 
 ### Aún falta
 - [x] Portadas en alta calidad (las de Too Lost son links temporales)
-- [ ] Fotos para la portada, sobre mí y prensa
-- [ ] Biografía larga
-- [ ] Instagram, TikTok y otras redes
+- [ ] Fotos para la portada, sobre mí y prensa (por ahora: las del sitio viejo y las del kit de prensa)
+- [x] Biografía larga (borrador en `web/src/content/bio.ts`, por aprobar)
+- [ ] Instagram, TikTok y otras redes (Instagram listo: @supernobaconb; falta el correo de prensa y otras redes)
 - [ ] Colores o estética de cada era (si ya existe)
 - [x] Audios para el reproductor propio
-- [ ] Productos de la tienda y dónde se compran
-- [ ] Proyectos de software para Jabi: nombre, descripción, repositorio o demo, capturas
+- [x] Productos de la tienda y dónde se compran (por ahora solo el libro impreso en Amazon)
+- [x] Proyectos de software para Jabi: AURA, Diablos AeroVision, RailSense y este sitio (AURA tiene repositorio privado)
 - [ ] Primera señal de la era 2 (video glitch, frase o imagen)
 - [ ] Otros hilos entre obras (además de BDUEM Parte 3 → part3)
 

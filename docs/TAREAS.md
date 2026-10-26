@@ -42,7 +42,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 1 — Base | ✅ Hecha | 14 / 14 |
 | 2 — Libro | ✅ Hecha | 9 / 9 |
 | 3 — Música | ✅ Hecha | 7 / 7 |
-| 4 — Jabi, videos, tienda y sobre mí | 🔨 En curso | 8 / 10 |
+| 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
@@ -460,8 +460,8 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 | F4-06 | `/proyectos/[slug]`: detalle del proyecto | Worker | F4-01, F4-02, F4-03, F4-05 | ✅ |
 | F4-07 | `/tienda` con links externos | Worker | F4-02 | ✅ |
 | F4-08 | Biografía y kit de prensa (ES/EN) | Orquestador | F4-01 | ✅ |
-| F4-09 | `/sobre-mi`: biografía, fotos, kit y contacto | Worker | F4-02, F4-05, F4-08 | ⬜ |
-| F4-10 | Verificación final de la fase | Orquestador | todas | ⬜ |
+| F4-09 | `/sobre-mi`: biografía, fotos, kit y contacto | Worker | F4-02, F4-05, F4-08 | ✅ |
+| F4-10 | Verificación final de la fase | Orquestador | todas | ✅ |
 
 **Orden y paralelo:** F4-02 y F4-03 en paralelo (no comparten archivos) mientras el orquestador hace F4-01. Después F4-04, F4-05 y F4-07 en paralelo. Luego F4-06 y F4-08 (orquestador) al mismo tiempo, F4-09 y al final F4-10. Solo un agente corre `npm run build` a la vez.
 
@@ -625,3 +625,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F4-07 | Worker hizo `/tienda`: el libro impreso como pieza editorial con polaroid, "Comprar en Amazon" (pestaña nueva) y "Leer en línea". Verificado por el orquestador a 1440 y 390 px. ✅ |
 | 2026-10-25 | F4-05 | Worker hizo el `Lightbox` (diálogo nativo, teclado, gestos, B/N opcional) y `/videos` (tres videoclips con fachada y 21 fotos en polaroids). Reviewer pidió correcciones (clic de fondo tras arrastre, `onClose` doble, foco al desmontar, pie repetido); aplicadas. El orquestador hizo que la imagen del visor cargue de inmediato. Verificado en el navegador: abre, flechas, Escape, foco devuelto, sin scroll horizontal a 390 px. ✅ |
 | 2026-10-25 | F4-06 | Worker hizo `/proyectos/[slug]` en base radiante: encabezado, acciones (demo, video, repositorio o "Código privado"), capturas que abren el visor a color, puntos clave, stack y "Conectado con"; 404 real. El orquestador puso las capturas de celular de AURA en una sola fila y corrigió un texto alternativo. Verificado a 1440 y 390 px; build sin errores. ✅ |
+| 2026-10-25 | F4-09 | Worker hizo `/sobre-mi`: retrato en polaroid vertical, SUPERN✦BA, las tres facetas enlazadas, bio larga, fotos con el visor, descargas del kit (PDF español e inglés y ZIP, con tamaño) y contacto (Instagram; el correo aparece solo si existe `site.pressEmail`); Instagram en el pie. Verificado por el orquestador a 1440 y 390 px. ✅ |
+| 2026-10-25 | F4-10 | Verificación del orquestador: tipos, lint y build sin errores. En producción (`next start` en el puerto 3100, ya detenido) `/proyectos`, los cuatro proyectos, `/videos`, `/tienda`, `/sobre-mi` y los tres archivos de prensa dan 200; `/proyectos/nada` y `/proyectos/puzzles-0618am` 404; ninguna página nombra eras ni tiene `iframe` o correo en el HTML; en `/videos` antes del clic solo hay peticiones al propio sitio (miniaturas por el optimizador); consola limpia. Se detuvieron dos servidores de prueba que dejaron los workers (3123 y 3124). Pendiente del artista: aprobar la bio y el kit, dar el correo de prensa y decidir si el repositorio de AURA se hace público. **Fase 4 terminada.** ✅ |
