@@ -42,7 +42,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 1 — Base | ✅ Hecha | 14 / 14 |
 | 2 — Libro | ✅ Hecha | 9 / 9 |
 | 3 — Música | ✅ Hecha | 7 / 7 |
-| 4 — Jabi, videos, tienda y sobre mí | 🔨 En curso | 0 / 10 |
+| 4 — Jabi, videos, tienda y sobre mí | 🔨 En curso | 8 / 10 |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
@@ -452,14 +452,14 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 
 | ID | Tarea | Quién | Depende de | Estado |
 |---|---|---|---|---|
-| F4-01 | Material: capturas de proyectos y fotos | Orquestador | — | ⬜ |
-| F4-02 | Datos: proyectos, videos, fotos, productos y contacto | Worker | — | ⬜ |
-| F4-03 | "Conectado con" compartido | Worker | — | ⬜ |
-| F4-04 | `/proyectos`: constelación Jabi y lista | Worker | F4-02 | ⬜ |
-| F4-05 | Visor de imágenes y `/videos`: videoclips y galería | Worker | F4-02 | ⬜ |
-| F4-06 | `/proyectos/[slug]`: detalle del proyecto | Worker | F4-01, F4-02, F4-03, F4-05 | ⬜ |
-| F4-07 | `/tienda` con links externos | Worker | F4-02 | ⬜ |
-| F4-08 | Biografía y kit de prensa (ES/EN) | Orquestador | F4-01 | ⬜ |
+| F4-01 | Material: capturas de proyectos y fotos | Orquestador | — | ✅ |
+| F4-02 | Datos: proyectos, videos, fotos, productos y contacto | Worker | — | ✅ |
+| F4-03 | "Conectado con" compartido | Worker | — | ✅ |
+| F4-04 | `/proyectos`: constelación Jabi y lista | Worker | F4-02 | ✅ |
+| F4-05 | Visor de imágenes y `/videos`: videoclips y galería | Worker | F4-02 | ✅ |
+| F4-06 | `/proyectos/[slug]`: detalle del proyecto | Worker | F4-01, F4-02, F4-03, F4-05 | ✅ |
+| F4-07 | `/tienda` con links externos | Worker | F4-02 | ✅ |
+| F4-08 | Biografía y kit de prensa (ES/EN) | Orquestador | F4-01 | ✅ |
 | F4-09 | `/sobre-mi`: biografía, fotos, kit y contacto | Worker | F4-02, F4-05, F4-08 | ⬜ |
 | F4-10 | Verificación final de la fase | Orquestador | todas | ⬜ |
 
@@ -478,7 +478,7 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
   - Tipos `ProjectDetail` (tagline, párrafos, rol, logro opcional, stack, puntos clave, capturas con ancho/alto/alt, repo o "privado", demo, video), `Video` (título, URL de YouTube, obra ligada), `Photo` (src, ancho, alto, alt, origen) y `Product` (nombre, descripción, imagen, precio opcional, link externo, obra ligada).
   - Obras nuevas en la constelación Jabi: `aura`, `diablos-aerovision` y `railsense`, con fecha, resumen, links y `href` `/proyectos/<id>`; *Este sitio* actualizado.
   - Los tres videoclips, las fotos (Cloudinary del sitio viejo + kit) y el libro físico como producto.
-  - `site.ts`: Instagram en `social` y `pressEmail` opcional.
+  - `site.ts`: `instagram` (el pie lo muestra en F4-09) y `pressEmail` opcional.
   - Funciones de consulta: `getProjects()`, `getProjectDetail(id)`, `getVideos()`, `getPhotos()`, `getProducts()`.
   - El cielo de la portada sigue bien con cuatro estrellas en Jabi (sin encimarse, también a 390 px).
 
@@ -616,3 +616,12 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | — | Decisión del artista: las eras no se presentan como "eras" en el sitio, quedan implícitas en el mapa y la estética. Orquestador quitó "ERA · … · EN ÓRBITA" de la página del libro, "Era …" de la página del sencillo (ahora solo el libro, con enlace), "guiño a la era" → "guiño al libro", y borró la ruta `/eras/[slug]` (`/eras/bduem` y `/eras/era-2` dan 404). Verificado: ninguna página muestra la palabra "era" salvo el propio texto del libro. Plan e identidad visual actualizados. |
 | 2026-10-25 | F2-07 | El artista vio un error de Next en `/libros/bduem/leer/parte-N`: desajuste de hidratación cuando hay progreso guardado. `ReaderDataProvider` (fuera del `Suspense`) se hidrata antes que el lector y, al hidratar `ReaderShell`, el aviso "Continuar donde te quedaste" ya aparecía en el cliente y no en el servidor. El orquestador lo condicionó a `useHydrated`. Verificado en el navegador con progreso, preferencia de modo páginas y un resaltado guardados: sin errores en las 4 partes y "Continuar" lleva al punto guardado. ✅ |
 | 2026-10-25 | F4 | Artista: proyectos elegidos de su GitHub (AURA, Diablos AeroVision, RailSense, además de *Este sitio*), fotos del sitio viejo y de su kit de prensa, tienda solo con el libro físico (Amazon), kit de prensa a mejorar en español e inglés, contacto por Instagram y un correo que aún falta. Se detallan F4-01 a F4-10. |
+| 2026-10-25 | F4-03 | Worker sacó "Conectado con" a `lib/connections.ts` + `components/works/Connections` (todos los tipos de hilo, incluido `construye` en los dos sentidos) y la página del libro solo muestra obras con hilo. Reviewer: aprobada; el orquestador confirmó que Rulos sigue en la página del libro. ✅ |
+| 2026-10-25 | — | Pedido del artista: la estrella en la "O" solo en SUPERNOBA y en el título de BDUEM. `StarWord` ya no la pone en otros textos (sencillos, otras partes del libro). Verificado en portada, libro, lector y sencillos; identidad visual actualizada. |
+| 2026-10-25 | F4-01 | Orquestador: capturas reales de los cuatro proyectos (este sitio y la app pública de AeroVision con Chrome sin ventana por CDP, AURA de su reporte de usabilidad, RailSense de su repositorio) y fotos del kit, en WebP ≤ 250 KB. ✅ |
+| 2026-10-25 | F4-02 | Worker hizo tipos y datos (proyectos con textos de sus README, videos derivados de las canciones, 21 fotos con medidas reales, el libro impreso, `site.instagram`). El orquestador vio que el aviso "Nuevo" mostraba Diablos AeroVision y limitó "lo último" a música y libros; llenó las capturas. Reviewer: aprobada. Cielo con cuatro estrellas en Jabi sin encimarse. ✅ |
+| 2026-10-25 | F4-08 | Orquestador: bio corta, media y larga en español e inglés (`content/bio.ts`, borrador para aprobar) y kit de prensa en PDF de dos páginas por idioma con la identidad del sitio, más ZIP de fotos y portadas en alta. Generadores en `web/materiales/prensa/` (fuera de git) para rehacerlo cuando llegue el correo de prensa. ✅ |
+| 2026-10-25 | F4-04 | Worker hizo `/proyectos`: constelación Jabi y lista con número, nombre, tagline, año, rol, logro con ✦ cálido, stack y miniatura. Orquestador lo revisó a 1440 y 390 px y recortó a proporción fija las miniaturas casi cuadradas. Sin reviewer (presentación verificada en el navegador). ✅ |
+| 2026-10-25 | F4-07 | Worker hizo `/tienda`: el libro impreso como pieza editorial con polaroid, "Comprar en Amazon" (pestaña nueva) y "Leer en línea". Verificado por el orquestador a 1440 y 390 px. ✅ |
+| 2026-10-25 | F4-05 | Worker hizo el `Lightbox` (diálogo nativo, teclado, gestos, B/N opcional) y `/videos` (tres videoclips con fachada y 21 fotos en polaroids). Reviewer pidió correcciones (clic de fondo tras arrastre, `onClose` doble, foco al desmontar, pie repetido); aplicadas. El orquestador hizo que la imagen del visor cargue de inmediato. Verificado en el navegador: abre, flechas, Escape, foco devuelto, sin scroll horizontal a 390 px. ✅ |
+| 2026-10-25 | F4-06 | Worker hizo `/proyectos/[slug]` en base radiante: encabezado, acciones (demo, video, repositorio o "Código privado"), capturas que abren el visor a color, puntos clave, stack y "Conectado con"; 404 real. El orquestador puso las capturas de celular de AURA en una sola fila y corrigió un texto alternativo. Verificado a 1440 y 390 px; build sin errores. ✅ |
