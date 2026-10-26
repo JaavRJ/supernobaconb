@@ -2,19 +2,38 @@ import type {
   Constellation,
   ConstellationId,
   Era,
+  Photo,
+  Product,
+  ProjectDetail,
   Signal,
   Thread,
   Track,
+  Video,
   Work,
 } from "@/types/content";
 import { constellations } from "./constellations";
 import { eras } from "./eras";
+import { photos } from "./photos";
+import { products } from "./products";
+import { projectDetails } from "./projects";
 import { signals } from "./signals";
 import { threads } from "./threads";
 import { tracks } from "./tracks";
+import { videos } from "./videos";
 import { works } from "./works";
 
-export { constellations, eras, signals, threads, tracks, works };
+export {
+  constellations,
+  eras,
+  photos,
+  products,
+  projectDetails,
+  signals,
+  threads,
+  tracks,
+  videos,
+  works,
+};
 
 export function getWork(id: string): Work | undefined {
   return works.find((w) => w.id === id);
@@ -95,9 +114,39 @@ export function toLocalDateString(date: Date, timeZone = "America/Mexico_City"):
   }).format(date);
 }
 
+/** Tipos que pueden ser "lo último": música y libros, nunca proyectos ni puzzles */
+const RELEASE_TYPES: Work["type"][] = ["sencillo", "ep", "album", "libro"];
+
 /** Obra publicada más reciente (fecha <= today, no oculta); today es YYYY-MM-DD */
 export function getLatestRelease(today: string): Work | undefined {
   return works
-    .filter((w) => !w.hidden && w.releaseDate && w.releaseDate <= today)
+    .filter((w) => RELEASE_TYPES.includes(w.type) && !w.hidden && w.releaseDate && w.releaseDate <= today)
     .sort((a, b) => (b.releaseDate ?? "").localeCompare(a.releaseDate ?? ""))[0];
+}
+
+/** Obras de Jabi tipo proyecto (no ocultas), las más nuevas primero, con su ficha */
+export function getProjects(): (Work & { detail: ProjectDetail })[] {
+  return works
+    .filter((w) => w.constellation === "jabi" && w.type === "proyecto" && !w.hidden)
+    .sort((a, b) => (b.releaseDate ?? "").localeCompare(a.releaseDate ?? ""))
+    .flatMap((w) => {
+      const detail = getProjectDetail(w.id);
+      return detail ? [{ ...w, detail }] : [];
+    });
+}
+
+export function getProjectDetail(id: string): ProjectDetail | undefined {
+  return projectDetails.find((p) => p.workId === id);
+}
+
+export function getVideos(): Video[] {
+  return videos;
+}
+
+export function getPhotos(): Photo[] {
+  return photos;
+}
+
+export function getProducts(): Product[] {
+  return products;
 }

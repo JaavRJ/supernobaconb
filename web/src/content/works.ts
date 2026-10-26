@@ -92,7 +92,55 @@ export const works: Work[] = [
     dateApproximate: true,
     summary:
       "El lector de BDUEM y este sitio: el cielo donde viven todas las obras, construido para el libro.",
-    links: [{ platform: "repo", url: "https://github.com/JaavRJ/supernobaconb" }],
+    links: [
+      { platform: "repo", url: "https://github.com/JaavRJ/supernobaconb" },
+      { platform: "demo", url: "https://supernobaconb.web.app", label: "Versión en línea" },
+    ],
     href: "/proyectos/sitio-supernoba",
+  },
+  {
+    id: "aura",
+    title: "AURA",
+    constellation: "jabi",
+    type: "proyecto",
+    era: "bduem",
+    role: "orbita",
+    releaseDate: "2026-10-01",
+    dateApproximate: true,
+    summary:
+      "Un agente de accesibilidad para Android que usa el teléfono por ti, pensado para adultos mayores.",
+    links: [],
+    href: "/proyectos/aura",
+  },
+  {
+    id: "diablos-aerovision",
+    title: "Diablos AeroVision",
+    constellation: "jabi",
+    type: "proyecto",
+    era: "bduem",
+    role: "orbita",
+    releaseDate: "2026-10-22",
+    summary:
+      "Calidad de pitcheo ajustada por la altitud de la Ciudad de México, hecha para el Hackathon ISAC 2026.",
+    links: [
+      { platform: "repo", url: "https://github.com/JaavRJ/hackathon_isac2026_diablosrojos" },
+      { platform: "demo", url: "https://diablos-aerovision.streamlit.app" },
+      { platform: "youtube", url: "https://youtu.be/lFUaiVm2P1I" },
+    ],
+    href: "/proyectos/diablos-aerovision",
+  },
+  {
+    id: "railsense",
+    title: "RailSense",
+    constellation: "jabi",
+    type: "proyecto",
+    era: "bduem",
+    role: "orbita",
+    releaseDate: "2025-11-01",
+    dateApproximate: true,
+    summary:
+      "Mapas de metro convertidos en tableros de análisis; ganador del track Open Source del Hackathon Mobility & AI 2025.",
+    links: [{ platform: "repo", url: "https://github.com/AxolutionsDevs/MobilityAI-Hackaton" }],
+    href: "/proyectos/railsense",
   },
 ];

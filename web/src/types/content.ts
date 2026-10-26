@@ -141,3 +141,66 @@ export interface Track {
   /** Créditos: persona y los roles que tuvo en la canción */
   credits?: { name: string; roles: string[] }[];
 }
+
+/** Captura de pantalla de un proyecto */
+export interface ProjectScreenshot {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption?: string;
+}
+
+/** Ficha de un proyecto de Jabi; se une a su obra por `workId` */
+export interface ProjectDetail {
+  workId: string;
+  tagline: string;
+  paragraphs: string[];
+  role?: string;
+  /** Premio o mención */
+  recognition?: string;
+  /** Evento o reto en que nació */
+  context?: string;
+  highlights: string[];
+  stack: string[];
+  screenshots: ProjectScreenshot[];
+  /** Repositorio público, o `private` si no se puede abrir */
+  repo: { url: string } | { private: true };
+  demo?: { url: string; label: string };
+  /** URL de YouTube */
+  video?: string;
+}
+
+/** Videoclip */
+export interface Video {
+  id: string;
+  title: string;
+  /** URL de YouTube */
+  url: string;
+  workId: string;
+  trackId?: string;
+  date: string;
+}
+
+/** Foto de la galería */
+export interface Photo {
+  id: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  /** De dónde viene: el kit de prensa o el libro (sitio anterior) */
+  source: "kit" | "libro";
+}
+
+/** Producto de la tienda, que se compra en un sitio externo */
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  format: string;
+  image: { src: string; width: number; height: number; alt: string };
+  price?: string;
+  buy: { url: string; store: string };
+  workId?: string;
+}

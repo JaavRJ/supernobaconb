@@ -13,6 +13,9 @@ export interface Site {
   description: string;
   nav: NavItem[];
   social: SocialLink[];
+  instagram: { handle: string; url: string };
+  /** Correo de prensa; sin valor hasta tenerlo */
+  pressEmail?: string;
 }
 
 export const site: Site = {
@@ -32,4 +35,5 @@ export const site: Site = {
     { label: "Apple Music", href: "https://music.apple.com/es/artist/supernoba/1885508885" },
     { label: "YouTube", href: "https://www.youtube.com/@supernobaconb" },
   ],
+  instagram: { handle: "@supernobaconb", url: "https://www.instagram.com/supernobaconb/" },
 };
