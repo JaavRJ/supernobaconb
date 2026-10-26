@@ -68,16 +68,14 @@
   font-style: italic;
 }
 
-.era a,
-.threads a {
+.era a {
   color: var(--era-fg-muted);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
   text-underline-offset: 5px;
 }
 
-.era a:hover,
-.threads a:hover {
+.era a:hover {
   color: var(--era-fg);
 }
 
@@ -132,7 +130,6 @@
 .listen:focus-visible,
 .platforms a:focus-visible,
 .era a:focus-visible,
-.threads a:focus-visible,
 .trackPlay:focus-visible,
 .trackPlatform:focus-visible {
   outline: 2px solid var(--era-accent, #fff);
@@ -330,18 +327,6 @@
 .moreVideos:focus-visible {
   outline: 2px solid var(--era-fg);
   outline-offset: 2px;
-}
-
-/* ---- Conectado con ---- */
-.threads {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 19px;
-  font-style: italic;
-  text-align: center;
-  display: grid;
-  gap: var(--space-3);
 }
 
 @media (min-width: 900px) {

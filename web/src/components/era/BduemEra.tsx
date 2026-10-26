@@ -115,7 +115,10 @@ const COUNT_WORDS = ["", "UNA", "DOS", "TRES", "CUATRO", "CINCO", "SEIS"];
 export function BduemEra({ era }: { era: Era }) {
   const book = getEraBook(era);
   if (!book) throw new Error(`La era ${era.id} no tiene un libro con partes como núcleo`);
-  const satellites = getWorksByEra(era.id).filter((w) => w.id !== book.id);
+  // Solo las obras unidas al libro por un hilo; las demás de la era no aparecen aquí
+  const satellites = getWorksByEra(era.id).filter(
+    (w) => w.id !== book.id && threadText(w, book) !== null,
+  );
   const parts = book.parts ?? [];
   const bookYear = yearOf(book);
 

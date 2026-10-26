@@ -1,0 +1,42 @@
+.section {
+  min-width: 0;
+}
+
+.heading {
+  margin: 0 0 var(--space-4);
+  color: var(--era-fg-muted);
+  font-family: var(--font-inter, system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.threads {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--era-font-body);
+  font-size: 19px;
+  font-style: italic;
+  text-align: center;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.threads a {
+  color: var(--era-fg-muted);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 5px;
+}
+
+.threads a:hover {
+  color: var(--era-fg);
+}
+
+.threads a:focus-visible {
+  outline: 2px solid var(--era-accent, #fff);
+  outline-offset: 3px;
+}
