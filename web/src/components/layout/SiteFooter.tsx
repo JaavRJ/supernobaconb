@@ -55,6 +55,31 @@ export function SiteFooter() {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href={site.instagram.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+              aria-label="Instagram (se abre en una pestaña nueva)"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17" cy="7" r="0.6" />
+              </svg>
+            </a>
+          </li>
         </ul>
         <p className={styles.copy}>© 2026 SUPERNOBA</p>
       </div>

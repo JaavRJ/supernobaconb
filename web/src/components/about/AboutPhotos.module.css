@@ -1,0 +1,63 @@
+/* Tira de polaroids; el relleno y `overflow: clip` evitan que los giros desborden */
+.strip {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  gap: var(--space-5) var(--space-4);
+  margin: 0;
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  list-style: none;
+  overflow: clip;
+}
+
+@media (min-width: 700px) {
+  .strip {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+.item {
+  margin: 0;
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  padding: 8px 8px 28px;
+  background: #f2f2f2;
+  border: 0;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  cursor: zoom-in;
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 200ms var(--ease-out);
+}
+
+.frame:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.frame:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 4px;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #2a2a2a;
+  filter: grayscale(1) contrast(1.05);
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame {
+    transition: none;
+  }
+
+  .frame:hover {
+    transform: rotate(var(--tilt, 0deg));
+  }
+}
