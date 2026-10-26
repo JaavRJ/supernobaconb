@@ -43,6 +43,7 @@ Lo que **no** tomamos de Gemini: el azul marino, el dorado como color dominante,
 - **Portada y cielo base: radiante**, en la línea de la referencia de Gemini (espacio profundo, estrellas que brillan, nebulosas fotográficas, resplandor cálido en lo principal), pero **sin infantilizar**: sin íconos tipo app, sin colores de juguete, con elementos finos y mucho espacio.
 - **El monocromo es de la era BDUEM**: negro puro, luz blanca, Uncial Antiqua y polaroids, exactamente como el sitio original. Entrar a BDUEM debe sentirse como entrar a ese mundo.
 - **La estrella-brújula** (`logo512.png`) reemplaza la "O" también en **SUPERN✦BA**: es la firma de la marca.
+- **Solo esos dos nombres llevan la estrella** (2026-10-25): SUPERN✦BA (donde aparezca) y BRILL✦ DE UNA ESTRELLA MUERTA. Ningún otro título o palabra cambia su "O" (ni sencillos como *nohablobien / part3*, ni las otras partes del libro).
 - **Scroll horizontal** en las páginas de era y del libro; la portada es vertical.
 - **Las eras no se nombran** (2026-10-25): ni la palabra "era", ni sus fases ("en órbita", "nebulosa"), ni páginas `/eras`. Se sienten por el acomodo del cielo y por la estética de cada obra; una obra se liga, como mucho, al libro del que nace.
 
