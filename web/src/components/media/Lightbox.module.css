@@ -1,0 +1,123 @@
+/* Visor de imágenes: diálogo modal a pantalla completa sobre fondo casi negro */
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(3, 5, 10, 0.94);
+  color: var(--era-fg);
+  font-family: var(--font-ui);
+  overscroll-behavior: contain;
+}
+
+.dialog[open] {
+  display: block;
+  animation: fade 220ms var(--ease-out);
+}
+
+.dialog::backdrop {
+  background: transparent;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open] {
+    animation: none;
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+}
+
+.top,
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+
+.counter {
+  margin: 0;
+  color: var(--era-fg-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+}
+
+/* Botones de texto pequeños con el borde fino del sitio */
+.control {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  background: transparent;
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-full);
+  color: var(--era-fg);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.control:hover {
+  border-color: var(--era-accent);
+  color: var(--era-accent);
+}
+
+.control:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+/* El gesto táctil se maneja con Pointer Events, así que el navegador no desplaza ni hace zoom aquí */
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 0 var(--space-2);
+  touch-action: none;
+}
+
+.image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 90vw;
+  max-height: 82vh;
+  max-height: min(82vh, 100%);
+  object-fit: contain;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.mono {
+  filter: grayscale(1) contrast(1.05);
+}
+
+.caption {
+  flex: 1;
+  margin: 0;
+  color: var(--era-fg-muted);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
