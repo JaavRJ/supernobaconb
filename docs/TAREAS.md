@@ -42,7 +42,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 1 — Base | ✅ Hecha | 14 / 14 |
 | 2 — Libro | ✅ Hecha | 9 / 9 |
 | 3 — Música | ✅ Hecha | 7 / 7 |
-| 4 — Jabi, videos, tienda y sobre mí | ⬜ Pendiente | se detalla al empezar |
+| 4 — Jabi, videos, tienda y sobre mí | 🔨 En curso | 0 / 10 |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
@@ -438,10 +438,115 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 
 ---
 
-## Fases siguientes (se detallan al empezar)
+## Fase 4 — Jabi, videos, tienda y sobre mí
 
-### Fase 4 — Jabi, videos, tienda y sobre mí
-Proyectos de software · "Conectado con" en cada obra (sin páginas de era) · videos y fotos · tienda con links · biografía y kit de prensa.
+**Decisiones de la fase 4**
+- **Proyectos de Jabi** (elegidos con el artista, 2026-10-25): *Este sitio* (ya existía), **AURA** (agente de accesibilidad para Android), **Diablos AeroVision** (Hackathon ISAC 2026) y **RailSense** (ganador del track Open Source, Hackathon Mobility & AI 2025). Los textos salen de sus README; nada se inventa. El repositorio de AURA es privado: la página dice "código privado" y no enlaza (pendiente: el artista decide si lo hace público). Los puzzles `/0618am` siguen siendo estrella oculta y no aparecen en la lista.
+- **Estética**: `/proyectos`, `/videos`, `/tienda` y `/sobre-mi` van en la base **radiante**. Los proyectos no nacen de un libro, así que su página también es radiante (incluido *Este sitio*, que se liga al libro por su hilo `construye`). Las **capturas de pantalla se muestran a color** con marco fino y sin giro (como las portadas: son la obra); las **fotos** del artista siempre en blanco y negro y en polaroid girada. Scroll vertical (el horizontal es de las páginas del libro).
+- **Fotos**: las del sitio viejo (Cloudinary, ya en `bduemPrelude.ts` y en las obras) y las del kit de prensa actual del artista (`Supernoba EPK (1).pdf`: retrato, farol, árbol con ave, estatua), optimizadas en `web/public/fotos/`.
+- **Tienda**: por ahora solo el libro físico, con el link de Amazon del kit (`https://a.co/d/00hx9lsU`). Sin precio (no lo tenemos); "Comprar en Amazon" abre en pestaña nueva.
+- **Kit de prensa**: el artista ya tiene uno (una página de Canva, en inglés). El orquestador lo reescribe y mejora en **español e inglés** con la identidad del sitio, y lo publica como PDF descargable más un ZIP de fotos y portadas en alta. La bio larga es un **borrador que el artista aprueba** antes de la Fase 6.
+- **Contacto**: Instagram `@supernobaconb` (se agrega también al pie) y un correo de prensa que el artista aún no da: `site.pressEmail` es opcional y, mientras falte, solo se muestra Instagram.
+- **Material del orquestador**: capturas en `web/public/proyectos/<id>/` (WebP ≤ 1600 px, ≤ 250 KB) y fotos en `web/public/fotos/`; los originales grandes se quedan en `web/materiales/` (ignorada por git).
+- **"Conectado con"** sale de una sola función y un solo componente, usados por la página de sencillo y la de proyecto. En la página del libro, las polaroids de "obras" solo muestran obras unidas al libro por un hilo (así los proyectos sin relación con BDUEM no aparecen ahí).
+
+| ID | Tarea | Quién | Depende de | Estado |
+|---|---|---|---|---|
+| F4-01 | Material: capturas de proyectos y fotos | Orquestador | — | ⬜ |
+| F4-02 | Datos: proyectos, videos, fotos, productos y contacto | Worker | — | ⬜ |
+| F4-03 | "Conectado con" compartido | Worker | — | ⬜ |
+| F4-04 | `/proyectos`: constelación Jabi y lista | Worker | F4-02 | ⬜ |
+| F4-05 | Visor de imágenes y `/videos`: videoclips y galería | Worker | F4-02 | ⬜ |
+| F4-06 | `/proyectos/[slug]`: detalle del proyecto | Worker | F4-01, F4-02, F4-03, F4-05 | ⬜ |
+| F4-07 | `/tienda` con links externos | Worker | F4-02 | ⬜ |
+| F4-08 | Biografía y kit de prensa (ES/EN) | Orquestador | F4-01 | ⬜ |
+| F4-09 | `/sobre-mi`: biografía, fotos, kit y contacto | Worker | F4-02, F4-05, F4-08 | ⬜ |
+| F4-10 | Verificación final de la fase | Orquestador | todas | ⬜ |
+
+**Orden y paralelo:** F4-02 y F4-03 en paralelo (no comparten archivos) mientras el orquestador hace F4-01. Después F4-04, F4-05 y F4-07 en paralelo. Luego F4-06 y F4-08 (orquestador) al mismo tiempo, F4-09 y al final F4-10. Solo un agente corre `npm run build` a la vez.
+
+### F4-01 — Material: capturas de proyectos y fotos
+- **Archivos:** `web/public/proyectos/<id>/` y `web/public/fotos/` (nuevos); originales en `web/materiales/proyectos/` y `web/materiales/fotos/`.
+- **Terminado cuando:**
+  - Cada proyecto tiene de 2 a 4 capturas reales: *Este sitio* (portada, lector y página de sencillo del sitio nuevo), AURA (capturas de su reporte de usabilidad), AeroVision (la app pública) y RailSense (resultados del repositorio).
+  - Las fotos del kit (retrato, farol, árbol, estatua) en WebP de hasta 1600 px, más el retrato en 2400 px para el kit.
+  - Cada imagen ≤ 250 KB (salvo las del kit) y con su ancho y alto anotados para `next/image`.
+
+### F4-02 — Datos: proyectos, videos, fotos, productos y contacto
+- **Archivos:** `web/src/types/content.ts`, `web/src/content/works.ts`, `web/src/content/threads.ts`, `web/src/content/projects.ts`, `videos.ts`, `photos.ts`, `products.ts` (nuevos), `web/src/content/index.ts`, `web/src/content/site.ts`.
+- **Terminado cuando:**
+  - Tipos `ProjectDetail` (tagline, párrafos, rol, logro opcional, stack, puntos clave, capturas con ancho/alto/alt, repo o "privado", demo, video), `Video` (título, URL de YouTube, obra ligada), `Photo` (src, ancho, alto, alt, origen) y `Product` (nombre, descripción, imagen, precio opcional, link externo, obra ligada).
+  - Obras nuevas en la constelación Jabi: `aura`, `diablos-aerovision` y `railsense`, con fecha, resumen, links y `href` `/proyectos/<id>`; *Este sitio* actualizado.
+  - Los tres videoclips, las fotos (Cloudinary del sitio viejo + kit) y el libro físico como producto.
+  - `site.ts`: Instagram en `social` y `pressEmail` opcional.
+  - Funciones de consulta: `getProjects()`, `getProjectDetail(id)`, `getVideos()`, `getPhotos()`, `getProducts()`.
+  - El cielo de la portada sigue bien con cuatro estrellas en Jabi (sin encimarse, también a 390 px).
+
+### F4-03 — "Conectado con" compartido
+- **Archivos:** `web/src/lib/connections.ts`, `web/src/components/works/Connections*` (nuevos), `web/src/components/music/ReleaseView.tsx`, `web/src/components/music/Release.module.css`, `web/src/components/era/BduemEra.tsx`.
+- **Terminado cuando:**
+  - `getConnections(work)` (pura) devuelve los hilos de una obra y sus canciones con su frase y enlace, para **todos** los tipos de hilo, incluido `construye` en los dos sentidos ("construido para el libro *Brillo de una Estrella Muerta*" / "su sitio y su lector: *Este sitio*"), sin nombrar eras.
+  - `<Connections work>` pinta la sección "Conectado con" con las variables `--era-*` (sirve en monocromo y en radiante) y no aparece si no hay hilos.
+  - La página de sencillo usa el componente sin cambiar cómo se ve (part3 → Parte 3 sigue igual).
+  - En la página del libro solo aparecen como obras las unidas al libro por un hilo.
+
+### F4-04 — `/proyectos`: constelación Jabi y lista
+- **Archivos:** `web/src/app/proyectos/page.tsx` (+ `page.module.css`), `web/src/components/projects/ProjectList*` (nuevo).
+- **Terminado cuando:**
+  - Encabezado "Proyectos" con la faceta "el que piensa", como `/musica`.
+  - La constelación Jabi sola (`<Sky only="jabi" />`) con sus estrellas enlazadas, y la lista de proyectos (en celular la lista primero).
+  - Cada proyecto: número, nombre, tagline, año, rol, logro (si tiene) y stack corto, con enlace a su página; la estrella oculta no aparece.
+  - Base radiante, accesible, sin scroll horizontal a 390 px.
+
+### F4-05 — Visor de imágenes y `/videos`: videoclips y galería
+- **Archivos:** `web/src/components/media/Lightbox*`, `web/src/components/videos/*` (nuevos), `web/src/app/videos/page.tsx` (+ `page.module.css`).
+- **Terminado cuando:**
+  - `Lightbox` reutilizable: abre una imagen grande en un diálogo modal (Escape, botón cerrar, flechas para pasar, foco atrapado y devuelto, resto de la página inerte, gesto en celular), con opción de mostrarla a color o en blanco y negro.
+  - `/videos` muestra los videoclips con la fachada de `YouTubeEmbed` (sin peticiones a YouTube antes del clic, salvo miniaturas), cada uno con su canción y enlace al sencillo.
+  - Galería de fotos en polaroids B/N con giro determinista; al tocar una se abre el visor.
+  - Base radiante, accesible, sin scroll horizontal a 390 px.
+
+### F4-06 — `/proyectos/[slug]`: detalle del proyecto
+- **Archivos:** `web/src/app/proyectos/[slug]/page.tsx`, `web/src/components/projects/ProjectView*` (nuevo).
+- **Terminado cuando:**
+  - Encabezado con nombre, tagline, año, rol y logro; botones a demo, video y repositorio (o "código privado").
+  - Descripción, puntos clave y stack.
+  - Capturas a color con marco fino; al tocarlas se abren en el `Lightbox` a color.
+  - "Conectado con" (F4-03) si tiene hilos; enlace de vuelta a Proyectos.
+  - Base radiante (ya no `EraTheme` de la era), 404 real en slugs inexistentes, metadatos, accesible y sin scroll horizontal a 390 px.
+
+### F4-07 — `/tienda` con links externos
+- **Archivos:** `web/src/app/tienda/page.tsx` (+ `page.module.css`), `web/src/components/shop/*` (nuevo).
+- **Terminado cuando:**
+  - Cada producto con imagen, nombre, descripción, precio solo si existe y "Comprar en …" que abre en pestaña nueva (con aviso para lector de pantalla).
+  - El libro físico enlaza también a leerlo en línea (`/libros/bduem`).
+  - Una línea discreta dice que vendrá más (discos, merch), sin "Próximamente" de relleno.
+  - Base radiante, accesible, sin scroll horizontal a 390 px.
+
+### F4-08 — Biografía y kit de prensa (ES/EN)
+- **Archivos:** `web/src/content/bio.ts` (nuevo), `web/public/prensa/` (nuevo).
+- **Terminado cuando:**
+  - Bio corta (una línea), media (un párrafo) y larga (4–6 párrafos) en español e inglés, a partir del kit actual, el plan y los datos verificados (libro, sencillos, proyectos y logros), sin cifras ni afirmaciones que no podamos sostener.
+  - `supernoba-kit-de-prensa.pdf` y `supernoba-press-kit.pdf` con la identidad del sitio (negro, estrella-brújula, Cinzel/Cormorant, fotos B/N): bio, lanzamientos, libro, fotos, links y contacto.
+  - `supernoba-fotos-prensa.zip` con el retrato y las portadas en alta y un archivo de créditos.
+  - Marcado como borrador hasta que el artista lo apruebe.
+
+### F4-09 — `/sobre-mi`: biografía, fotos, kit y contacto
+- **Archivos:** `web/src/app/sobre-mi/page.tsx` (+ `page.module.css`), `web/src/components/about/*` (nuevo), `web/src/components/layout/SiteFooter*` (ícono de Instagram).
+- **Terminado cuando:**
+  - Retrato en polaroid B/N, nombre con `StarWord`, la frase de las tres facetas y la bio larga en Cormorant.
+  - Las tres facetas (Jabi, noba, Supernoba) enlazan a Proyectos, Libros y Música.
+  - Algunas fotos más con el visor de F4-05.
+  - "Kit de prensa": descargas del PDF en español e inglés y del ZIP de fotos (con tamaño del archivo).
+  - Contacto: Instagram y, si existe `site.pressEmail`, el correo.
+  - Instagram en el pie del sitio. Base radiante, accesible, sin scroll horizontal a 390 px.
+
+### F4-10 — Verificación final de la fase
+- **Terminado cuando:** tipos, lint y build sin errores; en producción `/proyectos`, los cuatro proyectos, `/videos`, `/tienda` y `/sobre-mi` dan 200, un proyecto inexistente 404 y los PDF y el ZIP se descargan; antes de pulsar un video no hay peticiones a YouTube salvo miniaturas; ninguna página nombra eras; revisión en el navegador a 1440 y 390 px; el plan y este tablero actualizados.
+
+---
+
+## Fases siguientes (se detallan al empezar)
 
 ### Pase de diseño con materiales reales
 Cuando lleguen portadas, fotos y la estética de cada era (se adelanta si llegan antes): reemplazar portadas generadas y textos de relleno · ajustar el tema definitivo de cada era · revisar portada, cielo y páginas de obra con imágenes reales en escritorio y celular.
@@ -510,3 +615,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | — | Pedido del artista: la portada no debe dejar ver que viene una nueva era. Worker quitó del cielo el selector de eras, "Ver como lista" y la línea de tiempo (que mostraba una segunda franja), y borró `SkyList`, `Timeline` y `eraTimeline`. El orquestador hizo que la nebulosa viaje con un nombre neutro (`nebulosa-1`) en vez del id de su era. Se conserva la nebulosa con su señal. Verificado en el navegador a 1440 y 390 px y que el HTML de `/` no contiene "era-2". |
 | 2026-10-25 | — | Decisión del artista: las eras no se presentan como "eras" en el sitio, quedan implícitas en el mapa y la estética. Orquestador quitó "ERA · … · EN ÓRBITA" de la página del libro, "Era …" de la página del sencillo (ahora solo el libro, con enlace), "guiño a la era" → "guiño al libro", y borró la ruta `/eras/[slug]` (`/eras/bduem` y `/eras/era-2` dan 404). Verificado: ninguna página muestra la palabra "era" salvo el propio texto del libro. Plan e identidad visual actualizados. |
 | 2026-10-25 | F2-07 | El artista vio un error de Next en `/libros/bduem/leer/parte-N`: desajuste de hidratación cuando hay progreso guardado. `ReaderDataProvider` (fuera del `Suspense`) se hidrata antes que el lector y, al hidratar `ReaderShell`, el aviso "Continuar donde te quedaste" ya aparecía en el cliente y no en el servidor. El orquestador lo condicionó a `useHydrated`. Verificado en el navegador con progreso, preferencia de modo páginas y un resaltado guardados: sin errores en las 4 partes y "Continuar" lleva al punto guardado. ✅ |
+| 2026-10-25 | F4 | Artista: proyectos elegidos de su GitHub (AURA, Diablos AeroVision, RailSense, además de *Este sitio*), fotos del sitio viejo y de su kit de prensa, tienda solo con el libro físico (Amazon), kit de prensa a mejorar en español e inglés, contacto por Instagram y un correo que aún falta. Se detallan F4-01 a F4-10. |
