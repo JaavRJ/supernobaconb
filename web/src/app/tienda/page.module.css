@@ -1,0 +1,64 @@
+.page {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.header {
+  position: relative;
+  padding: clamp(2.5rem, 8vw, 5rem) 0 var(--space-4);
+  text-align: center;
+}
+
+/* Resplandor muy sutil blanco-cálido detrás del título, el único de la página */
+.header::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(90vw, 44rem);
+  height: 16rem;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 244, 222, 0.1),
+    rgba(242, 217, 166, 0.04) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.title {
+  position: relative;
+  margin: 0;
+  color: var(--era-fg);
+  font-family: var(--font-cinzel);
+  font-size: clamp(2.5rem, 9vw, 6rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.tagline {
+  position: relative;
+  margin: var(--space-4) 0 0;
+  color: var(--era-fg-muted);
+  font-family: var(--font-cormorant);
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  font-style: italic;
+}
+
+.products {
+  display: grid;
+  gap: clamp(3rem, 8vw, 6rem);
+  padding: var(--space-4) 0;
+}
+
+.more {
+  margin: clamp(3rem, 8vw, 5rem) 0 0;
+  color: var(--era-fg-muted);
+  font-family: var(--font-cormorant);
+  font-size: 1.125rem;
+  font-style: italic;
+  text-align: center;
+}
