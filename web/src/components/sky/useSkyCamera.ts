@@ -17,7 +17,10 @@ const SLACK = 0.08;
 const DRAG_THRESHOLD = 6;
 const BUTTON_STEP = 1.5;
 /** Duración del viaje entre constelaciones (debe coincidir con `data-cam-travel` en Sky.module.css) */
-const TRAVEL_MS = 1100;
+const TRAVEL_MS = 1200;
+/** Fracción del viaje en la que el zoom toca su punto más lejano, y cuánto se aleja respecto del menor zoom */
+const LIFT_AT = 0.35;
+const LIFT_ZOOM = 0.85;
 /** Con movimiento reducido no hay viaje: corte directo con un fundido corto */
 const CUT_MS = 300;
 
@@ -27,6 +30,8 @@ interface Camera {
   z: number;
 }
 
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 const clampNum = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
 /**
@@ -43,6 +48,7 @@ export function useSkyCamera(enabled: boolean) {
   const inertia = useRef(0);
   const traveling = useRef(false);
   const travelTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const travelRaf = useRef(0);
   const [zoomed, setZoomed] = useState(false);
 
   /** La escena visible (apaisada o vertical) */
@@ -52,18 +58,21 @@ export function useSkyCamera(enabled: boolean) {
   }, []);
 
   const apply = useCallback(
-    (animate = false) => {
+    (animate = false, free = false) => {
       const stage = stageRef.current;
       const scene = visibleScene();
       if (!stage || !scene) return;
       const c = cam.current;
       const w = scene.clientWidth;
       const h = scene.clientHeight;
-      c.z = clampNum(c.z, MIN_ZOOM, MAX_ZOOM);
-      const maxX = (w * (c.z - 1)) / 2 + w * SLACK;
-      const maxY = (h * (c.z - 1)) / 2 + h * SLACK;
-      c.x = clampNum(c.x, -maxX, maxX);
-      c.y = clampNum(c.y, -maxY, maxY);
+      // En pleno vuelo el zoom puede bajar de 1 al despegar y la cámara no se recorta
+      if (!free) {
+        c.z = clampNum(c.z, MIN_ZOOM, MAX_ZOOM);
+        const maxX = (w * (c.z - 1)) / 2 + w * SLACK;
+        const maxY = (h * (c.z - 1)) / 2 + h * SLACK;
+        c.x = clampNum(c.x, -maxX, maxX);
+        c.y = clampNum(c.y, -maxY, maxY);
+      }
       stage.toggleAttribute("data-cam-animate", animate);
       stage.style.setProperty("--cam-x", `${c.x.toFixed(1)}px`);
       stage.style.setProperty("--cam-y", `${c.y.toFixed(1)}px`);
@@ -112,7 +121,9 @@ export function useSkyCamera(enabled: boolean) {
   /** Corta un viaje en curso (sin avisar de la llegada) */
   const endTravel = useCallback(() => {
     clearTimeout(travelTimer.current);
+    cancelAnimationFrame(travelRaf.current);
     traveling.current = false;
+    stageRef.current?.style.removeProperty("--travel");
     stageRef.current?.removeAttribute("data-cam-travel");
     stageRef.current?.removeAttribute("data-cam-cut");
   }, []);
@@ -138,22 +149,48 @@ export function useSkyCamera(enabled: boolean) {
       pointers.current.clear();
       stage.removeAttribute("data-dragging");
       const c = cam.current;
+      const from = { ...c };
+      // El destino pasa por los mismos topes que cualquier posición de la cámara
       c.z = clampNum(z, MIN_ZOOM, MAX_ZOOM);
       c.x = -(fx - 0.5) * scene.clientWidth * c.z;
       c.y = -(fy - 0.5) * scene.clientHeight * c.z;
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      // Forzar un recálculo para que la animación de viaje reinicie aunque venga de otro viaje
-      void stage.offsetWidth;
-      stage.setAttribute(reduced ? "data-cam-cut" : "data-cam-travel", "");
-      traveling.current = true;
       apply(false);
-      travelTimer.current = setTimeout(
-        () => {
+      const to = { ...c };
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      traveling.current = true;
+      if (reduced) {
+        stage.setAttribute("data-cam-cut", "");
+        travelTimer.current = setTimeout(() => {
           endTravel();
           onArrive?.();
-        },
-        reduced ? CUT_MS : TRAVEL_MS + 60,
-      );
+        }, CUT_MS);
+        return;
+      }
+      cam.current = from;
+      stage.setAttribute("data-cam-travel", "");
+      const zLow = Math.min(from.z, to.z) * LIFT_ZOOM;
+      const start = performance.now();
+      const frame = (now: number) => {
+        const t = Math.min(1, (now - start) / TRAVEL_MS);
+        const e = easeInOutCubic(t);
+        const cur = cam.current;
+        cur.x = from.x + (to.x - from.x) * e;
+        cur.y = from.y + (to.y - from.y) * e;
+        // Primero se aleja (despegue) y luego se clava en el destino
+        cur.z =
+          t < LIFT_AT
+            ? from.z + (zLow - from.z) * easeOutCubic(t / LIFT_AT)
+            : zLow + (to.z - zLow) * easeInOutCubic((t - LIFT_AT) / (1 - LIFT_AT));
+        stage.style.setProperty("--travel", Math.sin(Math.PI * t).toFixed(3));
+        apply(false, true);
+        if (t < 1) {
+          travelRaf.current = requestAnimationFrame(frame);
+          return;
+        }
+        endTravel();
+        onArrive?.();
+      };
+      travelRaf.current = requestAnimationFrame(frame);
     },
     [apply, enabled, endTravel, visibleScene],
   );
@@ -212,6 +249,7 @@ export function useSkyCamera(enabled: boolean) {
       window.removeEventListener("resize", onResize);
       stopInertia();
       clearTimeout(travelTimer.current);
+      cancelAnimationFrame(travelRaf.current);
     };
   }, [apply, enabled]);
 

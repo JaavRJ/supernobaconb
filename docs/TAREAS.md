@@ -587,6 +587,12 @@ Pedido del artista tras probar MV-01: arrastrar y acercar sirve, pero se queda c
 - `/musica` (cielo `compact`) no cambia.
 **Terminado:** tipos y lint sin errores; los tres viajes, el regreso y el cambio entre constelaciones funcionan en escritorio y en celular (orientación vertical).
 
+### MV-05 — Área y viaje más naturales
+Ajuste del artista tras probar MV-04: el área con borde punteado y relleno gris se ve fea, y el efecto de viaje parece sobrepuesto.
+- **Área:** sin borde ni relleno plano. Al pasar el mouse la constelación se despierta con un aura difusa de su color (forma del área muy desenfocada, opacidad baja), sus líneas y estrellas brillan más y las demás bajan suave.
+- **Viaje:** sin estelas fijas al centro ni estirado del polvo. La cámara vuela con `requestAnimationFrame` con un arco de zoom (despega alejándose un poco y se clava en el destino); el polvo la sigue con paralaje exagerado durante el vuelo, así el campo de estrellas pasa en la dirección real del viaje. Las otras constelaciones se desvanecen durante el vuelo y, al llegar, las líneas de la constelación destino se trazan.
+**Terminado:** tipos y lint sin errores; movimiento reducido con corte directo.
+
 ### MV-03 — Revisión y verificación
 Reviewer sobre los dos diffs. El orquestador lo revisa en el navegador a 1440 y 390 px: arrastre, zoom, centrar, clic en estrella, nebulosa, scroll del hero, consola limpia y `/musica` sin cambios.
 

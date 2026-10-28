@@ -133,6 +133,8 @@ export function SkyInteractive({
   const [focus, setFocus] = useState<string | null>(null);
   // Constelación en la que ya se llegó (muestra el título grande)
   const [arrived, setArrived] = useState<string | null>(null);
+  // Constelación cuyas líneas se están trazando tras la llegada
+  const [tracing, setTracing] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
   const arrivalRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -205,6 +207,10 @@ export function SkyInteractive({
     setAnnouncement(`Viajando a ${areaName(id)}`);
     flyTo(target.fx, target.fy, target.z, () => {
       setArrived(id);
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        setTracing(id);
+        setTimeout(() => setTracing((cur) => (cur === id ? null : cur)), 1800);
+      }
       setAnnouncement(`Llegaste a ${areaName(id)}`);
     });
   }
@@ -334,6 +340,10 @@ export function SkyInteractive({
       !compact && focus === null && hot !== null && constellation !== hot;
     // Las estrellas solo se abren en el cielo de una constelación o dentro de la constelación en foco
     const starsLive = (constellation: string) => compact || (focus === constellation && arrived === constellation);
+    // Despierta la constelación resaltada en el mapa completo o la que está en foco
+    const awakeOf = (constellation: string) =>
+      !compact && (focus === null ? hot === constellation : focus === constellation);
+    let traceCount = 0;
     const areas = compact
       ? []
       : layout.labels.flatMap((l) => {
@@ -369,6 +379,9 @@ export function SkyInteractive({
           </desc>
 
           <defs>
+            <filter id={`${prefix}-aura-blur`} x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation={portrait ? 34 : 28} />
+            </filter>
             {Object.entries(constellationColors).map(([id, color]) => (
               <radialGradient key={id} id={`${prefix}-halo-${id}`}>
                 <stop offset="0%" stopColor={color} stopOpacity="0.9" />
@@ -427,14 +440,24 @@ export function SkyInteractive({
               })}
           </defs>
 
+          <g className={styles.auras} aria-hidden="true" filter={`url(#${prefix}-aura-blur)`}>
+            {areas.map((a) => (
+              <path
+                key={a.id}
+                className={classes(styles.aura, hot === a.id && focus === null && styles.auraOn)}
+                d={a.path}
+                fill={constellationColors[a.id]}
+              />
+            ))}
+          </g>
+
           <g className={styles.areas}>
             {areas.map((a) => {
               const current = focus === a.id;
               const path = (
                 <path
-                  className={classes(styles.area, hot === a.id && !current && styles.areaLit, current && styles.areaCurrent)}
+                  className={classes(styles.area, current && styles.areaCurrent)}
                   d={a.path}
-                  style={{ "--c": constellationColors[a.id] } as CSSProperties}
                 />
               );
               if (current) return <g key={a.id}>{path}</g>;
@@ -470,10 +493,16 @@ export function SkyInteractive({
           </g>
 
           <g className={styles.lines}>
-            {layout.lines.map((l) => (
+            {layout.lines.map((l) => {
+              const traceIndex = tracing === l.constellation ? traceCount++ : -1;
+              return (
               <line
                 key={`${l.from}-${l.to}`}
+                pathLength={1}
+                style={traceIndex >= 0 ? ({ "--i": traceIndex } as CSSProperties) : undefined}
                 className={classes(
+                  awakeOf(l.constellation) && styles.awake,
+                  traceIndex >= 0 && styles.trace,
                   (activeId !== null ? l.from !== activeId && l.to !== activeId : outOfFocus(l.constellation)) &&
                     styles.dim,
                   outOfHot(l.constellation) && styles.soft,
@@ -484,7 +513,8 @@ export function SkyInteractive({
                 x2={l.x2}
                 y2={l.y2}
               />
-            ))}
+              );
+            })}
           </g>
 
           <g className={styles.threads}>
@@ -580,6 +610,7 @@ export function SkyInteractive({
                       <circle
                         cx={s.x}
                         cy={s.y}
+                        className={styles.halo}
                         r={s.r * (3 + 4 * s.brightness)}
                         fill={`url(#${prefix}-halo-${s.constellation})`}
                         opacity={s.brightness}
@@ -604,6 +635,7 @@ export function SkyInteractive({
                     s.unreleased ? styles.unreleased : styles.star,
                     dim && styles.dim,
                     outOfHot(s.constellation) && styles.soft,
+                    awakeOf(s.constellation) && styles.awake,
                     !starsLive(s.constellation) && styles.inert,
                   )}
                   data-work-id={s.workId}
@@ -822,7 +854,6 @@ export function SkyInteractive({
           <>
             <div className={classes(styles.dust, styles.dustFar)} aria-hidden="true" />
             <div className={classes(styles.dust, styles.dustNear)} aria-hidden="true" />
-            <div className={styles.streaks} aria-hidden="true" />
           </>
         )}
         {!compact && arrivedLabel && (
