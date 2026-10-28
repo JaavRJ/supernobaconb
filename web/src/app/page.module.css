@@ -82,6 +82,9 @@
   padding: 0 var(--space-4) var(--space-4);
   overflow-x: visible;
   scroll-margin-top: var(--header-height);
+  /* Entra leve mientras el hero sale; sin JS (--hero-p sin definir) queda opaco y a tamaño completo */
+  opacity: clamp(0, calc(0.4 + var(--hero-p, 1) * 0.6), 1);
+  scale: calc(0.97 + var(--hero-p, 1) * 0.03);
 }
 
 .visuallyHidden {

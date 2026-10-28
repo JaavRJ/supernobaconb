@@ -8,6 +8,7 @@ import { coreVisualRadius, type SkyLayout, type SkyNebula, type SkyOrientation }
 import { THREAD_LABELS, THREAD_ORDER, type SkySignal, type SkyStarInfo } from "./meta";
 import { SignalPanel } from "./SignalPanel";
 import styles from "./Sky.module.css";
+import { useSkyCamera } from "./useSkyCamera";
 
 /** Cielo y nebulosas calculados para una orientación */
 export interface SkyVariant {
@@ -77,6 +78,8 @@ export function SkyInteractive({
   });
   const [openNebula, setOpenNebula] = useState<string | null>(null);
   const nebulaButtons = useRef(new Map<string, HTMLButtonElement>());
+  // El cielo completo se navega; el de una sola constelación se queda quieto
+  const { stageRef, sceneHandlers, zoomed, zoomIn, zoomOut, reset, reveal } = useSkyCamera(!compact);
 
   const activeId = hovered ?? focused ?? touched;
   const infoById = useMemo(() => new Map(starInfo.map((i) => [i.workId, i])), [starInfo]);
@@ -160,6 +163,8 @@ export function SkyInteractive({
     const top = fitsBelow || (above < 0 && below <= sceneHeight - above - cardHeight) ? below : above;
     const max = Math.max(0, sceneHeight - cardHeight);
     node.style.top = `${Math.min(max, Math.max(0, top))}px`;
+    // Con zoom la tarjeta se encoge hacia el lado de la estrella para no alejarse de ella
+    node.dataset.side = top === below ? "below" : "above";
   }
 
   /** Un SVG con sus estrellas, la tarjeta y las nebulosas; se llama una vez por orientación */
@@ -191,7 +196,7 @@ export function SkyInteractive({
     }
 
     return (
-      <>
+      <div className={styles.camera}>
         <svg
           className={styles.sky}
           viewBox={`0 0 ${width} ${height}`}
@@ -394,6 +399,7 @@ export function SkyInteractive({
                       }}
                       href={info.href}
                       tabIndex={0}
+                      draggable={false}
                       className={styles.link}
                       aria-label={info.ariaLabel}
                       data-sky-keep=""
@@ -405,7 +411,10 @@ export function SkyInteractive({
                       onMouseLeave={() => setHovered(null)}
                       onFocus={(e) => {
                         // Un clic de ratón no debe dejar la tarjeta fija
-                        if (e.currentTarget.matches(":focus-visible")) setFocused(s.workId);
+                        if (e.currentTarget.matches(":focus-visible")) {
+                          setFocused(s.workId);
+                          reveal(s.x / width, s.y / height);
+                        }
                       }}
                       onBlur={() => setFocused((cur) => (cur === s.workId ? null : cur))}
                       onKeyDown={(e) => {
@@ -561,13 +570,23 @@ export function SkyInteractive({
             </div>
           );
         })}
-      </>
+      </div>
     );
   }
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.stage}>
+      <div
+        ref={stageRef}
+        className={classes(styles.stage, !compact && styles.navigable)}
+        data-zoomed={zoomed || undefined}
+      >
+        {!compact && (
+          <>
+            <div className={classes(styles.dust, styles.dustFar)} aria-hidden="true" />
+            <div className={classes(styles.dust, styles.dustNear)} aria-hidden="true" />
+          </>
+        )}
         {ORIENTATIONS.map((orientation) => (
           <div
             key={orientation}
@@ -576,10 +595,32 @@ export function SkyInteractive({
               orientation === "portrait" ? styles.scenePortrait : styles.sceneLandscape,
             )}
             data-orientation={orientation}
+            {...sceneHandlers}
           >
             {renderScene(orientation)}
           </div>
         ))}
+        {!compact && (
+          <div className={styles.controls}>
+            <span className={styles.hint} aria-hidden="true">
+              arrastra para navegar
+            </span>
+            <button type="button" className={styles.control} onClick={zoomOut} aria-label="Alejar el cielo">
+              −
+            </button>
+            <button type="button" className={styles.control} onClick={zoomIn} aria-label="Acercar el cielo">
+              +
+            </button>
+            <button
+              type="button"
+              className={classes(styles.control, styles.controlWide)}
+              onClick={reset}
+              aria-label="Volver a ver todo el cielo"
+            >
+              centrar
+            </button>
+          </div>
+        )}
       </div>
 
       {!compact && presentKinds.length > 0 && (

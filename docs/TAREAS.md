@@ -546,6 +546,40 @@ Referencia visual obligatoria para el lector: la sección "Color de la era BDUEM
 
 ---
 
+## Pase de movimiento — el cielo se navega y SUPERNOBA se vuelve cielo
+
+Pedido del artista (2026-10-28), con ethercoded.com como referencia de sensación, no de peso: **sin three.js ni modelos 3D**, solo CSS, SVG y Pointer Events. Todo el movimiento se apaga con `prefers-reduced-motion: reduce`; sin JavaScript la página se ve completa y quieta.
+
+| Tarea | Estado | Archivos | Depende de |
+|---|---|---|---|
+| MV-01 Cielo navegable | 🔨 | `web/src/components/sky/useSkyCamera.ts`, `SkyInteractive.tsx`, `Sky.module.css` | — |
+| MV-02 SUPERNOBA vivo y que se vuelve cielo | 🔨 | `web/src/components/brand/StarWord.tsx` + `.module.css`, `web/src/components/home/HeroMotion.tsx` (nuevo), `web/src/app/page.tsx` + `page.module.css` | — |
+| MV-03 Revisión y verificación | ⬜ | — | MV-01, MV-02 |
+
+### MV-01 — Cielo navegable
+El orquestador ya escribió `useSkyCamera.ts` (cámara con `--cam-x/--cam-y/--cam-z` en el escenario, arrastre con inercia, pellizco, ctrl + rueda, botones, `reveal` al enfocar con teclado) y lo conectó en `SkyInteractive.tsx` (envoltura `.camera`, capas `.dust`, controles). Falta el CSS y pulir:
+- `.camera`: `position: relative`, `transform: translate(var(--cam-x), var(--cam-y)) scale(var(--cam-z))`, origen al centro; transición de 0.45 s solo con `[data-cam-animate]` en el escenario.
+- `.navigable .scene`: `cursor: grab` (`grabbing` al arrastrar), `touch-action: pan-y`; con `[data-zoomed]` → `touch-action: none`. Sin selección de texto al arrastrar.
+- `.dust` (dos capas, lejana y cercana): puntos y cuadritos pequeños (SVG en data URI repetido, guiño a ethercoded), `inset` negativo para que no se vean bordes, paralaje con la cámara (lejana ×0.3, cercana ×0.6 de traslado y zoom amortiguado) y deriva lenta propia.
+- La tarjeta de la estrella no crece con el zoom: `scale: calc(1 / var(--cam-z, 1))`, `transform-origin: left top`.
+- `.controls`: abajo a la derecha del cielo, botones píldora con texto en mayúsculas espaciado (`--font-ui`), foco visible; `.hint` "arrastra para navegar" sutil, oculto en celular si estorba.
+- Sin regresiones: un clic o toque en una estrella sigue abriendo/activando como antes; arrastrar desde una estrella no navega; la nebulosa y su señal siguen funcionando; `/musica` (cielo `compact`) no cambia.
+**Terminado:** tipos y lint sin errores; el cielo se mueve, acerca, aleja y centra; con movimiento reducido no hay deriva ni transición.
+
+### MV-02 — SUPERNOBA vivo y que se vuelve cielo
+- `StarWord` con prop opcional `letters`: cada carácter visible en `<span class="letter">` con `--i` y un desvío pseudoaleatorio determinista `--dx`, `--dy` (sin `Math.random`, para no romper la hidratación). La estrella-brújula también es una letra. Sin `letters` el marcado queda igual (se usa en otras páginas).
+- **Al cargar:** las letras se arman desde puntos dispersos (desenfoque y opacidad, escalonado por `--i`), ~1.2 s.
+- **En reposo:** un destello lento recorre las letras cada pocos segundos y la estrella gira o pulsa muy despacio. Nada que distraiga al leer.
+- **Al bajar:** `HeroMotion` (cliente, sin dependencias) escribe `--hero-p` (0 → 1 mientras el hero sale de la pantalla) en `document.documentElement` con `requestAnimationFrame`. Cada letra se encoge, se desenfoca y se apaga mientras un punto de luz aparece en su centro y viaja hacia abajo y afuera, escalonado: el nombre se deshace en estrellas que caen al cielo. La estrella de la "O" baja hacia el cielo y es la última en irse. El cielo entra con una escala y opacidad leves ligadas a `--hero-p`.
+- El valor por defecto deja todo visible: si no corre el JS, el nombre está armado y el cielo opaco.
+- Lector de pantalla: sigue leyendo "SUPERNOBA" una vez.
+**Terminado:** tipos y lint sin errores; sin desajuste de hidratación; con movimiento reducido el nombre está quieto y completo.
+
+### MV-03 — Revisión y verificación
+Reviewer sobre los dos diffs. El orquestador lo revisa en el navegador a 1440 y 390 px: arrastre, zoom, centrar, clic en estrella, nebulosa, scroll del hero, consola limpia y `/musica` sin cambios.
+
+---
+
 ## Fases siguientes (se detallan al empezar)
 
 ### Pase de diseño con materiales reales

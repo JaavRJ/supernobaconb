@@ -321,6 +321,184 @@
   margin-inline: auto;
 }
 
+/* ---- Cámara del cielo ---- */
+
+/* El hook escribe --cam-x, --cam-y y --cam-z en el escenario */
+.camera {
+  position: relative;
+  transform-origin: center;
+  transform: translate(var(--cam-x, 0px), var(--cam-y, 0px)) scale(var(--cam-z, 1));
+}
+
+.stage[data-cam-animate] .camera,
+.stage[data-cam-animate] .dust {
+  transition: transform 0.45s ease;
+}
+
+.navigable .scene {
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.navigable[data-zoomed] .scene {
+  touch-action: none;
+}
+
+.navigable[data-dragging] .scene,
+.navigable[data-dragging] .scene * {
+  cursor: grabbing;
+}
+
+.navigable .link {
+  -webkit-user-drag: none;
+}
+
+/* Que la tarjeta y la señal conserven su tamaño al acercar; la tarjeta crece desde el lado
+   más cercano a la estrella */
+.navigable .card {
+  scale: calc(1 / var(--cam-z, 1));
+  transform-origin: left top;
+}
+
+.navigable .card[data-side="above"] {
+  transform-origin: left bottom;
+}
+
+.navigable .signal {
+  scale: calc(1 / var(--cam-z, 1));
+  transform-origin: center top;
+  touch-action: pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: auto;
+}
+
+/* Polvo de fondo: dos capas con paralaje (más lejos, menos se mueve) y deriva propia.
+   `translate` es la deriva y `transform` la cámara, así no se pisan */
+.stage > .scene {
+  z-index: 1;
+}
+
+.dust {
+  position: absolute;
+  z-index: 0;
+  inset: -80% -60%;
+  pointer-events: none;
+  background-repeat: repeat;
+  opacity: 0.55;
+}
+
+.dustFar {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='%23eef0f6'%3E%3Ccircle cx='22' cy='38' r='.9'/%3E%3Ccircle cx='96' cy='12' r='.7'/%3E%3Ccircle cx='170' cy='64' r='1'/%3E%3Ccircle cx='54' cy='120' r='.7'/%3E%3Ccircle cx='132' cy='150' r='.9'/%3E%3Ccircle cx='214' cy='132' r='.7'/%3E%3Ccircle cx='80' cy='208' r='1'/%3E%3Ccircle cx='190' cy='214' r='.7'/%3E%3Crect x='112' y='84' width='1.6' height='1.6'/%3E%3Crect x='28' y='186' width='1.6' height='1.6'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  opacity: 0.4;
+  transform: translate(calc(var(--cam-x, 0px) * 0.3), calc(var(--cam-y, 0px) * 0.3))
+    scale(calc(1 + (var(--cam-z, 1) - 1) * 0.15));
+  animation: dust-drift-far 120s ease-in-out infinite alternate;
+}
+
+.dustNear {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360'%3E%3Cg fill='%23f2d9a6'%3E%3Ccircle cx='48' cy='70' r='1.4'/%3E%3Ccircle cx='250' cy='40' r='1.1'/%3E%3Ccircle cx='160' cy='200' r='1.5'/%3E%3Ccircle cx='320' cy='250' r='1.1'/%3E%3Crect x='110' y='110' width='2.5' height='2.5'/%3E%3Crect x='280' y='150' width='2' height='2'/%3E%3Crect x='60' y='290' width='2.5' height='2.5'/%3E%3Crect x='210' y='320' width='2' height='2'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 360px 360px;
+  opacity: 0.5;
+  transform: translate(calc(var(--cam-x, 0px) * 0.6), calc(var(--cam-y, 0px) * 0.6))
+    scale(calc(1 + (var(--cam-z, 1) - 1) * 0.3));
+  animation: dust-drift-near 80s ease-in-out infinite alternate;
+}
+
+@keyframes dust-drift-far {
+  to {
+    translate: 36px 18px;
+  }
+}
+
+@keyframes dust-drift-near {
+  to {
+    translate: -60px 30px;
+  }
+}
+
+.controls {
+  position: absolute;
+  z-index: 3;
+  bottom: 3rem;
+  right: max(1rem, calc((100% - 70rem) / 2));
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+}
+
+.hint {
+  margin-right: 0.5rem;
+  color: var(--era-fg-muted);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.control {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--era-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--era-bg) 70%, transparent);
+  color: var(--era-fg);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.control:hover {
+  border-color: var(--era-accent);
+}
+
+.control:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+.controlWide {
+  padding-inline: 1rem;
+}
+
+@media (pointer: coarse) {
+  .control {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .hint {
+    display: none;
+  }
+
+  .controls {
+    bottom: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dust {
+    animation: none;
+  }
+
+  .stage[data-cam-animate] .camera,
+  .stage[data-cam-animate] .dust {
+    transition: none;
+  }
+}
+
 /* ---- Nebulosa ---- */
 
 .nebulaWrap {

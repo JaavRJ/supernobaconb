@@ -35,3 +35,105 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/*
+ * Modo `letters`. Dos capas por letra para que no choquen las transformaciones:
+ * .letter lleva la caída ligada al scroll (--hero-p la escribe HeroMotion; sin JS vale 0 y todo se ve armado)
+ * .glyph lleva la entrada, el destello en reposo y el encogerse/desenfocarse al bajar.
+ */
+.letter {
+  --lp: clamp(0, calc(var(--hero-p, 0) * 1.6 - var(--i) * 0.06), 1);
+  --fall: 1.1em;
+  position: relative;
+  display: inline-block;
+  transform: translateY(calc(var(--lp) * var(--fall)));
+}
+
+/* La estrella de la "O" es la última en deshacerse y la que más baja, hacia el cielo */
+.starLetter {
+  --lp: clamp(0, calc(var(--hero-p, 0) * 1.6 - 0.58), 1);
+  --fall: 3.2em;
+}
+
+.glyph {
+  display: inline-block;
+  opacity: clamp(0, calc(1 - var(--lp) * 1.5), 1);
+  filter: blur(calc(var(--lp) * 0.12em));
+  scale: calc(1 - var(--lp) * 0.7);
+  animation:
+    assemble 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i) * 70ms) backwards,
+    shimmer 9s ease-in-out calc(2.2s + var(--i) * 0.16s) infinite;
+}
+
+.starLetter .glyph {
+  animation:
+    assemble 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i) * 70ms) backwards,
+    pulse 7s ease-in-out 2s infinite;
+}
+
+.starLetter .star {
+  animation: spin 140s linear infinite;
+}
+
+/* Punto de luz: nace en el centro de la letra y viaja hacia abajo y afuera */
+.letter::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.07em;
+  height: 0.07em;
+  border-radius: 50%;
+  background: var(--era-accent, currentColor);
+  box-shadow: 0 0 0.25em 0.08em var(--era-accent, currentColor);
+  opacity: clamp(0, min(calc(var(--lp) * 5), calc((1 - var(--lp)) * 2.5)), 1);
+  transform: translate(
+    calc(-50% + var(--dx) * var(--lp) * 1.5),
+    calc(-50% + var(--lp) * 1.6em)
+  );
+  pointer-events: none;
+}
+
+@keyframes assemble {
+  from {
+    opacity: 0;
+    filter: blur(0.18em);
+    translate: var(--dx) var(--dy);
+    scale: 0.4;
+  }
+}
+
+@keyframes shimmer {
+  0%,
+  12%,
+  100% {
+    text-shadow: none;
+  }
+  5% {
+    text-shadow: 0 0 0.18em rgba(255, 244, 222, 0.85);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyph,
+  .starLetter .glyph,
+  .starLetter .star {
+    animation: none;
+  }
+}

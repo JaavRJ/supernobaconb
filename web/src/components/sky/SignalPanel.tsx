@@ -75,7 +75,7 @@ export function SignalPanel({ id, signal, style, triggerId, onClose }: SignalPan
   }, [onClose, triggerId]);
 
   return (
-    <div ref={panel} id={id} className={styles.signal} style={style}>
+    <div ref={panel} id={id} className={styles.signal} style={style} data-nopan="">
       <p className={styles.signalTitle}>Transmisión interceptada</p>
       <div className={styles.signalBody}>
         {!signal && <p className={styles.signalText}>Sin señal por ahora.</p>}
