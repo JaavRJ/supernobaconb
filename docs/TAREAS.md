@@ -552,9 +552,11 @@ Pedido del artista (2026-10-28), con ethercoded.com como referencia de sensació
 
 | Tarea | Estado | Archivos | Depende de |
 |---|---|---|---|
-| MV-01 Cielo navegable | 🔨 | `web/src/components/sky/useSkyCamera.ts`, `SkyInteractive.tsx`, `Sky.module.css` | — |
+| MV-01 Cielo navegable | ✅ | `web/src/components/sky/useSkyCamera.ts`, `SkyInteractive.tsx`, `Sky.module.css` | — |
 | MV-02 SUPERNOBA vivo y que se vuelve cielo | 🔨 | `web/src/components/brand/StarWord.tsx` + `.module.css`, `web/src/components/home/HeroMotion.tsx` (nuevo), `web/src/app/page.tsx` + `page.module.css` | — |
-| MV-04 Viajar a una constelación | 🔨 | `web/src/components/sky/` | MV-01 |
+| MV-04 Viajar a una constelación | ✅ | `web/src/components/sky/` | MV-01 |
+| MV-05 Área y viaje más naturales | ✅ | `web/src/components/sky/` | MV-04 |
+| MV-06 Cámara de viaje natural | 🔨 | `web/src/components/sky/useSkyCamera.ts`, `SkyInteractive.tsx`, `Sky.module.css` | MV-05 |
 | MV-03 Revisión y verificación | ⬜ | — | MV-01, MV-02, MV-04 |
 
 ### MV-01 — Cielo navegable
@@ -592,6 +594,15 @@ Ajuste del artista tras probar MV-04: el área con borde punteado y relleno gris
 - **Área:** sin borde ni relleno plano. Al pasar el mouse la constelación se despierta con un aura difusa de su color (forma del área muy desenfocada, opacidad baja), sus líneas y estrellas brillan más y las demás bajan suave.
 - **Viaje:** sin estelas fijas al centro ni estirado del polvo. La cámara vuela con `requestAnimationFrame` con un arco de zoom (despega alejándose un poco y se clava en el destino); el polvo la sigue con paralaje exagerado durante el vuelo, así el campo de estrellas pasa en la dirección real del viaje. Las otras constelaciones se desvanecen durante el vuelo y, al llegar, las líneas de la constelación destino se trazan.
 **Terminado:** tipos y lint sin errores; movimiento reducido con corte directo.
+
+### MV-06 — Cámara de viaje natural
+Ajuste del artista tras probar MV-05: le gusta, pero el movimiento de la cámara se siente raro. Causa: `flyTo` interpola `x`, `y` (píxeles ya escalados por el zoom) y `z` por separado, con dos tramos de zoom pegados en `LIFT_AT`. Así el punto que mira la cámara se desvía y hay un quiebre a un tercio del vuelo.
+- **Interpolar lo que se ve:** interpolar el **punto mirado** en fracciones de la escena (`fx`, `fy`, que se derivan de `x/(w·z)`) y el zoom en **escala logarítmica**; recalcular `x`, `y` a partir de ellos en cada cuadro. Así el centro avanza en línea recta y el zoom se siente parejo.
+- **Arco de una sola pieza:** el alejamiento es una curva suave y continua (p. ej. `log z = lerp(log z0, log z1, e) − A·sin(π·e)`), con `A` proporcional a la distancia recorrida (en viajes cortos casi no se aleja; en largos, un poco más; tope moderado). Nada de dos tramos.
+- **Ritmo:** una sola curva de aceleración suave (inicio y llegada lentos, sin arranque brusco: p. ej. easeInOutSine o una cúbica suavizada). La duración depende de la distancia (~0.9 s a ~1.5 s). La variable `--travel` y el CSS que dependa de la duración deben seguir sincronizados.
+- **Lo demás igual:** interrumpir, regresar con Escape o "← mapa completo", cambiar de constelación y movimiento reducido (corte directo) funcionan como hoy.
+- Incluye los detalles pendientes de la revisión de MV-05: el `setTimeout` del trazado en un ref (se limpia al iniciar otro viaje, al llegar y al desmontar), `t = Math.max(0, …)` en el cuadro, el botón "centrar" ignora el clic durante un viaje, y el filtro de desenfoque solo en el aura activa.
+**Terminado:** tipos y lint sin errores; el centro de la vista viaja en línea recta sin desvíos ni quiebres.
 
 ### MV-03 — Revisión y verificación
 Reviewer sobre los dos diffs. El orquestador lo revisa en el navegador a 1440 y 390 px: arrastre, zoom, centrar, clic en estrella, nebulosa, scroll del hero, consola limpia y `/musica` sin cambios.

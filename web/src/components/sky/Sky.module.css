@@ -590,7 +590,7 @@
 .stage[data-cam-travel] .labels text,
 .stage[data-cam-travel] .halo,
 .stage[data-cam-travel] .nebulaWrap {
-  transition-duration: 1.2s;
+  transition-duration: var(--travel-ms, 1200ms);
 }
 
 /* Al llegar, las líneas de la constelación se trazan una tras otra. Con pathLength=1 el largo es 1;

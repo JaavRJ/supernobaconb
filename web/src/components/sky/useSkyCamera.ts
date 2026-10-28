@@ -16,11 +16,8 @@ const SLACK = 0.08;
 /** Píxeles que hay que mover antes de que un arrastre deje de ser un clic */
 const DRAG_THRESHOLD = 6;
 const BUTTON_STEP = 1.5;
-/** Duración del viaje entre constelaciones (debe coincidir con `data-cam-travel` en Sky.module.css) */
-const TRAVEL_MS = 1200;
-/** Fracción del viaje en la que el zoom toca su punto más lejano, y cuánto se aleja respecto del menor zoom */
-const LIFT_AT = 0.35;
-const LIFT_ZOOM = 0.85;
+/** Tope del alejamiento a mitad del viaje, en logaritmo natural del zoom */
+const MAX_LIFT = 0.35;
 /** Con movimiento reducido no hay viaje: corte directo con un fundido corto */
 const CUT_MS = 300;
 
@@ -30,8 +27,7 @@ interface Camera {
   z: number;
 }
 
-const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+const easeInOutSine = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
 const clampNum = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
 /**
@@ -124,6 +120,7 @@ export function useSkyCamera(enabled: boolean) {
     cancelAnimationFrame(travelRaf.current);
     traveling.current = false;
     stageRef.current?.style.removeProperty("--travel");
+    stageRef.current?.style.removeProperty("--travel-ms");
     stageRef.current?.removeAttribute("data-cam-travel");
     stageRef.current?.removeAttribute("data-cam-cut");
   }, []);
@@ -168,19 +165,28 @@ export function useSkyCamera(enabled: boolean) {
       }
       cam.current = from;
       stage.setAttribute("data-cam-travel", "");
-      const zLow = Math.min(from.z, to.z) * LIFT_ZOOM;
+      const w = scene.clientWidth;
+      const h = scene.clientHeight;
+      // Se interpola lo que se ve (el punto mirado y el zoom en escala logarítmica), no los píxeles
+      const fx0 = 0.5 - from.x / (w * from.z);
+      const fy0 = 0.5 - from.y / (h * from.z);
+      const fx1 = 0.5 - to.x / (w * to.z);
+      const fy1 = 0.5 - to.y / (h * to.z);
+      const lz0 = Math.log(from.z);
+      const lz1 = Math.log(to.z);
+      const dist = Math.hypot(fx1 - fx0, fy1 - fy0);
+      // Cuanto más lejos el destino, más se aleja la cámara a mitad del vuelo
+      const lift = Math.min(MAX_LIFT, dist * 0.6);
+      const duration = clampNum(900 + dist * 900, 900, 1500);
+      stage.style.setProperty("--travel-ms", `${Math.round(duration)}ms`);
       const start = performance.now();
       const frame = (now: number) => {
-        const t = Math.min(1, (now - start) / TRAVEL_MS);
-        const e = easeInOutCubic(t);
+        const t = Math.max(0, Math.min(1, (now - start) / duration));
+        const e = easeInOutSine(t);
         const cur = cam.current;
-        cur.x = from.x + (to.x - from.x) * e;
-        cur.y = from.y + (to.y - from.y) * e;
-        // Primero se aleja (despegue) y luego se clava en el destino
-        cur.z =
-          t < LIFT_AT
-            ? from.z + (zLow - from.z) * easeOutCubic(t / LIFT_AT)
-            : zLow + (to.z - zLow) * easeInOutCubic((t - LIFT_AT) / (1 - LIFT_AT));
+        cur.z = Math.exp(lz0 + (lz1 - lz0) * e - lift * Math.sin(Math.PI * e));
+        cur.x = -(fx0 + (fx1 - fx0) * e - 0.5) * w * cur.z;
+        cur.y = -(fy0 + (fy1 - fy0) * e - 0.5) * h * cur.z;
         stage.style.setProperty("--travel", Math.sin(Math.PI * t).toFixed(3));
         apply(false, true);
         if (t < 1) {

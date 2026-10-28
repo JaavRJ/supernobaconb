@@ -129,6 +129,9 @@ export function SkyInteractive({
   const nebulaButtons = useRef(new Map<string, HTMLButtonElement>());
   // El cielo completo se navega; el de una sola constelación se queda quieto
   const { stageRef, sceneHandlers, zoomed, zoomIn, zoomOut, reset, reveal, flyTo, frameTo, isTraveling } = useSkyCamera(!compact);
+  // Temporizador que apaga el trazado de líneas tras la llegada
+  const tracingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(tracingTimer.current), []);
   // Constelación a la que se viaja o en la que se está; null es el mapa completo
   const [focus, setFocus] = useState<string | null>(null);
   // Constelación en la que ya se llegó (muestra el título grande)
@@ -140,6 +143,8 @@ export function SkyInteractive({
   const titleRef = useRef<HTMLHeadingElement>(null);
   // Área resaltada (por ratón o teclado) en el mapa completo
   const [hot, setHot] = useState<string | null>(null);
+  /** La última aura encendida conserva el desenfoque mientras se apaga */
+  const [lastHot, setLastHot] = useState<string | null>(null);
   const areaRefs = useRef(new Map<string, SVGGElement>());
 
   const activeId = hovered ?? focused ?? touched;
@@ -198,6 +203,8 @@ export function SkyInteractive({
     if (compact || id === focus || isTraveling()) return;
     const target = targetFor(id);
     if (!target) return;
+    clearTimeout(tracingTimer.current);
+    setTracing(null);
     setFocus(id);
     setArrived(null);
     setTouched(null);
@@ -209,7 +216,8 @@ export function SkyInteractive({
       setArrived(id);
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         setTracing(id);
-        setTimeout(() => setTracing((cur) => (cur === id ? null : cur)), 1800);
+        clearTimeout(tracingTimer.current);
+        tracingTimer.current = setTimeout(() => setTracing((cur) => (cur === id ? null : cur)), 1800);
       }
       setAnnouncement(`Llegaste a ${areaName(id)}`);
     });
@@ -440,15 +448,19 @@ export function SkyInteractive({
               })}
           </defs>
 
-          <g className={styles.auras} aria-hidden="true" filter={`url(#${prefix}-aura-blur)`}>
-            {areas.map((a) => (
-              <path
-                key={a.id}
-                className={classes(styles.aura, hot === a.id && focus === null && styles.auraOn)}
-                d={a.path}
-                fill={constellationColors[a.id]}
-              />
-            ))}
+          <g className={styles.auras} aria-hidden="true">
+            {areas.map((a) => {
+              const on = hot === a.id && focus === null;
+              return (
+                <path
+                  key={a.id}
+                  className={classes(styles.aura, on && styles.auraOn)}
+                  d={a.path}
+                  fill={constellationColors[a.id]}
+                  filter={a.id === lastHot ? `url(#${prefix}-aura-blur)` : undefined}
+                />
+              );
+            })}
           </g>
 
           <g className={styles.areas}>
@@ -479,10 +491,15 @@ export function SkyInteractive({
                     e.preventDefault();
                     travelTo(a.id);
                   }}
-                  onMouseEnter={() => setHot(a.id)}
+                  onMouseEnter={() => {
+                    setHot(a.id);
+                    setLastHot(a.id);
+                  }}
                   onMouseLeave={() => setHot((cur) => (cur === a.id ? null : cur))}
                   onFocus={(e) => {
-                    if (e.currentTarget.matches(":focus-visible")) setHot(a.id);
+                    if (!e.currentTarget.matches(":focus-visible")) return;
+                    setHot(a.id);
+                    setLastHot(a.id);
                   }}
                   onBlur={() => setHot((cur) => (cur === a.id ? null : cur))}
                 >
@@ -894,7 +911,11 @@ export function SkyInteractive({
             <button
               type="button"
               className={classes(styles.control, styles.controlWide)}
-              onClick={focus ? goHome : reset}
+              onClick={() => {
+                if (isTraveling()) return;
+                if (focus) goHome();
+                else reset();
+              }}
               aria-label="Volver a ver todo el cielo"
             >
               centrar
