@@ -16,6 +16,10 @@ const SLACK = 0.08;
 /** Píxeles que hay que mover antes de que un arrastre deje de ser un clic */
 const DRAG_THRESHOLD = 6;
 const BUTTON_STEP = 1.5;
+/** Duración del viaje entre constelaciones (debe coincidir con `data-cam-travel` en Sky.module.css) */
+const TRAVEL_MS = 1100;
+/** Con movimiento reducido no hay viaje: corte directo con un fundido corto */
+const CUT_MS = 300;
 
 interface Camera {
   x: number;
@@ -37,6 +41,8 @@ export function useSkyCamera(enabled: boolean) {
   const drag = useRef({ moved: false, startX: 0, startY: 0, pinch: 0, vx: 0, vy: 0, t: 0 });
   const suppressClick = useRef(false);
   const inertia = useRef(0);
+  const traveling = useRef(false);
+  const travelTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [zoomed, setZoomed] = useState(false);
 
   /** La escena visible (apaisada o vertical) */
@@ -70,6 +76,7 @@ export function useSkyCamera(enabled: boolean) {
   /** Acerca o aleja manteniendo fijo el punto (px, py), relativo al centro de la escena */
   const zoomAt = useCallback(
     (factor: number, px = 0, py = 0, animate = false) => {
+      if (traveling.current) return;
       const c = cam.current;
       const z = clampNum(c.z * factor, MIN_ZOOM, MAX_ZOOM);
       const ratio = z / c.z;
@@ -85,17 +92,77 @@ export function useSkyCamera(enabled: boolean) {
 
   const zoomIn = useCallback(() => zoomAt(BUTTON_STEP, 0, 0, true), [zoomAt]);
   const zoomOut = useCallback(() => zoomAt(1 / BUTTON_STEP, 0, 0, true), [zoomAt]);
+
+  /** Coloca la cámara en (fx, fy, z) sin animar; sirve para reencuadrar tras un cambio de tamaño */
+  const frameTo = useCallback(
+    (fx: number, fy: number, z: number) => {
+      const scene = visibleScene();
+      if (!enabled || !scene || traveling.current) return;
+      const c = cam.current;
+      c.z = clampNum(z, MIN_ZOOM, MAX_ZOOM);
+      c.x = -(fx - 0.5) * scene.clientWidth * c.z;
+      c.y = -(fy - 0.5) * scene.clientHeight * c.z;
+      apply(false);
+    },
+    [apply, enabled, visibleScene],
+  );
+
+  const isTraveling = useCallback(() => traveling.current, []);
+
+  /** Corta un viaje en curso (sin avisar de la llegada) */
+  const endTravel = useCallback(() => {
+    clearTimeout(travelTimer.current);
+    traveling.current = false;
+    stageRef.current?.removeAttribute("data-cam-travel");
+    stageRef.current?.removeAttribute("data-cam-cut");
+  }, []);
+
   const reset = useCallback(() => {
     stopInertia();
+    endTravel();
     cam.current = { x: 0, y: 0, z: 1 };
     apply(true);
-  }, [apply]);
+  }, [apply, endTravel]);
+
+  /**
+   * Viaja hasta el punto (fx, fy), en fracciones de la escena (0–1), con zoom `z`.
+   * `onArrive` se llama al terminar, salvo que otro viaje o `reset` lo interrumpa.
+   */
+  const flyTo = useCallback(
+    (fx: number, fy: number, z: number, onArrive?: () => void) => {
+      const stage = stageRef.current;
+      const scene = visibleScene();
+      if (!enabled || !stage || !scene) return;
+      stopInertia();
+      endTravel();
+      pointers.current.clear();
+      stage.removeAttribute("data-dragging");
+      const c = cam.current;
+      c.z = clampNum(z, MIN_ZOOM, MAX_ZOOM);
+      c.x = -(fx - 0.5) * scene.clientWidth * c.z;
+      c.y = -(fy - 0.5) * scene.clientHeight * c.z;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // Forzar un recálculo para que la animación de viaje reinicie aunque venga de otro viaje
+      void stage.offsetWidth;
+      stage.setAttribute(reduced ? "data-cam-cut" : "data-cam-travel", "");
+      traveling.current = true;
+      apply(false);
+      travelTimer.current = setTimeout(
+        () => {
+          endTravel();
+          onArrive?.();
+        },
+        reduced ? CUT_MS : TRAVEL_MS + 60,
+      );
+    },
+    [apply, enabled, endTravel, visibleScene],
+  );
 
   /** Lleva a la vista un punto dado en fracciones de la escena (0–1), si quedó fuera */
   const reveal = useCallback(
     (fx: number, fy: number) => {
       const scene = visibleScene();
-      if (!enabled || !scene) return;
+      if (!enabled || !scene || traveling.current) return;
       const c = cam.current;
       const px = (fx - 0.5) * scene.clientWidth * c.z;
       const py = (fy - 0.5) * scene.clientHeight * c.z;
@@ -117,7 +184,9 @@ export function useSkyCamera(enabled: boolean) {
       const scene = visibleScene();
       if (!scene) return;
       const rect = scene.getBoundingClientRect();
-      if (event.ctrlKey) {
+      if (traveling.current) {
+        if (event.ctrlKey) event.preventDefault();
+      } else if (event.ctrlKey) {
         event.preventDefault();
         stopInertia();
         zoomAt(
@@ -142,6 +211,7 @@ export function useSkyCamera(enabled: boolean) {
     return () => {
       window.removeEventListener("resize", onResize);
       stopInertia();
+      clearTimeout(travelTimer.current);
     };
   }, [apply, enabled]);
 
@@ -160,6 +230,8 @@ export function useSkyCamera(enabled: boolean) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     // El panel de señal se desplaza y se selecciona sin mover el cielo
     if ((event.target as Element).closest("[data-nopan]")) return;
+    // Durante el viaje el arrastre se ignora
+    if (traveling.current) return;
     stopInertia();
     suppressClick.current = false;
     pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -254,5 +326,5 @@ export function useSkyCamera(enabled: boolean) {
       }
     : {};
 
-  return { stageRef, sceneHandlers, zoomed, zoomIn, zoomOut, reset, reveal };
+  return { stageRef, sceneHandlers, zoomed, zoomIn, zoomOut, reset, reveal, flyTo, frameTo, isTraveling };
 }

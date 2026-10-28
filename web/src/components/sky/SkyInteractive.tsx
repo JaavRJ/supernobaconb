@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent } from "react";
+import { useEffect, useEffectEvent, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent } from "react";
 import { FacetIcon } from "./FacetIcon";
 import { coreVisualRadius, type SkyLayout, type SkyNebula, type SkyOrientation } from "./layout";
 import { THREAD_LABELS, THREAD_ORDER, type SkySignal, type SkyStarInfo } from "./meta";
@@ -30,6 +30,55 @@ interface SkyInteractiveProps {
 
 function classes(...names: (string | false | undefined)[]): string {
   return names.filter(Boolean).join(" ");
+}
+
+/** Nombre del área de cada constelación, para las píldoras y los avisos */
+const AREA_NAMES: Record<string, string> = {
+  supernoba: "Música",
+  jabi: "Proyectos",
+  noba: "Literatura",
+};
+const areaName = (id: string) => AREA_NAMES[id] ?? id;
+
+type Point = { x: number; y: number };
+
+/** Cierre convexo (cadena monótona de Andrew) de un conjunto de puntos */
+function convexHull(points: Point[]): Point[] {
+  const pts = [...points].sort((a, b) => a.x - b.x || a.y - b.y);
+  if (pts.length < 3) return pts;
+  const cross = (o: Point, a: Point, b: Point) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+  const build = (list: Point[]) => {
+    const out: Point[] = [];
+    for (const p of list) {
+      while (out.length >= 2 && cross(out[out.length - 2], out[out.length - 1], p) <= 0) out.pop();
+      out.push(p);
+    }
+    out.pop();
+    return out;
+  };
+  return [...build(pts), ...build([...pts].reverse())];
+}
+
+/** Forma suave alrededor de las estrellas: cierre convexo de círculos de radio `margin`, con esquinas redondeadas */
+function areaPath(stars: Point[], margin: number): string | null {
+  if (stars.length === 0) return null;
+  const ring: Point[] = [];
+  for (const s of stars) {
+    for (let k = 0; k < 12; k++) {
+      const a = (k / 12) * Math.PI * 2;
+      ring.push({ x: s.x + Math.cos(a) * margin, y: s.y + Math.sin(a) * margin });
+    }
+  }
+  const hull = convexHull(ring);
+  const mid = (a: Point, b: Point) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+  const f = (n: number) => n.toFixed(1);
+  const start = mid(hull[hull.length - 1], hull[0]);
+  let d = `M${f(start.x)} ${f(start.y)}`;
+  for (let i = 0; i < hull.length; i++) {
+    const m = mid(hull[i], hull[(i + 1) % hull.length]);
+    d += `Q${f(hull[i].x)} ${f(hull[i].y)} ${f(m.x)} ${f(m.y)}`;
+  }
+  return `${d}Z`;
 }
 
 const ORIENTATIONS: SkyOrientation[] = ["landscape", "portrait"];
@@ -79,7 +128,17 @@ export function SkyInteractive({
   const [openNebula, setOpenNebula] = useState<string | null>(null);
   const nebulaButtons = useRef(new Map<string, HTMLButtonElement>());
   // El cielo completo se navega; el de una sola constelación se queda quieto
-  const { stageRef, sceneHandlers, zoomed, zoomIn, zoomOut, reset, reveal } = useSkyCamera(!compact);
+  const { stageRef, sceneHandlers, zoomed, zoomIn, zoomOut, reset, reveal, flyTo, frameTo, isTraveling } = useSkyCamera(!compact);
+  // Constelación a la que se viaja o en la que se está; null es el mapa completo
+  const [focus, setFocus] = useState<string | null>(null);
+  // Constelación en la que ya se llegó (muestra el título grande)
+  const [arrived, setArrived] = useState<string | null>(null);
+  const [announcement, setAnnouncement] = useState("");
+  const arrivalRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  // Área resaltada (por ratón o teclado) en el mapa completo
+  const [hot, setHot] = useState<string | null>(null);
+  const areaRefs = useRef(new Map<string, SVGGElement>());
 
   const activeId = hovered ?? focused ?? touched;
   const infoById = useMemo(() => new Map(starInfo.map((i) => [i.workId, i])), [starInfo]);
@@ -110,6 +169,88 @@ export function SkyInteractive({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [activeId]);
+
+  // Al llegar, el foco va al título de la constelación
+  useEffect(() => {
+    if (arrived) titleRef.current?.focus({ preventScroll: true });
+  }, [arrived]);
+
+  /** Centro (fracciones de la escena) y zoom para que la constelación llene la escena visible */
+  function targetFor(id: string): { fx: number; fy: number; z: number } | null {
+    const { layout } = variants[visible];
+    const stars = layout.stars.filter((s) => s.constellation === id);
+    if (stars.length === 0) return null;
+    const xs = stars.map((s) => s.x);
+    const ys = stars.map((s) => s.y);
+    const marginX = layout.width * 0.1;
+    const marginY = layout.height * 0.12;
+    const minX = Math.min(...xs) - marginX;
+    const maxX = Math.max(...xs) + marginX;
+    const minY = Math.min(...ys) - marginY;
+    const maxY = Math.max(...ys) + marginY;
+    const z = Math.max(1, Math.min(layout.width / (maxX - minX), layout.height / (maxY - minY)));
+    return { fx: (minX + maxX) / 2 / layout.width, fy: (minY + maxY) / 2 / layout.height, z };
+  }
+
+  function travelTo(id: string) {
+    if (compact || id === focus || isTraveling()) return;
+    const target = targetFor(id);
+    if (!target) return;
+    setFocus(id);
+    setArrived(null);
+    setTouched(null);
+    setHovered(null);
+    setFocused(null);
+    setHot(null);
+    setAnnouncement(`Viajando a ${areaName(id)}`);
+    flyTo(target.fx, target.fy, target.z, () => {
+      setArrived(id);
+      setAnnouncement(`Llegaste a ${areaName(id)}`);
+    });
+  }
+
+  function goHome() {
+    if (!focus || isTraveling()) return;
+    const from = focus;
+    const active = document.activeElement;
+    // Si el foco estaba en el título o en la escena, que no se pierda al desaparecer
+    if (active === document.body || arrivalRef.current?.contains(active) || active?.closest("[data-orientation]")) {
+      setTimeout(() => areaRefs.current.get(`${visible}:${from}`)?.focus({ preventScroll: true }), 0);
+    }
+    setFocus(null);
+    setArrived(null);
+    setTouched(null);
+    setHovered(null);
+    setFocused(null);
+    setHot(null);
+    setAnnouncement("Volviendo al mapa completo");
+    flyTo(0.5, 0.5, 1, () => setAnnouncement("Mapa completo"));
+  }
+
+  // Si el panel de la nebulosa está abierto, Escape solo lo cierra
+  const onEscape = useEffectEvent(() => {
+    if (openNebula === null) goHome();
+  });
+  useEffect(() => {
+    if (!focus) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onEscape();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [focus]);
+
+  // Con una constelación en foco, un cambio de tamaño u orientación reencuadra sin animar
+  const refit = useEffectEvent(() => {
+    if (!focus) return;
+    const target = targetFor(focus);
+    if (target) frameTo(target.fx, target.fy, target.z);
+  });
+  useEffect(() => {
+    refit();
+    window.addEventListener("resize", refit);
+    return () => window.removeEventListener("resize", refit);
+  }, [visible, focus]);
 
   useEffect(() => {
     if (!touched) return;
@@ -186,6 +327,22 @@ export function SkyInteractive({
     };
     // La tarjeta y el panel solo existen en la escena visible
     const isVisible = orientation === visible;
+    // Estando en una constelación, las demás se atenúan (siguen siendo pulsables)
+    const outOfFocus = (constellation: string | undefined) => focus !== null && constellation !== focus;
+    // En el mapa completo, al resaltar un área las otras se atenúan un poco
+    const outOfHot = (constellation: string | undefined) =>
+      !compact && focus === null && hot !== null && constellation !== hot;
+    // Las estrellas solo se abren en el cielo de una constelación o dentro de la constelación en foco
+    const starsLive = (constellation: string) => compact || (focus === constellation && arrived === constellation);
+    const areas = compact
+      ? []
+      : layout.labels.flatMap((l) => {
+          const path = areaPath(
+            layout.stars.filter((s) => s.constellation === l.constellation),
+            portrait ? 80 : 64,
+          );
+          return path ? [{ id: l.constellation, path }] : [];
+        });
 
     function cardPlacement(): CSSProperties {
       if (!active) return {};
@@ -270,11 +427,57 @@ export function SkyInteractive({
               })}
           </defs>
 
+          <g className={styles.areas}>
+            {areas.map((a) => {
+              const current = focus === a.id;
+              const path = (
+                <path
+                  className={classes(styles.area, hot === a.id && !current && styles.areaLit, current && styles.areaCurrent)}
+                  d={a.path}
+                  style={{ "--c": constellationColors[a.id] } as CSSProperties}
+                />
+              );
+              if (current) return <g key={a.id}>{path}</g>;
+              return (
+                <g
+                  key={a.id}
+                  ref={(node) => {
+                    const key = `${orientation}:${a.id}`;
+                    if (node) areaRefs.current.set(key, node);
+                    else areaRefs.current.delete(key);
+                  }}
+                  className={styles.areaButton}
+                  role="button"
+                  tabIndex={isVisible ? 0 : -1}
+                  aria-label={`Viajar a ${areaName(a.id)}`}
+                  onClick={() => travelTo(a.id)}
+                  onKeyDown={(e) => {
+                    if (e.key !== "Enter" && e.key !== " ") return;
+                    e.preventDefault();
+                    travelTo(a.id);
+                  }}
+                  onMouseEnter={() => setHot(a.id)}
+                  onMouseLeave={() => setHot((cur) => (cur === a.id ? null : cur))}
+                  onFocus={(e) => {
+                    if (e.currentTarget.matches(":focus-visible")) setHot(a.id);
+                  }}
+                  onBlur={() => setHot((cur) => (cur === a.id ? null : cur))}
+                >
+                  {path}
+                </g>
+              );
+            })}
+          </g>
+
           <g className={styles.lines}>
             {layout.lines.map((l) => (
               <line
                 key={`${l.from}-${l.to}`}
-                className={classes(activeId !== null && l.from !== activeId && l.to !== activeId && styles.dim)}
+                className={classes(
+                  (activeId !== null ? l.from !== activeId && l.to !== activeId : outOfFocus(l.constellation)) &&
+                    styles.dim,
+                  outOfHot(l.constellation) && styles.soft,
+                )}
                 data-constellation={l.constellation}
                 x1={l.x1}
                 y1={l.y1}
@@ -287,10 +490,19 @@ export function SkyInteractive({
           <g className={styles.threads}>
             {layout.threads.map((t) => {
               const isLit = activeId !== null && (t.from === activeId || t.to === activeId);
+              const threadDim =
+                activeId !== null
+                  ? !isLit
+                  : outOfFocus(starById.get(t.from)?.constellation) || outOfFocus(starById.get(t.to)?.constellation);
               return (
                 <path
                   key={t.id}
-                  className={classes(styles.thread, isLit && styles.lit, activeId !== null && !isLit && styles.dim)}
+                  className={classes(
+                    styles.thread,
+                    isLit && styles.lit,
+                    threadDim && styles.dim,
+                    outOfHot(starById.get(t.from)?.constellation) && styles.soft,
+                  )}
                   data-kind={t.kind}
                   data-from={t.from}
                   data-to={t.to}
@@ -303,7 +515,7 @@ export function SkyInteractive({
 
           <g className={styles.nebulas} aria-hidden="true">
             {nebulas.map((n) => (
-              <g key={n.eraId} className={styles.nebulaWrap}>
+              <g key={n.eraId} className={classes(styles.nebulaWrap, focus !== null && styles.dim)}>
                 <ellipse
                   className={styles.nebula}
                   cx={n.x}
@@ -325,7 +537,8 @@ export function SkyInteractive({
                 "--twinkle-duration": `${(3.2 + (i % 3) * 0.8).toFixed(1)}s`,
               } as CSSProperties;
               const isLit = connected.has(s.workId);
-              const dim = activeId !== null && s.workId !== activeId && !isLit;
+              const dim =
+                activeId !== null ? s.workId !== activeId && !isLit : outOfFocus(s.constellation);
               const coreR = coreVisualRadius(orientation);
               const isCoreStar = s.core && !s.unreleased;
               const content = (
@@ -387,12 +600,17 @@ export function SkyInteractive({
               return (
                 <g
                   key={s.workId}
-                  className={classes(s.unreleased ? styles.unreleased : styles.star, dim && styles.dim)}
+                  className={classes(
+                    s.unreleased ? styles.unreleased : styles.star,
+                    dim && styles.dim,
+                    outOfHot(s.constellation) && styles.soft,
+                    !starsLive(s.constellation) && styles.inert,
+                  )}
                   data-work-id={s.workId}
                   data-constellation={s.constellation}
                   style={twinkle}
                 >
-                  {info ? (
+                  {info && starsLive(s.constellation) ? (
                     <a
                       ref={(node) => {
                         anchors.current[orientation][i] = node;
@@ -452,7 +670,10 @@ export function SkyInteractive({
                 const radius = portrait ? 26 : 19;
                 const x = s.core ? s.x + coreR * 1.15 : s.x + side * (s.r + radius + 14);
                 const y = s.core ? s.y + coreR * 0.8 : s.y - (s.r + radius + 8);
-                const dim = activeId !== null && s.workId !== activeId && !connected.has(s.workId);
+                const dim =
+                  activeId !== null
+                    ? s.workId !== activeId && !connected.has(s.workId)
+                    : outOfFocus(s.constellation);
                 return (
                   <FacetIcon
                     key={s.workId}
@@ -468,7 +689,16 @@ export function SkyInteractive({
 
           <g className={styles.labels}>
             {layout.labels.map((l) => (
-              <text key={l.constellation} x={l.x} y={l.y} textAnchor="middle">
+              <text
+                key={l.constellation}
+                x={l.x}
+                y={l.y}
+                textAnchor="middle"
+                className={classes(
+                  hot === l.constellation && styles.labelLit,
+                  (outOfFocus(l.constellation) || outOfHot(l.constellation)) && styles.dim,
+                )}
+              >
                 <tspan className={portrait ? styles.namePortrait : styles.name}>{l.name}</tspan>
                 <tspan
                   className={portrait ? styles.facetPortrait : styles.facet}
@@ -574,8 +804,15 @@ export function SkyInteractive({
     );
   }
 
+  const arrivedLabel = arrived ? baseLayout.labels.find((l) => l.constellation === arrived) : undefined;
+
   return (
     <div className={styles.wrapper}>
+      {!compact && (
+        <p className={styles.srOnly} role="status" aria-live="polite">
+          {announcement}
+        </p>
+      )}
       <div
         ref={stageRef}
         className={classes(styles.stage, !compact && styles.navigable)}
@@ -585,7 +822,19 @@ export function SkyInteractive({
           <>
             <div className={classes(styles.dust, styles.dustFar)} aria-hidden="true" />
             <div className={classes(styles.dust, styles.dustNear)} aria-hidden="true" />
+            <div className={styles.streaks} aria-hidden="true" />
           </>
+        )}
+        {!compact && arrivedLabel && (
+          <div ref={arrivalRef} className={styles.arrival}>
+            <h2 ref={titleRef} tabIndex={-1} className={styles.arrivalTitle}>
+              {arrivedLabel.name}
+            </h2>
+            <p className={styles.arrivalFacet}>{arrivedLabel.facet}</p>
+            <button type="button" className={classes(styles.control, styles.arrivalBack)} onClick={goHome}>
+              ← mapa completo
+            </button>
+          </div>
         )}
         {ORIENTATIONS.map((orientation) => (
           <div
@@ -614,7 +863,7 @@ export function SkyInteractive({
             <button
               type="button"
               className={classes(styles.control, styles.controlWide)}
-              onClick={reset}
+              onClick={focus ? goHome : reset}
               aria-label="Volver a ver todo el cielo"
             >
               centrar

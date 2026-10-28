@@ -554,7 +554,8 @@ Pedido del artista (2026-10-28), con ethercoded.com como referencia de sensació
 |---|---|---|---|
 | MV-01 Cielo navegable | 🔨 | `web/src/components/sky/useSkyCamera.ts`, `SkyInteractive.tsx`, `Sky.module.css` | — |
 | MV-02 SUPERNOBA vivo y que se vuelve cielo | 🔨 | `web/src/components/brand/StarWord.tsx` + `.module.css`, `web/src/components/home/HeroMotion.tsx` (nuevo), `web/src/app/page.tsx` + `page.module.css` | — |
-| MV-03 Revisión y verificación | ⬜ | — | MV-01, MV-02 |
+| MV-04 Viajar a una constelación | 🔨 | `web/src/components/sky/` | MV-01 |
+| MV-03 Revisión y verificación | ⬜ | — | MV-01, MV-02, MV-04 |
 
 ### MV-01 — Cielo navegable
 El orquestador ya escribió `useSkyCamera.ts` (cámara con `--cam-x/--cam-y/--cam-z` en el escenario, arrastre con inercia, pellizco, ctrl + rueda, botones, `reveal` al enfocar con teclado) y lo conectó en `SkyInteractive.tsx` (envoltura `.camera`, capas `.dust`, controles). Falta el CSS y pulir:
@@ -574,6 +575,17 @@ El orquestador ya escribió `useSkyCamera.ts` (cámara con `--cam-x/--cam-y/--ca
 - El valor por defecto deja todo visible: si no corre el JS, el nombre está armado y el cielo opaco.
 - Lector de pantalla: sigue leyendo "SUPERNOBA" una vez.
 **Terminado:** tipos y lint sin errores; sin desajuste de hidratación; con movimiento reducido el nombre está quieto y completo.
+
+### MV-04 — Viajar a una constelación
+Pedido del artista tras probar MV-01: arrastrar y acercar sirve, pero se queda corto. Desde el mapa completo, al elegir una constelación (Música, Proyectos o Literatura) la cámara **viaja** hacia ella.
+- **Disparadores (ajuste del artista):** el mapa completo se ve igual que hoy. Cada constelación tiene un **área** suave alrededor de sus estrellas, invisible en reposo; al pasar el mouse o enfocarla se resalta (relleno tenue de su color, borde punteado, brillo) y su nombre se ilumina. En el mapa completo, el clic en el área (también sobre sus estrellas) hace el viaje; las estrellas no abren su obra en esa vista. Cada área es un botón accesible ("Viajar a …"). Sin fila de píldoras.
+- **Detalles al llegar:** dentro de la constelación sus estrellas recuperan la tarjeta y el enlace a la obra; las otras quedan atenuadas y sin interacción, pero sus áreas sirven para viajar directo a ellas.
+- **Destino:** se calcula en el cliente con la caja de las estrellas de esa constelación en la orientación visible (con margen): centro y zoom para que llene la escena (tope `MAX_ZOOM`). El hook expone `flyTo(fx, fy, z)`.
+- **Efecto de viaje (~1.1 s):** la cámara se mueve con una curva suave (no la transición corta de los botones); las capas de polvo se estiran y aceleran (más escala y traslado que la cámara, paralaje exagerado); una capa de estelas radiales sutil (gradiente cónico repetido o similar, centrada en el destino) aparece y se apaga; un desenfoque leve a mitad del viaje. Nada de librerías.
+- **Llegada:** las otras constelaciones, hilos y nebulosa se atenúan; aparece el nombre de la constelación en grande (Cinzel) con su faceta y un botón "← mapa completo" (también con Escape) que regresa con el mismo viaje a la inversa. Arrastrar y acercar siguen funcionando estando ahí. Cambiar directo de una constelación a otra con las píldoras viaja entre ellas.
+- **Accesibilidad:** las píldoras con `aria-pressed`; al llegar, el foco va al título de la constelación; el anuncio "Viajando a Música" en una región `aria-live`. Con movimiento reducido no hay estelas ni desenfoque: corte directo con un fundido corto.
+- `/musica` (cielo `compact`) no cambia.
+**Terminado:** tipos y lint sin errores; los tres viajes, el regreso y el cambio entre constelaciones funcionan en escritorio y en celular (orientación vertical).
 
 ### MV-03 — Revisión y verificación
 Reviewer sobre los dos diffs. El orquestador lo revisa en el navegador a 1440 y 390 px: arrastre, zoom, centrar, clic en estrella, nebulosa, scroll del hero, consola limpia y `/musica` sin cambios.
