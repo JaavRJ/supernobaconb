@@ -156,6 +156,36 @@
   font-size: 1.15em;
 }
 
+/* Las tres partes: etiqueta pequeña en Inter sobre su párrafo */
+.parts {
+  margin: 0 0 1.25em;
+}
+
+.part {
+  margin: 0 0 1.25em;
+  padding-left: 1.25em;
+  border-left: 1px solid var(--era-line);
+}
+
+.partLabel {
+  margin: 0 0 0.35em;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.partText {
+  margin: 0;
+}
+
+.bio .closing {
+  margin-top: 1.75em;
+  font-style: italic;
+  text-align: center;
+}
+
 .section {
   margin-top: var(--space-7);
 }

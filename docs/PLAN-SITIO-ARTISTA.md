@@ -204,7 +204,7 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - [x] Sección "Conectado con" en cada obra (las eras no tienen página propia)
 - [x] Galería de videos y fotos
 - [x] Tienda con links externos (pagos integrados más adelante si hace falta)
-- [x] Biografía y kit de prensa (borrador en español e inglés, pendiente de aprobación del artista y del correo de prensa)
+- [x] Biografía y kit de prensa (texto del artista; kit en español e inglés con correo de prensa)
 
 ### Pase de diseño con materiales reales
 Se hace cuando lleguen las portadas, fotos y la estética de cada era; si llegan antes, se adelanta.
@@ -282,8 +282,8 @@ Las tres facetas son las tres constelaciones del cielo (ver sección 2). Jabi in
 ### Aún falta
 - [x] Portadas en alta calidad (las de Too Lost son links temporales)
 - [ ] Fotos para la portada, sobre mí y prensa (por ahora: las del sitio viejo y las del kit de prensa)
-- [x] Biografía larga (borrador en `web/src/content/bio.ts`, por aprobar)
-- [ ] Instagram, TikTok y otras redes (Instagram listo: @supernobaconb; falta el correo de prensa y otras redes)
+- [x] Biografía larga (escrita por el artista, en `web/src/content/bio.ts`)
+- [ ] Instagram, TikTok y otras redes (Instagram @supernobaconb y correo supernoba.contacto@gmail.com; faltan otras redes)
 - [ ] Colores o estética de cada era (si ya existe)
 - [x] Audios para el reproductor propio
 - [x] Productos de la tienda y dónde se compran (por ahora solo el libro impreso en Amazon)

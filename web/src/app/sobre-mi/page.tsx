@@ -3,7 +3,7 @@ import path from "node:path";
 import Image from "next/image";
 import Link from "next/link";
 import { getPhotos } from "@/content";
-import { bio } from "@/content/bio";
+import { about, bio } from "@/content/bio";
 import { site } from "@/content/site";
 import { StarWord } from "@/components/brand/StarWord";
 import { AboutPhotos } from "@/components/about/AboutPhotos";
@@ -92,11 +92,16 @@ export default function SobreMiPage() {
       </nav>
 
       <section className={styles.bio} aria-label="Biografía">
-        {bio.es.long.map((p, i) => (
-          <p key={i} className={i === 0 ? styles.lead : undefined}>
-            {p}
-          </p>
-        ))}
+        <p className={styles.lead}>{about.intro}</p>
+        <dl className={styles.parts}>
+          {about.parts.map((part) => (
+            <div key={part.label} className={styles.part}>
+              <dt className={styles.partLabel}>{part.label}</dt>
+              <dd className={styles.partText}>{part.text}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className={styles.closing}>{about.closing}</p>
       </section>
 
       {kitPhotos.length > 0 && (
