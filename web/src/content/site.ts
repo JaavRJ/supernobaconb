@@ -36,4 +36,5 @@ export const site: Site = {
     { label: "YouTube", href: "https://www.youtube.com/@supernobaconb" },
   ],
   instagram: { handle: "@supernobaconb", url: "https://www.instagram.com/supernobaconb/" },
+  pressEmail: "supernoba.contacto@gmail.com",
 };
