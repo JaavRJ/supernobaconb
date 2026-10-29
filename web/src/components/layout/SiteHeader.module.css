@@ -22,6 +22,11 @@
   );
 }
 
+/* En el lector el header es negro sólido: el texto que se desplaza debajo no debe asomarse */
+:global(html:has(main [data-reader])) .header {
+  background: #000;
+}
+
 .inner {
   display: flex;
   align-items: center;
