@@ -1,0 +1,123 @@
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tab {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--era-fg);
+  border-color: var(--era-fg-muted);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+.tabActive,
+.tabActive:hover {
+  border-color: var(--era-accent);
+  color: var(--era-fg);
+  box-shadow: 0 0 14px var(--era-glow);
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.cards {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-md);
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--era-font-body);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.note,
+.meta {
+  margin: 0;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.meta {
+  font-size: var(--text-xs);
+}
+
+.noteText {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.alert {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid rgba(229, 138, 138, 0.5);
+  border-radius: var(--radius-md);
+  color: #f4c4c4;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.chapters {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: var(--space-5);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+}
+
+.chapterTitle {
+  overflow-wrap: anywhere;
+}
+
+.chapterMeta {
+  color: var(--era-fg-muted);
+}
