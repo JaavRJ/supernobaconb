@@ -45,7 +45,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
 | Ajustes del artista tras la fase 4 | 🔨 En curso | 13 / 14 (AJ-13 espera al Pase de movimiento) |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
-| 5 — Admin ampliado | 🔨 En curso | 3 / 12 |
+| 5 — Admin ampliado | 🔨 En curso | 6 / 12 |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
 
 ---
@@ -721,14 +721,14 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 | F5-01 | Capa de datos: contenido desde Firestore con respaldo local | Worker | — | ✅ |
 | F5-02 | Reglas de Firestore para el contenido y el admin | Orquestador | — | ✅ |
 | F5-03 | Base del admin: acceso, navegación, guardar y refrescar, subir a Cloudinary | Worker | — | ✅ |
-| F5-04 | Importar el contenido local a Firestore | Worker | F5-01, F5-02, F5-03 | ⬜ |
+| F5-04 | Importar el contenido local a Firestore | Worker | F5-01, F5-02, F5-03 | ✅ |
 | F5-05 | Obras y su posición en el cielo | Worker | F5-04 | ⬜ |
 | F5-06 | Canciones (letra, créditos, audio) y videos | Worker | F5-04 | ⬜ |
 | F5-07 | Hilos y nebulosa (señales) | Worker | F5-04 | ⬜ |
 | F5-08 | Fotos, productos, Sobre mí y redes | Worker | F5-04 | ⬜ |
 | F5-09 | Diario del proceso y escritos | Worker | F5-04 | ⬜ |
-| F5-10 | Libro: partes, capítulos y notas del autor | Worker | F5-03 | ⬜ |
-| F5-11 | Newsletter: lista e intereses con exportación CSV | Worker | F5-02, F5-03 | ⬜ |
+| F5-10 | Libro: partes, capítulos y notas del autor | Worker | F5-03 | ✅ |
+| F5-11 | Newsletter: lista e intereses con exportación CSV | Worker | F5-02, F5-03 | ✅ |
 | F5-12 | Verificación final de la fase | Orquestador | todas | ⬜ |
 
 **Orden y paralelo:** F5-01 y F5-03 en paralelo (no comparten archivos) mientras el orquestador hace F5-02. Luego F5-04. Después las secciones del admin (F5-05 a F5-11) de dos en dos o de tres en tres: cada una vive en su carpeta `web/src/components/admin/<sección>/` y su ruta `web/src/app/admin/<sección>/`, y solo usan las piezas comunes de F5-03 sin cambiarlas (si necesitan una pieza común nueva, la pide el orquestador). F5-10 y F5-11 no dependen de F5-04 y pueden ir antes. Solo un agente corre `npm run build` a la vez. No se toca `web/src/components/sky/` salvo lo que pida F5-05 para mover estrellas, y solo si el Pase de movimiento ya cerró.
@@ -888,3 +888,6 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-29 | F5-02 | Orquestador: reglas con lectura pública y escritura solo admin para las colecciones nuevas, y lectura de `subscribers` para admin; publicadas con la CLI con el OK del artista (el archivo de reglas está fuera de git por decisión del repo). Probado por REST sin sesión: leer works 200, escribir works 403, leer subscribers 403, el libro sigue en 200. ✅ |
 | 2026-10-29 | F5-03 | Worker hizo la base del admin: acceso con Google y `adminUsers`, piezas comunes, `useAdminCollection`, `refreshContent` (verifica admin con Identity Toolkit + `adminUsers` por REST y usa `updateTag`) y la firma de Cloudinary en el servidor. Reviewer: aprobada sin problemas de seguridad; el orquestador aplicó sus mejoras menores (tiempo límite en verificaciones y subidas, estado "sin conexión" distinto de "sin acceso"). ✅ |
 | 2026-10-29 | F5-01 | Worker hizo `lib/content`: `getContent()` (REST, `cacheTag("content")`, respaldo local por colección), `content()` con las consultas, siembra para importar, letras y escritos como texto (Firestore no admite arreglos anidados), `order` en cada documento, y el reproductor recibe los datos de la obra con cada pista. Las 12 rutas comparadas contra un build de HEAD: mismo texto, enlaces e imágenes. Orquestador probó en el navegador que "Escuchar" suena con su portada. Incluye el `cacheTag("book")` que agregó F5-10 en `lib/book/index.ts`. ✅ |
+| 2026-10-29 | F5-11 | Worker hizo la newsletter en el admin (solo lectura): totales por interés, filtros, búsqueda sin acentos y CSV UTF-8 con BOM, probado con comas, comillas y saltos de línea; los suscriptores del sitio viejo se marcan. ✅ |
+| 2026-10-29 | F5-10 | Worker hizo el libro en el admin (partes en `works/bduem`, editor del texto en `parts/{n}/chapters`, notas del autor). Reviewer comprobó con el HTML real de las 4 partes que la limpieza no pierde texto ni capítulos, y pidió correcciones (id de nota nueva si la lista no cargó, texto perdido al cambiar de pestaña, guardar en el id real del documento, confirmación si el texto se acorta mucho, encabezados pegados); aplicadas. ✅ |
+| 2026-10-29 | F5-04 | Worker hizo `/admin/importar`: compara la semilla local (37 documentos, sin arreglos anidados ni `undefined`) con Firestore, importa solo lo que falta en lotes y refresca el sitio; "Reemplazar todo" con doble confirmación. La importación real la hace el orquestador con la cuenta del artista. El orquestador detuvo servidores de prueba que dejaron los workers (3100, 3200, 3201) y volvió a levantar el de desarrollo en el 3000. ✅ |
