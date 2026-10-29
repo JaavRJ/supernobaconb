@@ -1,0 +1,72 @@
+.root {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.label {
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.preview {
+  max-width: 100%;
+  max-height: 14rem;
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-md);
+  object-fit: contain;
+  justify-self: start;
+}
+
+.audio {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* El selector nativo se oculta; lo abre el botón (sigue accesible por su etiqueta) */
+.file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  opacity: 0;
+}
+
+.limit {
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+}
+
+.progress {
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--era-line);
+}
+
+.bar {
+  display: block;
+  height: 100%;
+  background: var(--era-accent);
+  transition: width 0.15s linear;
+}
+
+.error {
+  margin: 0;
+  color: #f4c4c4;
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}

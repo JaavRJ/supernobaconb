@@ -1,0 +1,84 @@
+/* Botones y campos compartidos por las piezas del admin */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--era-accent);
+  border-radius: var(--radius-full);
+  background: var(--era-accent);
+  color: var(--era-accent-contrast);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+  box-shadow: 0 0 18px var(--era-glow);
+}
+
+.button:focus-visible,
+.input:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.quiet {
+  background: transparent;
+  color: var(--era-fg);
+  border-color: var(--era-line);
+}
+
+.quiet:hover:not(:disabled) {
+  border-color: var(--era-fg-muted);
+  box-shadow: none;
+}
+
+.danger {
+  background: transparent;
+  color: #f4c4c4;
+  border-color: rgba(229, 138, 138, 0.5);
+}
+
+.danger:hover:not(:disabled) {
+  border-color: #e58a8a;
+  box-shadow: none;
+}
+
+.small {
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-md);
+  background: rgba(3, 4, 10, 0.55);
+  color: var(--era-fg);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.input::placeholder {
+  color: var(--era-fg-muted);
+  opacity: 0.7;
+}
+
+.input[aria-invalid="true"] {
+  border-color: #e58a8a;
+}
