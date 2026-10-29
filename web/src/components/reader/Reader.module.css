@@ -728,7 +728,7 @@ a.barBtn {
 
 .noteCard[data-sheet] {
   right: 0;
-  bottom: 0;
+  bottom: var(--player-height, 0px);
   left: 0;
   width: auto;
   max-height: 65svh;
@@ -786,7 +786,8 @@ a.barBtn {
 /* Aviso de lectura a medias */
 .resume {
   position: fixed;
-  bottom: 24px;
+  /* Encima del mini reproductor cuando está visible (su alto lo publica PlayerSlot en --player-height) */
+  bottom: calc(24px + var(--player-height, 0px));
   left: 50%;
   z-index: 24;
   width: min(380px, calc(100vw - 24px));
@@ -834,7 +835,7 @@ a.barBtn {
 }
 
 .shell[data-mode="pages"] .resume {
-  bottom: 56px;
+  bottom: calc(56px + var(--player-height, 0px));
 }
 
 .viewportPages {

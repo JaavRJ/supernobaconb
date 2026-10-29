@@ -13,7 +13,7 @@
 
 /* Pasos sin control que señalar: abajo y al centro, como el aviso de lectura a medias */
 .floating {
-  bottom: 24px;
+  bottom: calc(24px + var(--player-height, 0px));
   left: 50%;
   transform: translateX(-50%);
 }
