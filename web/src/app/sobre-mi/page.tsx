@@ -168,6 +168,20 @@ export default function SobreMiPage() {
               </a>
             </dd>
           </div>
+          <div>
+            <dt>TikTok</dt>
+            <dd>
+              <a
+                href={site.tiktok.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.textLink}
+              >
+                {site.tiktok.handle}
+                <span className={styles.sr}> (se abre en una pestaña nueva)</span>
+              </a>
+            </dd>
+          </div>
           {site.pressEmail && (
             <div>
               <dt>Prensa</dt>

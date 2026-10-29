@@ -22,6 +22,7 @@ const TYPE_LABEL: Record<Work["type"], string> = {
   video: "VIDEO",
   proyecto: "PROYECTO",
   puzzle: "PUZZLE",
+  escrito: "ESCRITO",
 };
 
 /** Giros de las polaroids, repetidos en ciclo */

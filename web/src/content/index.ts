@@ -11,6 +11,7 @@ import type {
   Track,
   Video,
   Work,
+  Writing,
 } from "@/types/content";
 import { constellations } from "./constellations";
 import { diary } from "./diary";
@@ -23,6 +24,7 @@ import { threads } from "./threads";
 import { tracks } from "./tracks";
 import { videos } from "./videos";
 import { works } from "./works";
+import { writings } from "./writings";
 
 export {
   constellations,
@@ -36,6 +38,7 @@ export {
   tracks,
   videos,
   works,
+  writings,
 };
 
 export function getWork(id: string): Work | undefined {
@@ -140,6 +143,21 @@ export function getProjects(): (Work & { detail: ProjectDetail })[] {
 
 export function getProjectDetail(id: string): ProjectDetail | undefined {
   return projectDetails.find((p) => p.workId === id);
+}
+
+/** Obras tipo escrito (no ocultas) con su contenido, las más nuevas primero */
+export function getWritings(): (Work & { writing: Writing })[] {
+  return works
+    .filter((w) => w.type === "escrito" && !w.hidden)
+    .sort((a, b) => (b.releaseDate ?? "").localeCompare(a.releaseDate ?? ""))
+    .flatMap((w) => {
+      const writing = writings.find((x) => x.workId === w.id);
+      return writing ? [{ ...w, writing }] : [];
+    });
+}
+
+export function getWriting(id: string): (Work & { writing: Writing }) | undefined {
+  return getWritings().find((w) => w.id === id);
 }
 
 export function getVideos(): Video[] {

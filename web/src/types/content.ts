@@ -24,7 +24,8 @@ export type WorkType =
   | "album"
   | "video"
   | "proyecto"
-  | "puzzle";
+  | "puzzle"
+  | "escrito";
 
 export interface WorkLink {
   platform:
@@ -181,6 +182,18 @@ export interface DiaryEntry {
   images?: { src: string; width: number; height: number; alt: string; caption?: string }[];
   /** Obra de la que habla la entrada */
   workId?: string;
+}
+
+export type WritingKind = "letra" | "poema" | "texto";
+
+/** Contenido de un escrito suelto; se une a su obra (tipo `escrito`) por `workId` */
+export interface Writing {
+  workId: string;
+  kind: WritingKind;
+  /** Estrofas con sus versos; un texto en prosa es un bloque con un párrafo por elemento */
+  body: string[][];
+  /** Nota del autor al pie */
+  note?: string;
 }
 
 /** Videoclip */

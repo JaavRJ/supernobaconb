@@ -14,6 +14,7 @@ export interface Site {
   nav: NavItem[];
   social: SocialLink[];
   instagram: { handle: string; url: string };
+  tiktok: { handle: string; url: string };
   /** Correo de prensa; sin valor hasta tenerlo */
   pressEmail?: string;
 }
@@ -24,7 +25,7 @@ export const site: Site = {
   nav: [
     { label: "Inicio", href: "/" },
     { label: "Música", href: "/musica" },
-    { label: "Libros", href: "/libros" },
+    { label: "Literatura", href: "/libros" },
     { label: "Proceso", href: "/proceso" },
     { label: "Videos", href: "/videos" },
     { label: "Tienda", href: "/tienda" },
@@ -36,5 +37,6 @@ export const site: Site = {
     { label: "YouTube", href: "https://www.youtube.com/@supernobaconb" },
   ],
   instagram: { handle: "@supernobaconb", url: "https://www.instagram.com/supernobaconb/" },
+  tiktok: { handle: "@supernobaconb", url: "https://www.tiktok.com/@supernobaconb" },
   pressEmail: "supernoba.contacto@gmail.com",
 };

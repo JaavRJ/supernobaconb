@@ -34,6 +34,7 @@ export const TYPE_LABELS: Record<WorkType, string> = {
   video: "Video",
   proyecto: "Proyecto",
   puzzle: "Puzzle",
+  escrito: "Escrito",
 };
 
 /** Datos de cada estrella que solo se necesitan para la tarjeta y el aria-label */

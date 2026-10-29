@@ -80,6 +80,30 @@ export function SiteFooter() {
               </svg>
             </a>
           </li>
+          <li>
+            <a
+              href={site.tiktok.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+              aria-label="TikTok (se abre en una pestaña nueva)"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M14 4v11.2a3.7 3.7 0 1 1-3.7-3.7" />
+                <path d="M14 4c.3 2.4 1.9 4 4.5 4.2" />
+              </svg>
+            </a>
+          </li>
         </ul>
         <p className={styles.copy}>© 2026 SUPERNOBA</p>
       </div>
