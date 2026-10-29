@@ -171,6 +171,18 @@ export interface ProjectDetail {
   video?: string;
 }
 
+/** Entrada del diario de Proceso */
+export interface DiaryEntry {
+  id: string;
+  /** Fecha ISO (YYYY-MM-DD) */
+  date: string;
+  title: string;
+  paragraphs: string[];
+  images?: { src: string; width: number; height: number; alt: string; caption?: string }[];
+  /** Obra de la que habla la entrada */
+  workId?: string;
+}
+
 /** Videoclip */
 export interface Video {
   id: string;

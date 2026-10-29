@@ -80,10 +80,10 @@ export const works: Work[] = [
     hidden: true,
   },
   {
-    id: "sitio-supernoba",
+    id: "supernobaconb-web",
     photoUrl:
       "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763505974/supernoba/IMG_20251118_111352_m7qf2r.png",
-    title: "Este sitio",
+    title: "supernobaconb.web",
     constellation: "jabi",
     type: "proyecto",
     era: "bduem",
@@ -91,56 +91,11 @@ export const works: Work[] = [
     releaseDate: "2025-12-01",
     dateApproximate: true,
     summary:
-      "El lector de BDUEM y este sitio: el cielo donde viven todas las obras, construido para el libro.",
+      "El lector de BDUEM y el cielo donde viven todas las obras, construido para el libro.",
     links: [
       { platform: "repo", url: "https://github.com/JaavRJ/supernobaconb" },
       { platform: "demo", url: "https://supernobaconb.web.app", label: "Versión en línea" },
     ],
-    href: "/proyectos/sitio-supernoba",
-  },
-  {
-    id: "aura",
-    title: "AURA",
-    constellation: "jabi",
-    type: "proyecto",
-    era: "bduem",
-    role: "orbita",
-    releaseDate: "2026-10-01",
-    dateApproximate: true,
-    summary:
-      "Un agente de accesibilidad para Android que usa el teléfono por ti, pensado para adultos mayores.",
-    links: [],
-    href: "/proyectos/aura",
-  },
-  {
-    id: "diablos-aerovision",
-    title: "Diablos AeroVision",
-    constellation: "jabi",
-    type: "proyecto",
-    era: "bduem",
-    role: "orbita",
-    releaseDate: "2026-10-22",
-    summary:
-      "Calidad de pitcheo ajustada por la altitud de la Ciudad de México, hecha para el Hackathon ISAC 2026.",
-    links: [
-      { platform: "repo", url: "https://github.com/JaavRJ/hackathon_isac2026_diablosrojos" },
-      { platform: "demo", url: "https://diablos-aerovision.streamlit.app" },
-      { platform: "youtube", url: "https://youtu.be/lFUaiVm2P1I" },
-    ],
-    href: "/proyectos/diablos-aerovision",
-  },
-  {
-    id: "railsense",
-    title: "RailSense",
-    constellation: "jabi",
-    type: "proyecto",
-    era: "bduem",
-    role: "orbita",
-    releaseDate: "2025-11-01",
-    dateApproximate: true,
-    summary:
-      "Mapas de metro convertidos en tableros de análisis; ganador del track Open Source del Hackathon Mobility & AI 2025.",
-    links: [{ platform: "repo", url: "https://github.com/AxolutionsDevs/MobilityAI-Hackaton" }],
-    href: "/proyectos/railsense",
+    href: "/proceso/supernobaconb-web",
   },
 ];

@@ -6,7 +6,7 @@ import { Lightbox } from "@/components/media/Lightbox";
 import type { ProjectScreenshot } from "@/types/content";
 import styles from "./ProjectScreenshots.module.css";
 
-/** Una captura es vertical si es claramente más alta que ancha (como las de AURA) */
+/** Una captura es vertical si es claramente más alta que ancha (como las de celular) */
 function isTall(shot: ProjectScreenshot) {
   return shot.height > shot.width * 1.1;
 }

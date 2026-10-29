@@ -23,8 +23,8 @@ export const threads: Thread[] = [
     note: "nohablobien guarda pequeñas referencias al libro",
   },
   {
-    id: "sitio-construye-bduem",
-    from: "sitio-supernoba",
+    id: "web-construye-bduem",
+    from: "supernobaconb-web",
     to: "bduem",
     kind: "construye",
   },

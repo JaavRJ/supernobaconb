@@ -20,12 +20,12 @@ export interface Site {
 
 export const site: Site = {
   name: "Supernoba",
-  description: "Sitio oficial de Supernoba: música, libros y proyectos.",
+  description: "Sitio oficial de Supernoba: música, libros y proceso.",
   nav: [
     { label: "Inicio", href: "/" },
     { label: "Música", href: "/musica" },
     { label: "Libros", href: "/libros" },
-    { label: "Proyectos", href: "/proyectos" },
+    { label: "Proceso", href: "/proceso" },
     { label: "Videos", href: "/videos" },
     { label: "Tienda", href: "/tienda" },
     { label: "Sobre mí", href: "/sobre-mi" },

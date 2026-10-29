@@ -5,7 +5,7 @@ export const constellations: Constellation[] = [
     id: "jabi",
     name: "Jabi",
     facet: "el que piensa",
-    description: "Proyectos de software, herramientas, experimentos, puzzles y secretos.",
+    description: "El proceso: notas, demos, experimentos, puzzles y secretos.",
     color: "#e6f2f7",
     skyRegion: { x: 0.2, y: 0.35 },
   },

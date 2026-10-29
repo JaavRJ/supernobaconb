@@ -1,0 +1,72 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5, 2.5rem);
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4) var(--space-5, 2.5rem);
+}
+
+.back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--era-fg);
+  text-decoration: underline;
+}
+
+.back:focus-visible,
+.about a:focus-visible {
+  outline: 2px solid var(--era-accent);
+  outline-offset: 2px;
+}
+
+.date {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: var(--era-fg);
+  font-family: var(--font-title);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.prose p {
+  margin: 0 0 1.2em;
+  color: var(--era-fg);
+  font-family: var(--font-cormorant);
+  font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.4375rem);
+  line-height: 1.6;
+}
+
+.about {
+  margin: 0;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+}
+
+.about a {
+  color: var(--era-fg);
+}

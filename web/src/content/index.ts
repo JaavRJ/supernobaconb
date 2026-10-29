@@ -1,5 +1,6 @@
 import type {
   Constellation,
+  DiaryEntry,
   ConstellationId,
   Era,
   Photo,
@@ -12,6 +13,7 @@ import type {
   Work,
 } from "@/types/content";
 import { constellations } from "./constellations";
+import { diary } from "./diary";
 import { eras } from "./eras";
 import { photos } from "./photos";
 import { products } from "./products";
@@ -24,6 +26,7 @@ import { works } from "./works";
 
 export {
   constellations,
+  diary,
   eras,
   photos,
   products,
@@ -149,4 +152,13 @@ export function getPhotos(): Photo[] {
 
 export function getProducts(): Product[] {
   return products;
+}
+
+/** Entradas del diario, las más nuevas primero */
+export function getDiary(): DiaryEntry[] {
+  return [...diary].sort((a, b) => b.date.localeCompare(a.date));
+}
+
+export function getDiaryEntry(id: string): DiaryEntry | undefined {
+  return diary.find((e) => e.id === id);
 }

@@ -32,14 +32,6 @@
 
 /* ---- Lista ---- */
 
-.rows {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 .row {
   position: relative;
   display: grid;
@@ -48,9 +40,6 @@
   align-items: center;
   padding: var(--space-4) 0;
   border-top: 1px solid var(--era-line);
-}
-
-.row:last-child {
   border-bottom: 1px solid var(--era-line);
 }
 
@@ -64,14 +53,6 @@
   min-width: 0;
 }
 
-.number {
-  margin: 0 0 0.5rem;
-  color: var(--era-fg-muted);
-  font-family: var(--font-ui);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-}
-
 .name {
   margin: 0;
   font-family: var(--font-title);
@@ -82,7 +63,7 @@
   overflow-wrap: anywhere;
 }
 
-/* Toda la fila es el enlace al proyecto */
+/* Toda la tarjeta es el enlace a la web */
 .nameLink {
   color: var(--era-fg);
   text-decoration: none;
@@ -106,35 +87,6 @@
   font-style: italic;
 }
 
-.meta,
-.stack,
-.context {
-  margin: 0.6rem 0 0;
-  color: var(--era-fg-muted);
-  font-family: var(--font-ui);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  line-height: 1.5;
-}
-
-.meta,
-.context {
-  text-transform: uppercase;
-}
-
-.stack {
-  letter-spacing: 0.04em;
-}
-
-/* Único toque cálido de la fila */
-.recognition {
-  margin: 0.6rem 0 0;
-  color: var(--era-accent);
-  font-family: var(--font-ui);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-}
-
 /* ---- Miniatura ---- */
 
 .thumb {
@@ -151,29 +103,9 @@
   height: auto;
 }
 
-/* Las capturas casi cuadradas o algo verticales (como RailSense) se recortan para no alargar la fila */
-.thumb:not(.tall) img {
+/* La captura se recorta para no alargar la tarjeta */
+.thumb img {
   aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: top;
-}
-
-/* Capturas verticales: más angostas para no alargar la fila */
-.tall {
-  width: 8rem;
-  justify-self: start;
-}
-
-@media (min-width: 640px) {
-  .tall {
-    justify-self: end;
-  }
-}
-
-.empty {
-  margin: 0;
-  color: var(--era-fg-muted);
-  font-family: var(--font-cormorant);
-  font-size: 1.25rem;
-  text-align: center;
 }

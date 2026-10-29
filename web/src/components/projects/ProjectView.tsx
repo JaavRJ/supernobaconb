@@ -9,13 +9,13 @@ const NEW_TAB = <span className={styles.srOnly}> (se abre en una pestaña nueva)
 /** Página de un proyecto: encabezado, acciones, capturas, descripción y conexiones */
 export function ProjectView({ work, detail }: { work: Work; detail: ProjectDetail }) {
   const year = work.releaseDate?.slice(0, 4);
-  const eyebrow = ["Jabi", "Proyecto", year].filter(Boolean).join(" · ");
+  const eyebrow = ["Jabi", "Proceso", year].filter(Boolean).join(" · ");
   const facts = [detail.role, detail.context].filter(Boolean).join(" · ");
 
   return (
     <article className={styles.page}>
-      <Link href="/proyectos" className={styles.back}>
-        <span aria-hidden="true">← </span>Proyectos
+      <Link href="/proceso" className={styles.back}>
+        <span aria-hidden="true">← </span>Proceso
       </Link>
 
       <header className={styles.header}>

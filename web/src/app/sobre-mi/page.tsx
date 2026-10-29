@@ -15,7 +15,7 @@ export const metadata = {
 };
 
 const FACETS = [
-  { name: "Jabi", role: "el que piensa", href: "/proyectos" },
+  { name: "Jabi", role: "el que piensa", href: "/proceso" },
   { name: "noba", role: "el que escribe", href: "/libros" },
   { name: "Supernoba", role: "el que canta", href: "/musica" },
 ];
