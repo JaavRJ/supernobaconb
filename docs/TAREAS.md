@@ -43,7 +43,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 2 — Libro | ✅ Hecha | 9 / 9 |
 | 3 — Música | ✅ Hecha | 7 / 7 |
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
-| Ajustes del artista tras la fase 4 | 🔨 En curso | 0 / 14 |
+| Ajustes del artista tras la fase 4 | 🔨 En curso | 9 / 14 |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
@@ -624,16 +624,16 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 
 | ID | Tarea | Quién | Depende de | Estado |
 |---|---|---|---|---|
-| AJ-01 | Jabi como Proceso y la web como supernobaconb.web | Worker | — | ⬜ |
-| AJ-02 | Literatura: libros y escritos | Worker | AJ-01 | ⬜ |
-| AJ-03 | TikTok en el pie y en Sobre mí | Worker | AJ-01 | ⬜ |
-| AJ-04 | "Lo último" y las partes se actualizan a la hora exacta | Worker | — | ⬜ |
-| AJ-05 | Kit de prensa ligero, sin software y con TikTok | Orquestador | AJ-01, AJ-03 | ⬜ |
+| AJ-01 | Jabi como Proceso y la web como supernobaconb.web | Worker | — | ✅ |
+| AJ-02 | Literatura: libros y escritos | Worker | AJ-01 | ✅ |
+| AJ-03 | TikTok en el pie y en Sobre mí | Worker | AJ-01 | ✅ |
+| AJ-04 | "Lo último" y las partes se actualizan a la hora exacta | Worker | — | ✅ |
+| AJ-05 | Kit de prensa ligero, sin software y con TikTok | Orquestador | AJ-01, AJ-03 | ✅ |
 | AJ-06 | Prueba del lector con cuenta de Google real | Orquestador + artista | — | ⬜ |
-| AJ-07 | Resaltados del lector sin repintado innecesario | Worker | — | ⬜ |
-| AJ-08 | Reacciones por capítulo | Worker | AJ-07 | ⬜ |
-| AJ-09 | Tarjeta de cita para Instagram | Worker | AJ-08 | ⬜ |
-| AJ-10 | Descarga de cada parte en PDF | Worker | — | ⬜ |
+| AJ-07 | Resaltados del lector sin repintado innecesario | Worker | — | ✅ |
+| AJ-08 | Reacciones por capítulo | Worker | AJ-07 | ✅ |
+| AJ-09 | Tarjeta de cita para Instagram | Worker | AJ-08 | ✅ |
+| AJ-10 | Descarga de cada parte en PDF | Worker | — | ✅ |
 | AJ-11 | Tutorial de primera visita en el lector | Worker | AJ-09, AJ-10 | ⬜ |
 | AJ-12 | Aviso de newsletter en el lector | Worker | AJ-11 | ⬜ |
 | AJ-13 | Cielo: etiqueta "Proceso", nebulosa y parpadeo optimizados | Worker | MV-03, AJ-01 | ⛔ |
@@ -789,3 +789,12 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F4-10 | Verificación del orquestador: tipos, lint y build sin errores. En producción (`next start` en el puerto 3100, ya detenido) `/proyectos`, los cuatro proyectos, `/videos`, `/tienda`, `/sobre-mi` y los tres archivos de prensa dan 200; `/proyectos/nada` y `/proyectos/puzzles-0618am` 404; ninguna página nombra eras ni tiene `iframe` o correo en el HTML; en `/videos` antes del clic solo hay peticiones al propio sitio (miniaturas por el optimizador); consola limpia. Se detuvieron dos servidores de prueba que dejaron los workers (3123 y 3124). Pendiente del artista: aprobar la bio y el kit, dar el correo de prensa y decidir si el repositorio de AURA se hace público. **Fase 4 terminada.** ✅ |
 | 2026-10-28 | — | El artista dio el correo de prensa (supernoba.contacto@gmail.com) y escribió su biografía. Sobre mí usa su texto tal cual en primera persona (introducción, Literatura, Música, Desarrollo y cierre); el kit de prensa y los metadatos usan una versión en tercera persona en español e inglés hecha a partir de ese texto. Kit regenerado con el correo. Verificado en el navegador a 1440 y 390 px. |
 | 2026-10-28 | AJ | Revisión de pendientes con el artista: Jabi pasa de proyectos de software a Proceso (diario), la web se llama supernobaconb.web, Libros pasa a Literatura con escritos, tienda solo con links, TikTok, y se hacen las funciones del lector viejo, la prueba con Google y las optimizaciones. Se detallan AJ-01 a AJ-14. |
+| 2026-10-28 | AJ-01 | Worker quitó AURA, AeroVision y RailSense; la web pasó a supernobaconb.web en `/proceso/supernobaconb-web`; `/proceso` con la constelación Jabi, la web destacada y el diario (vacío, con una línea honesta). Verificado en el navegador. Pendiente en AJ-13: la píldora del cielo aún dice "Proyectos". ✅ |
+| 2026-10-28 | AJ-07 | Worker quitó letra, interlineado y modo de las dependencias del cálculo de resaltados. Orquestador midió en el navegador: 0 recálculos de rangos tras cinco cambios, y el resaltado sigue dibujado. ✅ |
+| 2026-10-28 | AJ-10 | Worker hizo `/libros/bduem/leer/parte-N/pdf` con `pdf-lib` + `fontkit` (A5, portada, capítulos en Uncial, texto en Cormorant, números de página; 80–274 KB por parte), 404 en partes no publicadas. Orquestador agregó `outputFileTracingIncludes` para las fuentes y revisó el PDF. ✅ |
+| 2026-10-28 | AJ-02/03 | Worker hizo Literatura (`/libros` con el libro y escritos cuando existan, `/libros/escritos/[slug]` con su estética según el libro del que nacen; probado con un escrito temporal ya quitado) y TikTok en el pie y en Sobre mí. Tocó una línea de `sky/meta.ts` (etiqueta del tipo nuevo) por los tipos. ✅ |
+| 2026-10-28 | AJ-04 | Worker hizo `lib/schedule.ts`: el caché de lo que depende de fechas vence en la siguiente publicación (`expire` en la fecha, `revalidate` un segundo antes) y envolvió esas piezas en `Suspense`. En `next dev` la primera visita tras la fecha aún vio la copia vieja (dev retiene al menos 300 s); se confirma en producción en AJ-14. ✅ |
+| 2026-10-28 | — | Pedido del artista: botón de cerrar sesión y de descargar el PDF en el lector. El panel "Mis citas y marcadores" muestra la sesión con "Salir" y la barra tiene el ícono de descarga. |
+| 2026-10-28 | AJ-08 | Worker hizo las reacciones (`reactions` / `userReactions` con el `userId` local del sitio viejo, transacción e `increment`, en vivo). Orquestador lo probó en el navegador con los conteos reales del sitio viejo (11 → 12 → 11). ✅ |
+| 2026-10-28 | AJ-05 | Orquestador: el kit bajó de 6 MB a 0.5 MB por PDF (imágenes al tamaño impreso y polaroids con marco y giro dibujados en JPEG, porque Chrome rasterizaba las giradas), sin la lista de software, con TikTok y etiquetas "Música · Literatura". ✅ |
+| 2026-10-28 | AJ-09 | Worker hizo la tarjeta de cita en canvas (Noche, Papel y Polaroid) con vista previa, compartir como archivo y descargar. Orquestador la revisó en el navegador: fuentes reales y la estrella en BRILL✦. ✅ |
