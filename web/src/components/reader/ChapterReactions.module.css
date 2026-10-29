@@ -1,0 +1,95 @@
+/* Reacciones al final de cada capítulo: discretas, en blanco y trazo fino */
+.reactions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4rem;
+  padding-inline: 8px;
+  text-align: center;
+}
+
+.prompt {
+  margin: 0;
+  color: var(--era-fg-muted);
+  font-family: var(--era-font-body);
+  font-size: 0.95rem;
+  font-style: italic;
+  text-indent: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+}
+
+.button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 56px;
+  min-height: 56px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.button[aria-pressed="true"] {
+  color: #fff;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  transition: fill 0.2s ease, filter 0.2s ease;
+}
+
+.icon[data-selected] {
+  fill: rgba(255, 255, 255, 0.9);
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.55));
+}
+
+.count {
+  min-height: 1em;
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Modo páginas: queda al pie del capítulo sin romper la columna */
+:global([data-mode="pages"]) .reactions {
+  margin-top: 2rem;
+  break-inside: avoid;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .icon {
+    transition: none;
+  }
+}

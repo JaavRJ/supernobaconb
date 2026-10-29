@@ -5,6 +5,7 @@ import { EraPanel } from "@/components/era/EraPanel";
 import { VerticalLabel } from "@/components/era/VerticalLabel";
 import { scheduledCacheLife } from "@/lib/schedule";
 import { getBookPart, getBookParts, getPartMeta, isPartPublished, partSlug } from "@/lib/book";
+import { ChapterReactions } from "./ChapterReactions";
 import { PartCountdown } from "./PartCountdown";
 import { PartPrelude } from "./PartPrelude";
 import { ReaderShell } from "./ReaderShell";
@@ -163,6 +164,7 @@ export async function PartView({ partNumber }: { partNumber: number }) {
                     <Ornament />
                   </header>
                   <div className={styles.body} data-chapter-body dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+                  <ChapterReactions partNumber={part.number} chapterIndex={c.index} />
                 </section>
               );
             })}
