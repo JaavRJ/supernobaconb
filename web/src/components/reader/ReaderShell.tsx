@@ -481,6 +481,7 @@ export function ReaderShell({
         <div id="controles-de-lectura" className={styles.controls}>
           <ReaderTools
             partNumber={partNumber}
+            partTitle={partTitle}
             chapters={chapters}
             where={where}
             pageNumber={pages ? page + 1 : 1}

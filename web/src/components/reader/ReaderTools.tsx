@@ -5,6 +5,7 @@ import { SignInButton } from "@/components/auth/SignInButton";
 import { useAuth, useBookmarks, useQuotes, type Bookmark, type Quote } from "@/lib/reader";
 import { useHydrated } from "./useHydrated";
 import { copyToClipboard, quoteWithSource } from "./clipboard";
+import { QuoteCardDialog, type QuoteCardTarget } from "./QuoteCardDialog";
 import styles from "./Reader.module.css";
 
 /** Un marcador cuenta como "aquí" si está a menos de este avance del capítulo */
@@ -12,6 +13,7 @@ const NEAR = 0.04;
 
 interface ReaderToolsProps {
   partNumber: number;
+  partTitle: string;
   chapters: { index: number; title: string }[];
   /** Punto de lectura actual */
   where: { chapter: number; progress: number };
@@ -21,13 +23,22 @@ interface ReaderToolsProps {
 }
 
 /** Botones finos de la barra: marcador del punto actual y panel "Mis citas y marcadores" */
-export function ReaderTools({ partNumber, chapters, where, pageNumber, onGoBookmark, onGoQuote }: ReaderToolsProps) {
+export function ReaderTools({
+  partNumber,
+  partTitle,
+  chapters,
+  where,
+  pageNumber,
+  onGoBookmark,
+  onGoQuote,
+}: ReaderToolsProps) {
   const { bookmarks, save: saveBookmark, remove: removeBookmark } = useBookmarks(partNumber);
   const { quotes, remove: removeQuote } = useQuotes(partNumber);
   const { user, configured, loading } = useAuth();
 
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+  const [card, setCard] = useState<QuoteCardTarget | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
@@ -212,6 +223,17 @@ export function ReaderTools({ partNumber, chapters, where, pageNumber, onGoBookm
                       <button
                         type="button"
                         className={styles.libraryAct}
+                        aria-label="Compartir la cita como imagen"
+                        onClick={() => {
+                          setOpen(false);
+                          setCard({ text: q.text, partNumber: q.partNumber, partTitle: q.partTitle || partTitle });
+                        }}
+                      >
+                        Compartir
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.libraryAct}
                         aria-label="Borrar la cita"
                         onClick={() => void removeQuote(q.id)}
                       >
@@ -235,6 +257,16 @@ export function ReaderTools({ partNumber, chapters, where, pageNumber, onGoBookm
             </div>
           )}
         </div>
+      )}
+
+      {card && (
+        <QuoteCardDialog
+          {...card}
+          onClose={() => {
+            setCard(null);
+            buttonRef.current?.focus();
+          }}
+        />
       )}
     </>
   );

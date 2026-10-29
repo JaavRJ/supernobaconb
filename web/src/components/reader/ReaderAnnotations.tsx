@@ -11,7 +11,8 @@ import {
 } from "react";
 import { useHighlights, useQuotes } from "@/lib/reader";
 import { anchorFromRange, buildIndex, locate, rangeFromGlobal, type Anchor } from "./anchoring";
-import { copyToClipboard, quoteWithSource } from "./clipboard";
+import { copyToClipboard } from "./clipboard";
+import { QuoteCardDialog, type QuoteCardTarget } from "./QuoteCardDialog";
 import type { ReadMode } from "./ReaderSettings";
 import styles from "./Reader.module.css";
 
@@ -94,6 +95,7 @@ export function ReaderAnnotations({
   const [menu, setMenu] = useState<MenuState | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [note, setNote] = useState<NoteState | null>(null);
+  const [card, setCard] = useState<QuoteCardTarget | null>(null);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -336,13 +338,11 @@ export function ReaderAnnotations({
     finish((await copyToClipboard(menu.copyText)) ? "Copiado" : "No se pudo copiar");
   };
 
-  const doShare = async () => {
+  const doShare = () => {
     if (menu?.kind !== "selection") return;
-    try {
-      await navigator.share({ text: quoteWithSource(menu.copyText, partNumber), url: window.location.href });
-    } catch {
-      // Compartir cancelado por la persona lectora
-    }
+    holdUntil.current = Date.now() + 1500;
+    setCard({ text: menu.copyText, partNumber, partTitle });
+    window.getSelection()?.removeAllRanges();
     closeMenu();
   };
 
@@ -484,10 +484,9 @@ export function ReaderAnnotations({
     return () => document.removeEventListener("keydown", onKey);
   }, [menu, activeNote, closeNote, closeMenu]);
 
-  const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
-
   return (
     <>
+      {card && <QuoteCardDialog {...card} onClose={() => setCard(null)} />}
       {menu && (
         <div
           ref={menuRef}
@@ -515,11 +514,9 @@ export function ReaderAnnotations({
               <button type="button" className={styles.selBtn} onClick={() => void doCopy()}>
                 Copiar
               </button>
-              {canShare && (
-                <button type="button" className={styles.selBtn} onClick={() => void doShare()}>
-                  Compartir
-                </button>
-              )}
+              <button type="button" className={styles.selBtn} onClick={doShare}>
+                Compartir
+              </button>
             </>
           ) : (
             <button type="button" className={styles.selBtn} onClick={() => void doRemove()}>

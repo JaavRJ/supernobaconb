@@ -1,0 +1,111 @@
+.dialog {
+  width: min(420px, calc(100vw - 24px));
+  max-height: calc(100svh - 24px);
+  margin: auto;
+  padding: 16px;
+  overflow-y: auto;
+  border: 1px solid var(--era-line, rgba(255, 255, 255, 0.2));
+  border-radius: 14px;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-ui, var(--font-inter, system-ui, sans-serif));
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Deja sitio para variantes y botones; la imagen conserva su proporción 9:16 */
+  height: min(calc(100svh - 230px), 640px);
+  min-height: 200px;
+}
+
+.preview {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  aspect-ratio: 9 / 16;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.placeholder {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.variants {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.variant,
+.action,
+.close {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.variant {
+  flex: 1;
+  padding: 0 8px;
+}
+
+.variant[aria-pressed="true"] {
+  border-color: #fff;
+  color: #fff;
+}
+
+.action {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.close {
+  border-color: transparent;
+}
+
+.variant:hover,
+.action:hover,
+.close:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.close:hover {
+  border-color: transparent;
+}
+
+.variant:focus-visible,
+.action:focus-visible,
+.close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
