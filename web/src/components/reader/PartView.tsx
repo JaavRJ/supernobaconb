@@ -1,9 +1,9 @@
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { StarWord } from "@/components/brand/StarWord";
 import { EraPanel } from "@/components/era/EraPanel";
 import { VerticalLabel } from "@/components/era/VerticalLabel";
+import { scheduledCacheLife } from "@/lib/schedule";
 import { getBookPart, getBookParts, getPartMeta, isPartPublished, partSlug } from "@/lib/book";
 import { PartCountdown } from "./PartCountdown";
 import { PartPrelude } from "./PartPrelude";
@@ -15,10 +15,10 @@ const TEXT_ID = "texto-de-la-parte";
 
 type Meta = NonNullable<ReturnType<typeof getPartMeta>>;
 
-/** La hora actual se lee dentro de un caché de horas: así la página no se vuelve dinámica */
+/** La hora actual se lee dentro de un caché que vence en la siguiente publicación: así la página no se vuelve dinámica */
 async function isPublishedNow(partNumber: number): Promise<boolean> {
   "use cache";
-  cacheLife("hours");
+  scheduledCacheLife();
   const meta = getPartMeta(partNumber);
   return meta ? isPartPublished(meta, new Date()) : false;
 }

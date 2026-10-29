@@ -1,8 +1,9 @@
-import { cacheLife } from "next/cache";
 import Link from "next/link";
+import { Suspense } from "react";
 import { StarWord } from "@/components/brand/StarWord";
 import { getWork, getWorksByEra, threads } from "@/content";
 import { getBookParts, isPartPublished, partSlug } from "@/lib/book/publication";
+import { scheduledCacheLife } from "@/lib/schedule";
 import type { Era, Work } from "@/types/content";
 import styles from "./BduemEra.module.css";
 import { EraPanel } from "./EraPanel";
@@ -67,10 +68,10 @@ function formatPartDate(date: string): string {
   return `${day} de ${MONTHS[month - 1]}`;
 }
 
-/** La hora actual se lee dentro de un caché de horas: así la página no se renderiza en cada petición */
+/** La hora actual se lee dentro de un caché que vence en la siguiente publicación: así la página no se renderiza en cada petición */
 async function getPublishedPartNumbers(): Promise<number[]> {
   "use cache";
-  cacheLife("hours");
+  scheduledCacheLife();
   const now = new Date();
   return getBookParts()
     .filter((p) => isPartPublished(p, now))
@@ -148,7 +149,10 @@ export function BduemEra({ era }: { era: Era }) {
 
         <section className={`${styles.panel} ${styles.book}`} aria-label="El libro">
           <ol className={styles.index} role="list">
-            <PartsIndex parts={parts} />
+            {/* Si la publicación está a menos de 5 min, el caché es de petición y Next exige Suspense */}
+            <Suspense fallback={null}>
+              <PartsIndex parts={parts} />
+            </Suspense>
           </ol>
           <Polaroid
             src={book.photoUrl}

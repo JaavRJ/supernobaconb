@@ -1,13 +1,14 @@
-import { cacheLife } from "next/cache";
+import { Suspense } from "react";
 import { getEra, getTracksForWork, getWorksByConstellation, toLocalDateString } from "@/content";
 import { Sky } from "@/components/sky/Sky";
+import { scheduledCacheLife } from "@/lib/schedule";
 import type { WorkLink } from "@/types/content";
 import { DiscographyView, type DiscographyItem } from "./DiscographyView";
 
-/** La hora actual se lee dentro de un caché de horas, como en la portada */
+/** La hora actual se lee dentro de un caché que vence en la siguiente publicación, como en la portada */
 async function getToday(): Promise<string> {
   "use cache";
-  cacheLife("hours");
+  scheduledCacheLife();
   return toLocalDateString(new Date());
 }
 
@@ -34,7 +35,16 @@ function linkUrl(links: WorkLink[], platform: WorkLink["platform"]): string | un
 }
 
 /** Constelación Supernoba y lista de sus sencillos, del más nuevo al más viejo */
-export async function Discography() {
+export function Discography() {
+  // Si la publicación está a menos de 5 min, el caché es de petición y Next exige un límite de Suspense
+  return (
+    <Suspense fallback={null}>
+      <DiscographyList />
+    </Suspense>
+  );
+}
+
+async function DiscographyList() {
   const today = await getToday();
   const works = getWorksByConstellation("supernoba")
     // Las obras sin fecha (por anunciar) van primero, luego de la más nueva a la más vieja
