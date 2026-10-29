@@ -403,6 +403,13 @@
   cursor: pointer;
 }
 
+/* El enlace de descarga se alinea como los botones */
+a.barBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .barBtn:hover,
 .barBtn[aria-expanded="true"] {
   color: #fff;

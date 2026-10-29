@@ -115,6 +115,25 @@ export function ReaderTools({ partNumber, chapters, where, pageNumber, onGoBookm
         </svg>
       </button>
 
+      <a
+        className={styles.barBtn}
+        href={`/libros/bduem/leer/parte-${partNumber}/pdf`}
+        download={`BDUEM-Parte-${partNumber}.pdf`}
+        aria-label={`Descargar la Parte ${partNumber} en PDF`}
+        title="Descargar en PDF"
+      >
+        <svg viewBox="0 0 16 18" width="14" height="16" aria-hidden="true" className={styles.barIcon}>
+          <path
+            d="M8 1.5v10M4 8l4 4 4-4M2 14.5v2h12v-2"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </a>
+
       <button
         ref={buttonRef}
         type="button"
@@ -205,9 +224,13 @@ export function ReaderTools({ partNumber, chapters, where, pageNumber, onGoBookm
             )}
           </section>
 
-          {!user && configured && !loading && (
+          {configured && !loading && (
             <div className={styles.libraryAccount}>
-              <p>Inicia sesión para guardarlo en tu cuenta</p>
+              <p>
+                {user
+                  ? "Tus citas, marcadores y avance se guardan en tu cuenta"
+                  : "Inicia sesión para guardarlo en tu cuenta"}
+              </p>
               <SignInButton />
             </div>
           )}
