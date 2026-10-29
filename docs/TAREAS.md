@@ -25,6 +25,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 🔁 Correcciones | Volvió al worker con hallazgos |
 | ✅ Hecha | Verificada y con commit |
 | ⛔ Bloqueada | Espera algo (dato, decisión, otra tarea) |
+| ⏸️ En pausa | Detenida por decisión del artista; se retoma cuando lo pida |
 
 **Decisiones técnicas de la fase 1**
 - El nuevo sitio vive en la carpeta `web/` en la rama `artista`. El sitio actual (raíz del repo) sigue funcionando hasta el cambio.
@@ -45,7 +46,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
 | Ajustes del artista tras la fase 4 | 🔨 En curso | 13 / 14 (AJ-13 espera al Pase de movimiento) |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
-| 5 — Admin ampliado | 🔨 En curso | 6 / 12 |
+| 5 — Admin ampliado | ⏸️ En pausa | 9 / 12 |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
 
 ---
@@ -722,11 +723,11 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 | F5-02 | Reglas de Firestore para el contenido y el admin | Orquestador | — | ✅ |
 | F5-03 | Base del admin: acceso, navegación, guardar y refrescar, subir a Cloudinary | Worker | — | ✅ |
 | F5-04 | Importar el contenido local a Firestore | Worker | F5-01, F5-02, F5-03 | ✅ |
-| F5-05 | Obras y su posición en el cielo | Worker | F5-04 | ⬜ |
-| F5-06 | Canciones (letra, créditos, audio) y videos | Worker | F5-04 | ⬜ |
-| F5-07 | Hilos y nebulosa (señales) | Worker | F5-04 | ⬜ |
-| F5-08 | Fotos, productos, Sobre mí y redes | Worker | F5-04 | ⬜ |
-| F5-09 | Diario del proceso y escritos | Worker | F5-04 | ⬜ |
+| F5-05 | Obras y su posición en el cielo | Worker | F5-04 | ✅ |
+| F5-06 | Canciones (letra, créditos, audio) y videos | Worker | F5-04 | ✅ |
+| F5-07 | Hilos y nebulosa (señales) | Worker | F5-04 | ✅ |
+| F5-08 | Fotos, productos, Sobre mí y redes | Worker | F5-04 | ⏸️ |
+| F5-09 | Diario del proceso y escritos | Worker | F5-04 | ⏸️ |
 | F5-10 | Libro: partes, capítulos y notas del autor | Worker | F5-03 | ✅ |
 | F5-11 | Newsletter: lista e intereses con exportación CSV | Worker | F5-02, F5-03 | ✅ |
 | F5-12 | Verificación final de la fase | Orquestador | todas | ⬜ |
@@ -891,3 +892,7 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-29 | F5-11 | Worker hizo la newsletter en el admin (solo lectura): totales por interés, filtros, búsqueda sin acentos y CSV UTF-8 con BOM, probado con comas, comillas y saltos de línea; los suscriptores del sitio viejo se marcan. ✅ |
 | 2026-10-29 | F5-10 | Worker hizo el libro en el admin (partes en `works/bduem`, editor del texto en `parts/{n}/chapters`, notas del autor). Reviewer comprobó con el HTML real de las 4 partes que la limpieza no pierde texto ni capítulos, y pidió correcciones (id de nota nueva si la lista no cargó, texto perdido al cambiar de pestaña, guardar en el id real del documento, confirmación si el texto se acorta mucho, encabezados pegados); aplicadas. ✅ |
 | 2026-10-29 | F5-04 | Worker hizo `/admin/importar`: compara la semilla local (37 documentos, sin arreglos anidados ni `undefined`) con Firestore, importa solo lo que falta en lotes y refresca el sitio; "Reemplazar todo" con doble confirmación. La importación real la hace el orquestador con la cuenta del artista. El orquestador detuvo servidores de prueba que dejaron los workers (3100, 3200, 3201) y volvió a levantar el de desarrollo en el 3000. ✅ |
+| 2026-10-29 | F5-07 | Worker hizo hilos (con vista previa de "Conectado con") y señales de la nebulosa (una sola activa por era, con `writeBatch`). ✅ |
+| 2026-10-29 | F5-05 | Worker hizo obras por constelación (crear, editar, borrar con aviso de referencias, portada chica por transformación de Cloudinary, partes del libro intactas) y el mapa para arrastrar la estrella con `layoutSky`. ✅ |
+| 2026-10-29 | F5-06 | Worker hizo canciones (letra como texto ida y vuelta idéntica, créditos, audio con duración sugerida) y videos extra. El orquestador hizo que "Conectado con" reconozca las canciones por su obra (las nuevas no siempre están en `trackIds`). ✅ |
+| 2026-10-29 | F5 | **Pausa pedida por el artista.** F5-08 (fotos, tienda, Sobre mí y redes) y F5-09 (diario y escritos) se cortaron a medias al cerrarse la sesión; su avance (14 archivos sin terminar ni revisar) quedó en `web/materiales/pendiente-f5.zip` (fuera de git) para retomarlo, y el sitio compila sin ellos. Faltan además la importación real del contenido a Firestore (el artista ya inició sesión en `/admin`) y F5-12. Hasta importar, el sitio sigue leyendo los archivos locales. |
