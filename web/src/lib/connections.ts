@@ -10,7 +10,8 @@ export interface Connection {
 
 /** Hilos que tocan la obra o alguna de sus canciones, con su frase y enlace */
 export function getConnections(c: Content, work: Work): Connection[] {
-  const ids = new Set([work.id, ...(work.trackIds ?? [])]);
+  // Canciones de la obra por su `workId` (las creadas en el admin no siempre están en `trackIds`)
+  const ids = new Set([work.id, ...(work.trackIds ?? []), ...c.getTracksForWork(work.id).map((t) => t.id)]);
   const result: Connection[] = [];
   const seen = new Set<string>();
   for (const t of c.threads) {
