@@ -26,8 +26,6 @@ interface ReaderAnnotationsProps {
   flowRef: RefObject<HTMLDivElement | null>;
   mode: ReadMode;
   page: number;
-  fontSize: number;
-  lineHeight: number;
 }
 
 type MenuState =
@@ -83,8 +81,6 @@ export function ReaderAnnotations({
   flowRef,
   mode,
   page,
-  fontSize,
-  lineHeight,
 }: ReaderAnnotationsProps) {
   const { highlights, save: saveHighlight, remove: removeHighlight } = useHighlights(partNumber);
   const { save: saveQuote } = useQuotes(partNumber);
@@ -157,8 +153,9 @@ export function ReaderAnnotations({
       }
     }
     return () => unwrapMarks(root);
-    // El modo y el tamaño no mueven los rangos vivos, pero se recalcula por si el navegador reinicia el diseño
-  }, [highlights, article, mode, fontSize, lineHeight]);
+    // Solo depende de la lista: el texto lo pinta el servidor y el contenedor es el mismo en
+    // ambos modos, así que los rangos siguen vivos al cambiar letra, interlineado o modo
+  }, [highlights, article]);
 
   // ----- Menú de selección -----
   const closeMenu = useCallback(() => {

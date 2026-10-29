@@ -528,8 +528,6 @@ export function ReaderShell({
         flowRef={flowRef}
         mode={mode}
         page={page}
-        fontSize={fontSize}
-        lineHeight={lineHeight}
       />
 
       {pages && (
