@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
-import { getEra, getWork } from "@/content";
 import { eraThemeStyle } from "@/lib/theme";
 import { FullPlayer } from "./FullPlayer";
 import {
@@ -74,8 +73,7 @@ export function MiniPlayer() {
 
   if (!currentTrack) return null;
 
-  const work = getWork(currentTrack.workId);
-  const era = work ? getEra(work.era) : undefined;
+  const work = currentTrack.work;
   const total = duration || currentTrack.durationSec;
   const progressText = `${formatTime(currentTime)} de ${formatTime(total)}`;
 
@@ -84,7 +82,7 @@ export function MiniPlayer() {
     <div
       ref={barRef}
       className={styles.player}
-      style={era ? eraThemeStyle(era.theme) : undefined}
+      style={work?.theme ? eraThemeStyle(work.theme) : undefined}
     >
       <button
         type="button"

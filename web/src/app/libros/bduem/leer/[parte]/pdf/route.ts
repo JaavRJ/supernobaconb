@@ -8,8 +8,8 @@ import { getPartPdf } from "@/lib/book/pdf";
  */
 export async function GET(_request: Request, ctx: RouteContext<"/libros/bduem/leer/[parte]/pdf">) {
   const { parte } = await ctx.params;
-  const n = parsePartSlug(parte);
-  const meta = n === null ? undefined : getPartMeta(n);
+  const n = await parsePartSlug(parte);
+  const meta = n === null ? undefined : await getPartMeta(n);
   if (n === null || !meta || !isPartPublished(meta, new Date())) {
     return new Response("Esta parte no existe o aún no se publica.", {
       status: 404,

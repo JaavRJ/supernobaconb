@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getConnections } from "@/lib/connections";
+import { content } from "@/lib/content";
 import type { Work } from "@/types/content";
 import styles from "./Connections.module.css";
 
@@ -9,8 +10,8 @@ interface ConnectionsProps {
 }
 
 /** "Conectado con": los hilos de una obra y de sus canciones, como enlaces */
-export function Connections({ work, headingId = "work-threads" }: ConnectionsProps) {
-  const connections = getConnections(work);
+export async function Connections({ work, headingId = "work-threads" }: ConnectionsProps) {
+  const connections = getConnections(await content(), work);
   if (connections.length === 0) return null;
 
   return (

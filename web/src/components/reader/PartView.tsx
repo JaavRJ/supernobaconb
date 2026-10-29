@@ -5,6 +5,7 @@ import { EraPanel } from "@/components/era/EraPanel";
 import { VerticalLabel } from "@/components/era/VerticalLabel";
 import { scheduledCacheLife } from "@/lib/schedule";
 import { getBookPart, getBookParts, getPartMeta, isPartPublished, partSlug } from "@/lib/book";
+import type { Work } from "@/types/content";
 import { ChapterReactions } from "./ChapterReactions";
 import { NewsletterNotice } from "./NewsletterNotice";
 import { PartCountdown } from "./PartCountdown";
@@ -15,13 +16,13 @@ import { formatReleaseDate } from "./format";
 
 const TEXT_ID = "texto-de-la-parte";
 
-type Meta = NonNullable<ReturnType<typeof getPartMeta>>;
+type Meta = NonNullable<Work["parts"]>[number];
 
 /** La hora actual se lee dentro de un caché que vence en la siguiente publicación: así la página no se vuelve dinámica */
 async function isPublishedNow(partNumber: number): Promise<boolean> {
   "use cache";
-  scheduledCacheLife();
-  const meta = getPartMeta(partNumber);
+  await scheduledCacheLife();
+  const meta = await getPartMeta(partNumber);
   return meta ? isPartPublished(meta, new Date()) : false;
 }
 
@@ -65,9 +66,7 @@ function Stage({ children }: { children: ReactNode }) {
 }
 
 /** Lo que se ve mientras se resuelve la parte: solo el encabezado */
-export function PartFallback({ partNumber }: { partNumber: number }) {
-  const meta = getPartMeta(partNumber);
-  if (!meta) return null;
+export function PartFallback({ meta }: { meta: Meta }) {
   return (
     <Stage>
       <PartHeading meta={meta} />
@@ -89,7 +88,7 @@ function Ornament() {
 }
 
 export async function PartView({ partNumber }: { partNumber: number }) {
-  const meta = getPartMeta(partNumber);
+  const meta = await getPartMeta(partNumber);
   if (!meta) return null;
 
   if (!(await isPublishedNow(partNumber))) {
@@ -122,8 +121,10 @@ export async function PartView({ partNumber }: { partNumber: number }) {
     );
   }
 
-  const prev = partNumber > 1 ? getPartMeta(partNumber - 1) : undefined;
-  const next = partNumber < getBookParts().length ? getPartMeta(partNumber + 1) : undefined;
+  const [prev, next] = await Promise.all([
+    partNumber > 1 ? getPartMeta(partNumber - 1) : undefined,
+    partNumber < (await getBookParts()).length ? getPartMeta(partNumber + 1) : undefined,
+  ]);
 
   return (
     <Stage>

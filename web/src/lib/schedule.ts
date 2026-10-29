@@ -1,5 +1,6 @@
-import { cacheLife } from "next/cache";
-import { toLocalDateString, works } from "@/content";
+import { cacheLife, cacheTag } from "next/cache";
+import { toLocalDateString } from "@/content";
+import { getContent, type ContentSnapshot } from "@/lib/content";
 
 const TIME_ZONE = "America/Mexico_City";
 
@@ -7,7 +8,7 @@ const TIME_ZONE = "America/Mexico_City";
 const HOURS = { stale: 300, revalidate: 3600, expire: 86400 };
 
 /** Fechas (día calendario de México) en que algo se publica: partes de libros y obras con fecha */
-function knownReleaseDates(): string[] {
+function knownReleaseDates({ works }: ContentSnapshot): string[] {
   return works
     .filter((w) => !w.hidden)
     .flatMap((w) => [w.releaseDate, ...(w.parts ?? []).map((p) => p.releaseDate)])
@@ -43,12 +44,9 @@ function startOfLocalDay(date: string): number {
 
 /**
  * Segundos (redondeados hacia abajo, mínimo 1) hasta la siguiente fecha de publicación posterior a `now`,
- * o `null` si no hay ninguna. Pura: recibe `now` y, opcionalmente, las fechas.
+ * o `null` si no hay ninguna. Pura: recibe `now` y las fechas.
  */
-export function secondsUntilNextRelease(
-  now: Date,
-  dates: readonly string[] = knownReleaseDates(),
-): number | null {
+export function secondsUntilNextRelease(now: Date, dates: readonly string[]): number | null {
   const today = toLocalDateString(now);
   const next = dates.filter((d) => d > today).sort()[0];
   if (!next) return null;
@@ -69,7 +67,8 @@ export function scheduledProfile(seconds: number | null): { stale: number; reval
 
 /**
  * Sustituye a `cacheLife("hours")` en las funciones cacheadas que deciden qué está publicado.
- * Llamar dentro del ámbito `"use cache"`.
+ * Llamar con `await` dentro del ámbito `"use cache"`: lee las fechas del contenido y etiqueta el
+ * caché con `content`, así que se renueva también cuando el admin guarda.
  *
  * Según la guía de Next 16, entre `revalidate` y `expire` se sirve la copia vieja mientras se
  * regenera, y solo después de `expire` la siguiente visita espera la copia nueva. Por eso `expire`
@@ -78,6 +77,8 @@ export function scheduledProfile(seconds: number | null): { stale: number; reval
  * primera visita posterior se regenera con la hora nueva. Lo que se regenera en el último segundo
  * puede vivir hasta 1 s después de la fecha (el mínimo de `expire`).
  */
-export function scheduledCacheLife(now: Date = new Date()): void {
-  cacheLife(scheduledProfile(secondsUntilNextRelease(now)));
+export async function scheduledCacheLife(now: Date = new Date()): Promise<void> {
+  const snapshot = await getContent();
+  cacheTag("content");
+  cacheLife(scheduledProfile(secondsUntilNextRelease(now, knownReleaseDates(snapshot))));
 }

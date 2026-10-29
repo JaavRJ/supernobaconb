@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { usePlayer } from "@/components/player/PlayerProvider";
-import type { Track } from "@/types/content";
+import type { PlayerTrack } from "@/types/content";
 import styles from "./Discography.module.css";
 
 export interface DiscographyItem {
@@ -22,7 +22,7 @@ export interface DiscographyItem {
   /** Aún no se publica: se muestra apagada y sin "Escuchar" */
   upcoming: boolean;
   /** Canciones con audio propio, para el reproductor del sitio */
-  playable: Track[];
+  playable: PlayerTrack[];
   /** Smart link o, si no hay, Spotify */
   listenUrl?: string;
   spotifyUrl?: string;

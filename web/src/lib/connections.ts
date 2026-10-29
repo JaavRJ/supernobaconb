@@ -1,5 +1,5 @@
-import { getWork, threads } from "@/content";
 import { partSlug } from "@/lib/book/publication";
+import type { Content } from "@/lib/content";
 import type { Work } from "@/types/content";
 
 export interface Connection {
@@ -9,14 +9,14 @@ export interface Connection {
 }
 
 /** Hilos que tocan la obra o alguna de sus canciones, con su frase y enlace */
-export function getConnections(work: Work): Connection[] {
+export function getConnections(c: Content, work: Work): Connection[] {
   const ids = new Set([work.id, ...(work.trackIds ?? [])]);
   const result: Connection[] = [];
   const seen = new Set<string>();
-  for (const t of threads) {
+  for (const t of c.threads) {
     const incoming = ids.has(t.to);
     if (!incoming && !ids.has(t.from)) continue;
-    const other = getWork(incoming ? t.from : t.to);
+    const other = c.getWork(incoming ? t.from : t.to);
     if (!other || other.hidden) continue;
     const isBook = other.type === "libro";
     const part = other.parts?.find((p) => p.number === t.fromPart);

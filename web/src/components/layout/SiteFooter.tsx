@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { site } from "@/content/site";
+import { content } from "@/lib/content";
 import styles from "./SiteFooter.module.css";
 
 /** Íconos finos de trazo por plataforma, indexados por la etiqueta de `site.social` */
@@ -25,7 +26,8 @@ const icons: Record<string, ReactNode> = {
   ),
 };
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const { contact } = await content();
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
@@ -57,7 +59,7 @@ export function SiteFooter() {
           ))}
           <li>
             <a
-              href={site.instagram.url}
+              href={contact.instagram.url}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.link}
@@ -82,7 +84,7 @@ export function SiteFooter() {
           </li>
           <li>
             <a
-              href={site.tiktok.url}
+              href={contact.tiktok.url}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.link}

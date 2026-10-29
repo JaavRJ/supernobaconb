@@ -143,6 +143,23 @@ export interface Track {
   credits?: { name: string; roles: string[] }[];
 }
 
+/** Lo que el reproductor (cliente) necesita saber de la obra de una canción */
+export interface PlayerWork {
+  title: string;
+  /** Ruta interna de la obra */
+  href: string;
+  coverUrl?: string;
+  /** Portada chica para la barra y la sesión de medios */
+  coverSmallUrl?: string;
+  /** Tema de su era; sin él el reproductor usa la base radiante */
+  theme?: EraThemeTokens;
+}
+
+/** Canción de la cola del reproductor: la canción y los datos de su obra, que arma el servidor */
+export interface PlayerTrack extends Track {
+  work?: PlayerWork;
+}
+
 /** Captura de pantalla de un proyecto */
 export interface ProjectScreenshot {
   src: string;

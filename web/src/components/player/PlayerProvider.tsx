@@ -10,8 +10,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { getWork } from "@/content";
-import type { Track } from "@/types/content";
+import type { PlayerTrack } from "@/types/content";
 
 /** Segundos a partir de los cuales "anterior" reinicia la canción en vez de retroceder */
 const RESTART_THRESHOLD_SEC = 3;
@@ -20,16 +19,16 @@ const RESTART_THRESHOLD_SEC = 3;
 const DEFAULT_VOLUME = 0.8;
 
 export interface PlayerContextValue {
-  queue: Track[];
+  queue: PlayerTrack[];
   index: number;
   /** Canción actual; undefined si no hay cola */
-  currentTrack: Track | undefined;
+  currentTrack: PlayerTrack | undefined;
   isPlaying: boolean;
   currentTime: number;
   duration: number;
   volume: number;
   muted: boolean;
-  playQueue: (tracks: Track[], startIndex?: number) => void;
+  playQueue: (tracks: PlayerTrack[], startIndex?: number) => void;
   togglePlay: () => void;
   next: () => void;
   previous: () => void;
@@ -52,7 +51,7 @@ export function usePlayer(): PlayerContextValue {
  */
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [queue, setQueue] = useState<Track[]>([]);
+  const [queue, setQueue] = useState<PlayerTrack[]>([]);
   const [index, setIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -60,7 +59,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [volume, setVolumeState] = useState(1);
   const [muted, setMuted] = useState(false);
 
-  const currentTrack: Track | undefined = queue[index];
+  const currentTrack: PlayerTrack | undefined = queue[index];
   const currentUrl = currentTrack?.audioUrl;
 
   // Carga y reproduce cada vez que cambia la cola o la posición (acciones del usuario)
@@ -80,7 +79,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     audio.muted = muted;
   }, [volume, muted]);
 
-  const playQueue = useCallback((tracks: Track[], startIndex = 0) => {
+  const playQueue = useCallback((tracks: PlayerTrack[], startIndex = 0) => {
     const playable = tracks.filter((t) => Boolean(t.audioUrl));
     if (playable.length === 0) return;
     const start = Math.min(Math.max(startIndex, 0), playable.length - 1);
@@ -160,7 +159,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       session.metadata = null;
       return;
     }
-    const work = getWork(currentTrack.workId);
+    const work = currentTrack.work;
     session.metadata = new MediaMetadata({
       title: currentTrack.title,
       artist: "Supernoba",

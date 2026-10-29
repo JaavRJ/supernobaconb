@@ -1,13 +1,7 @@
 import { notFound } from "next/navigation";
 import { DiaryEntryView } from "@/components/diary/DiaryEntryView";
 import { ProjectView } from "@/components/projects/ProjectView";
-import {
-  getDiary,
-  getDiaryEntry,
-  getProjectDetail,
-  getWork,
-  getWorksByConstellation,
-} from "@/content";
+import { content, type Content } from "@/lib/content";
 
 /** La primera visita a un slug no listado espera la página completa (y su 404) */
 export const ensureStatic = "navigation";
@@ -15,35 +9,38 @@ export const ensureStatic = "navigation";
 /** Los slugs se conocen de antemano y el 404 de los desconocidos depende de `params`, así que la ruta puede bloquear al navegar */
 export const instant = false;
 
-export function generateStaticParams() {
-  const projects = getWorksByConstellation("jabi").filter((w) => w.type === "proyecto");
-  return [...getDiary(), ...projects].map((item) => ({ slug: item.id }));
+export async function generateStaticParams() {
+  const c = await content();
+  const projects = c.getWorksByConstellation("jabi").filter((w) => w.type === "proyecto");
+  return [...c.getDiary(), ...projects].map((item) => ({ slug: item.id }));
 }
 
-function findProject(slug: string) {
-  const work = getWork(slug);
+function findProject(c: Content, slug: string) {
+  const work = c.getWork(slug);
   if (!work || work.constellation !== "jabi" || work.type !== "proyecto" || work.hidden) {
     return undefined;
   }
-  const detail = getProjectDetail(work.id);
+  const detail = c.getProjectDetail(work.id);
   return detail ? { work, detail } : undefined;
 }
 
 export async function generateMetadata({ params }: PageProps<"/proceso/[slug]">) {
   const { slug } = await params;
-  const entry = getDiaryEntry(slug);
+  const c = await content();
+  const entry = c.getDiaryEntry(slug);
   if (entry) return { title: entry.title, description: entry.paragraphs[0] };
-  const project = findProject(slug);
+  const project = findProject(c, slug);
   return project ? { title: project.work.title, description: project.work.summary } : {};
 }
 
 export default async function ProcesoSlugPage({ params }: PageProps<"/proceso/[slug]">) {
   const { slug } = await params;
+  const c = await content();
 
-  const entry = getDiaryEntry(slug);
+  const entry = c.getDiaryEntry(slug);
   if (entry) return <DiaryEntryView entry={entry} />;
 
-  const project = findProject(slug);
+  const project = findProject(c, slug);
   if (!project) notFound();
 
   return <ProjectView work={project.work} detail={project.detail} />;

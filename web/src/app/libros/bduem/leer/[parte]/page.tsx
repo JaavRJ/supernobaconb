@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { PartFallback, PartView } from "@/components/reader/PartView";
 import { EraTheme } from "@/components/theme/EraTheme";
-import { getEra, getWork } from "@/content";
+import { getEra } from "@/content";
+import { content } from "@/lib/content";
 import { ReaderDataProvider } from "@/lib/reader";
 import { getBookParts, getPartMeta, parsePartSlug, partSlug } from "@/lib/book";
 
@@ -12,16 +13,16 @@ export const ensureStatic = "navigation";
 /** Los slugs se conocen de antemano y el 404 de los desconocidos depende de `params`, así que la ruta puede bloquear al navegar */
 export const instant = false;
 
-export function generateStaticParams() {
-  return getBookParts().map((p) => ({ parte: partSlug(p.number) }));
+export async function generateStaticParams() {
+  return (await getBookParts()).map((p) => ({ parte: partSlug(p.number) }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/libros/bduem/leer/[parte]">) {
   const { parte } = await params;
-  const n = parsePartSlug(parte);
-  const meta = n === null ? undefined : getPartMeta(n);
+  const n = await parsePartSlug(parte);
+  const meta = n === null ? undefined : await getPartMeta(n);
   if (!meta) return {};
-  const book = getWork("bduem")?.title ?? "Brillo de una Estrella Muerta";
+  const book = (await content()).getWork("bduem")?.title ?? "Brillo de una Estrella Muerta";
   return {
     title: { absolute: `Parte ${meta.number}: ${meta.title} — ${book}` },
     description: meta.subtitle ? `${book}. ${meta.subtitle}.` : book,
@@ -30,17 +31,18 @@ export async function generateMetadata({ params }: PageProps<"/libros/bduem/leer
 
 export default async function ReadPartPage({ params }: PageProps<"/libros/bduem/leer/[parte]">) {
   const { parte } = await params;
-  const n = parsePartSlug(parte);
-  if (n === null) notFound();
+  const n = await parsePartSlug(parte);
+  const meta = n === null ? undefined : await getPartMeta(n);
+  if (n === null || !meta) notFound();
 
-  const work = getWork("bduem");
+  const work = (await content()).getWork("bduem");
   const era = work ? getEra(work.era) : undefined;
-  if (!era) throw new Error("Falta la obra bduem o su era en @/content");
+  if (!era) throw new Error("Falta la obra bduem o su era en el contenido");
 
   return (
     <EraTheme era={era}>
       <ReaderDataProvider>
-        <Suspense fallback={<PartFallback partNumber={n} />}>
+        <Suspense fallback={<PartFallback meta={meta} />}>
           <PartView partNumber={n} />
         </Suspense>
       </ReaderDataProvider>

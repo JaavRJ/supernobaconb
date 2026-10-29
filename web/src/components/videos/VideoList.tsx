@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { YouTubeEmbed } from "@/components/music/YouTubeEmbed";
-import { getWork } from "@/content";
+import { content } from "@/lib/content";
 import type { Video } from "@/types/content";
 import styles from "./VideoList.module.css";
 
@@ -15,11 +15,12 @@ function formatDate(iso: string): string {
 }
 
 /** Videoclips en rejilla: fachada de YouTube, sencillo ligado y fecha */
-export function VideoList({ videos }: { videos: Video[] }) {
+export async function VideoList({ videos }: { videos: Video[] }) {
+  const c = await content();
   return (
     <ul className={styles.grid}>
       {videos.map((video) => {
-        const work = getWork(video.workId);
+        const work = c.getWork(video.workId);
         return (
           <li key={video.id} className={styles.item}>
             <YouTubeEmbed url={video.url} title={video.title} />

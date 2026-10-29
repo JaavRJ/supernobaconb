@@ -1,4 +1,4 @@
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import type { AuthorNote, BookPart } from "@/types/book";
 import { splitIntoChapters } from "./chapters";
 import { fetchAuthorNotes, fetchPartHtml } from "./firestore";
@@ -11,7 +11,7 @@ export { readingMinutes } from "./reading";
 
 /** Construye la parte a partir de Firestore; `null` si falta configuración o falla la red */
 async function loadBookPart(partNumber: number): Promise<{ part: BookPart; complete: boolean } | null> {
-  const meta = getPartMeta(partNumber);
+  const meta = await getPartMeta(partNumber);
   if (!meta) return null;
   const [raw, allNotes] = await Promise.all([fetchPartHtml(partNumber), fetchAuthorNotes()]);
   if (!raw) return null;
@@ -45,6 +45,7 @@ async function loadBookPart(partNumber: number): Promise<{ part: BookPart; compl
  */
 export async function getBookPart(partNumber: number): Promise<BookPart | null> {
   "use cache";
+  cacheTag("book");
   const loaded = await loadBookPart(partNumber);
   if (loaded?.complete) cacheLife("hours");
   else cacheLife("seconds");
@@ -54,6 +55,7 @@ export async function getBookPart(partNumber: number): Promise<BookPart | null> 
 /** Todas las notas del autor de una parte (marcadas o no); `[]` si no se pueden leer */
 export async function getAuthorNotes(partNumber: number): Promise<AuthorNote[]> {
   "use cache";
+  cacheTag("book");
   const notes = await fetchAuthorNotes();
   if (notes) cacheLife("hours");
   else cacheLife("seconds");

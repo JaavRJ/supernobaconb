@@ -12,9 +12,8 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { getEra, getWork } from "@/content";
 import { eraThemeStyle } from "@/lib/theme";
-import type { Track } from "@/types/content";
+import type { PlayerTrack } from "@/types/content";
 import {
   ChevronDownIcon,
   NextIcon,
@@ -38,7 +37,7 @@ interface FullPlayerProps {
   onClose: () => void;
   /** Elemento que abrió la vista; recupera el foco al cerrar */
   openerRef: RefObject<HTMLElement | null>;
-  track: Track;
+  track: PlayerTrack;
 }
 
 /**
@@ -102,7 +101,7 @@ function Dialog({
 }: {
   open: boolean;
   onClose: () => void;
-  track: Track;
+  track: PlayerTrack;
 }) {
   const {
     queue,
@@ -170,13 +169,13 @@ function Dialog({
     if (dialogRef.current) dialogRef.current.style.transform = "";
   };
 
-  const work = getWork(track.workId);
-  const era = work ? getEra(work.era) : undefined;
+  const work = track.work;
+  const theme = work?.theme;
   const total = duration || track.durationSec;
   const progressText = `${formatTime(currentTime)} de ${formatTime(total)}`;
   const lyrics = track.lyrics?.filter((stanza) => stanza.length > 0) ?? [];
 
-  const themeStyle: CSSProperties | undefined = era ? eraThemeStyle(era.theme) : undefined;
+  const themeStyle: CSSProperties | undefined = theme ? eraThemeStyle(theme) : undefined;
 
   return (
     <div
@@ -185,7 +184,7 @@ function Dialog({
       data-full-player=""
       data-state={open ? "open" : "closed"}
       data-tab={tab}
-      data-themed={era ? "" : undefined}
+      data-themed={theme ? "" : undefined}
       style={themeStyle}
       role="dialog"
       aria-modal="true"
@@ -316,7 +315,7 @@ function Dialog({
         <section className={styles.queue} aria-label="Cola de reproducción">
           <ol className={styles.queueList}>
             {queue.map((item, i) => {
-              const itemWork = getWork(item.workId);
+              const itemWork = item.work;
               const current = i === index;
               return (
                 <li key={`${item.id}-${i}`}>

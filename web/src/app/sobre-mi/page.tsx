@@ -2,17 +2,14 @@ import fs from "node:fs";
 import path from "node:path";
 import Image from "next/image";
 import Link from "next/link";
-import { getPhotos } from "@/content";
-import { about, bio } from "@/content/bio";
-import { site } from "@/content/site";
+import { content } from "@/lib/content";
 import { StarWord } from "@/components/brand/StarWord";
 import { AboutPhotos } from "@/components/about/AboutPhotos";
 import styles from "./page.module.css";
 
-export const metadata = {
-  title: "Sobre mí",
-  description: bio.es.medium,
-};
+export async function generateMetadata() {
+  return { title: "Sobre mí", description: (await content()).bio.es.medium };
+}
 
 const FACETS = [
   { name: "Jabi", role: "el que piensa", href: "/proceso" },
@@ -54,8 +51,9 @@ function fileSize(file: string): string {
   }
 }
 
-export default function SobreMiPage() {
-  const kitPhotos = getPhotos()
+export default async function SobreMiPage() {
+  const { about, bio, contact, photos } = await content();
+  const kitPhotos = photos
     .filter((p) => p.source === "kit" && p.id !== "retrato")
     .slice(0, 4);
 
@@ -158,12 +156,12 @@ export default function SobreMiPage() {
             <dt>Instagram</dt>
             <dd>
               <a
-                href={site.instagram.url}
+                href={contact.instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.textLink}
               >
-                {site.instagram.handle}
+                {contact.instagram.handle}
                 <span className={styles.sr}> (se abre en una pestaña nueva)</span>
               </a>
             </dd>
@@ -172,22 +170,22 @@ export default function SobreMiPage() {
             <dt>TikTok</dt>
             <dd>
               <a
-                href={site.tiktok.url}
+                href={contact.tiktok.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.textLink}
               >
-                {site.tiktok.handle}
+                {contact.tiktok.handle}
                 <span className={styles.sr}> (se abre en una pestaña nueva)</span>
               </a>
             </dd>
           </div>
-          {site.pressEmail && (
+          {contact.pressEmail && (
             <div>
               <dt>Prensa</dt>
               <dd>
-                <a href={`mailto:${site.pressEmail}`} className={styles.textLink}>
-                  {site.pressEmail}
+                <a href={`mailto:${contact.pressEmail}`} className={styles.textLink}>
+                  {contact.pressEmail}
                 </a>
               </dd>
             </div>

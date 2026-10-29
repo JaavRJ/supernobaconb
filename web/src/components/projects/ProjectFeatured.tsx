@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getProjects } from "@/content";
+import { content } from "@/lib/content";
 import { Sky } from "@/components/sky/Sky";
 import styles from "./ProjectFeatured.module.css";
 
 /** Constelación de Jabi y, destacada, la web: lo único de software que se queda */
-export function ProjectFeatured() {
-  const featured = getProjects()[0];
+export async function ProjectFeatured() {
+  const featured = (await content()).getProjects()[0];
   const shot = featured?.detail.screenshots[0];
 
   return (

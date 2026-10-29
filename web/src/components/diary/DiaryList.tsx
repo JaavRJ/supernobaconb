@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDiary } from "@/content";
+import { content } from "@/lib/content";
 import styles from "./DiaryList.module.css";
 
 /** Primer párrafo recortado en una palabra completa */
@@ -18,8 +18,8 @@ function formatDate(iso: string) {
 }
 
 /** Lista del diario de Proceso, las entradas más nuevas primero */
-export function DiaryList() {
-  const entries = getDiary();
+export async function DiaryList() {
+  const entries = (await content()).getDiary();
 
   if (entries.length === 0) {
     return (

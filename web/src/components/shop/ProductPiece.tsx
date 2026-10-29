@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Polaroid } from "@/components/era/Polaroid";
-import { getWork } from "@/content";
+import { content } from "@/lib/content";
 import type { Product } from "@/types/content";
 import styles from "./ProductPiece.module.css";
 
 /** Un producto como pieza editorial: foto en polaroid y, al lado, datos y compra */
-export function ProductPiece({ product, rotate }: { product: Product; rotate: number }) {
-  const work = product.workId ? getWork(product.workId) : undefined;
+export async function ProductPiece({ product, rotate }: { product: Product; rotate: number }) {
+  const work = product.workId ? (await content()).getWork(product.workId) : undefined;
   const readHref = work?.type === "libro" ? work.href : undefined;
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Track } from "@/types/content";
+import type { PlayerTrack } from "@/types/content";
 import { usePlayer } from "@/components/player/PlayerProvider";
 import styles from "./Release.module.css";
 
@@ -11,7 +11,7 @@ function formatDuration(totalSec: number): string {
 }
 
 /** Botón principal: reproduce todo el sencillo en el reproductor del sitio */
-export function ReleaseListenButton({ tracks, title }: { tracks: Track[]; title: string }) {
+export function ReleaseListenButton({ tracks, title }: { tracks: PlayerTrack[]; title: string }) {
   const { playQueue } = usePlayer();
   return (
     <button
@@ -26,7 +26,7 @@ export function ReleaseListenButton({ tracks, title }: { tracks: Track[]; title:
 }
 
 interface ReleaseTrackListProps {
-  tracks: Track[];
+  tracks: PlayerTrack[];
   /** Plataforma a la que enviar las canciones sin audio propio */
   fallbackUrl?: string;
 }

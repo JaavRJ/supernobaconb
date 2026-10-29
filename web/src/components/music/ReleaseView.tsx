@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { StarWord } from "@/components/brand/StarWord";
 import { VerticalLabel } from "@/components/era/VerticalLabel";
-import { getWork } from "@/content";
+import { content } from "@/lib/content";
 import { Connections } from "@/components/works/Connections";
-import type { Era, Track, Work, WorkLink } from "@/types/content";
+import type { Era, PlayerTrack, Work, WorkLink } from "@/types/content";
 import { Credits } from "./Credits";
 import { Lyrics } from "./Lyrics";
 import styles from "./Release.module.css";
@@ -39,11 +39,11 @@ const PLATFORMS: { platform: WorkLink["platform"]; label: string }[] = [
 interface ReleaseViewProps {
   work: Work;
   era: Era | null;
-  tracks: Track[];
+  tracks: PlayerTrack[];
 }
 
 /** Página de un sencillo: portada, canciones, embeds y conexiones, sobre el negro de la era */
-export function ReleaseView({ work, era, tracks }: ReleaseViewProps) {
+export async function ReleaseView({ work, era, tracks }: ReleaseViewProps) {
   const link = (platform: WorkLink["platform"]) => work.links.find((l) => l.platform === platform)?.url;
   const spotifyUrl = link("spotify");
   const hasAudio = tracks.some((t) => t.audioUrl);
@@ -65,7 +65,7 @@ export function ReleaseView({ work, era, tracks }: ReleaseViewProps) {
   if (workVideo && !seen.has(workVideo)) videos.push({ url: workVideo, title: work.title });
 
   // La era no se nombra: la obra solo se liga al libro del que nace
-  const book = era?.coreWorkId ? getWork(era.coreWorkId) : undefined;
+  const book = era?.coreWorkId ? (await content()).getWork(era.coreWorkId) : undefined;
 
   return (
     <div className={styles.stage} data-era-page>

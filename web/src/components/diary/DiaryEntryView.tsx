@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ProjectScreenshots } from "@/components/projects/ProjectScreenshots";
-import { getWork } from "@/content";
+import { content } from "@/lib/content";
 import type { DiaryEntry } from "@/types/content";
 import styles from "./DiaryEntryView.module.css";
 
@@ -14,8 +14,8 @@ function formatDate(iso: string) {
 }
 
 /** Página de una entrada del diario: fecha, título, texto, imágenes y la obra de la que habla */
-export function DiaryEntryView({ entry }: { entry: DiaryEntry }) {
-  const work = entry.workId ? getWork(entry.workId) : undefined;
+export async function DiaryEntryView({ entry }: { entry: DiaryEntry }) {
+  const work = entry.workId ? (await content()).getWork(entry.workId) : undefined;
 
   return (
     <article className={styles.page}>

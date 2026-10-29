@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { StarWord } from "@/components/brand/StarWord";
-import { getWork, getWorksByEra, threads } from "@/content";
+import { content, type Content } from "@/lib/content";
 import { getBookParts, isPartPublished, partSlug } from "@/lib/book/publication";
 import { scheduledCacheLife } from "@/lib/schedule";
 import type { Era, Work } from "@/types/content";
@@ -30,8 +30,8 @@ const TYPE_LABEL: Record<Work["type"], string> = {
 const TILTS = [3, -4, 2];
 
 /** Texto del hilo que une una obra con el libro de la era (el más específico gana) */
-function threadText(work: Work, core: Work): string | null {
-  const between = threads.filter(
+function threadText(c: Content, work: Work, core: Work): string | null {
+  const between = c.threads.filter(
     (t) =>
       (t.from === core.id && t.to === work.id) || (t.from === work.id && t.to === core.id),
   );
@@ -52,8 +52,8 @@ function yearOf(work: Work): string | null {
 }
 
 /** Libro núcleo de la era si tiene partes; solo esas eras usan esta experiencia */
-export function getEraBook(era: Era): Work | undefined {
-  const work = era.coreWorkId ? getWork(era.coreWorkId) : undefined;
+export function getEraBook(c: Content, era: Era): Work | undefined {
+  const work = era.coreWorkId ? c.getWork(era.coreWorkId) : undefined;
   return work?.type === "libro" && work.parts?.length ? work : undefined;
 }
 
@@ -71,9 +71,9 @@ function formatPartDate(date: string): string {
 /** La hora actual se lee dentro de un caché que vence en la siguiente publicación: así la página no se renderiza en cada petición */
 async function getPublishedPartNumbers(): Promise<number[]> {
   "use cache";
-  scheduledCacheLife();
+  await scheduledCacheLife();
   const now = new Date();
-  return getBookParts()
+  return (await getBookParts())
     .filter((p) => isPartPublished(p, now))
     .map((p) => p.number);
 }
@@ -114,12 +114,13 @@ async function PartsIndex({ parts }: { parts: NonNullable<Work["parts"]> }) {
 const COUNT_WORDS = ["", "UNA", "DOS", "TRES", "CUATRO", "CINCO", "SEIS"];
 
 /** Experiencia de la era BDUEM: título, índice del libro y obras, en recorrido horizontal */
-export function BduemEra({ era }: { era: Era }) {
-  const book = getEraBook(era);
+export async function BduemEra({ era }: { era: Era }) {
+  const c = await content();
+  const book = getEraBook(c, era);
   if (!book) throw new Error(`La era ${era.id} no tiene un libro con partes como núcleo`);
   // Solo las obras unidas al libro por un hilo; las demás de la era no aparecen aquí
-  const satellites = getWorksByEra(era.id).filter(
-    (w) => w.id !== book.id && threadText(w, book) !== null,
+  const satellites = c.getWorksByEra(era.id).filter(
+    (w) => w.id !== book.id && threadText(c, w, book) !== null,
   );
   const parts = book.parts ?? [];
   const bookYear = yearOf(book);
@@ -171,7 +172,7 @@ export function BduemEra({ era }: { era: Era }) {
         {satellites.length > 0 && (
           <section className={`${styles.panel} ${styles.works}`} aria-label="Obras que nacen del libro">
             {satellites.map((w, i) => {
-              const thread = threadText(w, book);
+              const thread = threadText(c, w, book);
               const year = yearOf(w);
               return (
                 <Link key={w.id} href={w.href} className={styles.work}>

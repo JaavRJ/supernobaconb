@@ -1,5 +1,5 @@
 import { ProductPiece } from "@/components/shop/ProductPiece";
-import { getProducts } from "@/content";
+import { content } from "@/lib/content";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -11,8 +11,8 @@ export const metadata = {
 // Giros leves fijos, alternados entre productos
 const TILTS = [-2.5, 2];
 
-export default function TiendaPage() {
-  const products = getProducts();
+export default async function TiendaPage() {
+  const { products } = await content();
   return (
     <div className={styles.page}>
       <header className={styles.header}>

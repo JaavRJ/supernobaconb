@@ -1,6 +1,7 @@
 import { Suspense } from "react";
-import { getEra, getTracksForWork, getWorksByConstellation, toLocalDateString } from "@/content";
+import { getEra, toLocalDateString } from "@/content";
 import { Sky } from "@/components/sky/Sky";
+import { content } from "@/lib/content";
 import { scheduledCacheLife } from "@/lib/schedule";
 import type { WorkLink } from "@/types/content";
 import { DiscographyView, type DiscographyItem } from "./DiscographyView";
@@ -8,7 +9,7 @@ import { DiscographyView, type DiscographyItem } from "./DiscographyView";
 /** La hora actual se lee dentro de un caché que vence en la siguiente publicación, como en la portada */
 async function getToday(): Promise<string> {
   "use cache";
-  scheduledCacheLife();
+  await scheduledCacheLife();
   return toLocalDateString(new Date());
 }
 
@@ -46,12 +47,13 @@ export function Discography() {
 
 async function DiscographyList() {
   const today = await getToday();
-  const works = getWorksByConstellation("supernoba")
+  const c = await content();
+  const works = c.getWorksByConstellation("supernoba")
     // Las obras sin fecha (por anunciar) van primero, luego de la más nueva a la más vieja
     .reverse();
 
   const items: DiscographyItem[] = works.map((work) => {
-    const tracks = getTracksForWork(work.id);
+    const tracks = c.toPlayerTracks(c.getTracksForWork(work.id));
     const upcoming = !work.releaseDate || work.releaseDate > today;
     const spotify = linkUrl(work.links, "spotify");
     return {

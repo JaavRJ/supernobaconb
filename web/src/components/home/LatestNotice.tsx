@@ -2,14 +2,14 @@
 
 import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { usePlayer } from "@/components/player/PlayerProvider";
-import type { Track } from "@/types/content";
+import type { PlayerTrack } from "@/types/content";
 import styles from "./LatestRelease.module.css";
 
 interface LatestNoticeProps {
   title: string;
   eraName?: string | null;
   /** Canciones con audio propio; si hay, suenan en el reproductor del sitio */
-  tracks: Track[];
+  tracks: PlayerTrack[];
   spotifyUrl?: string;
 }
 
