@@ -110,6 +110,7 @@ export function ReaderTools({
       <button
         type="button"
         className={styles.barBtn}
+        data-tutorial="bookmark"
         aria-pressed={marked}
         aria-label={marked ? "Quitar el marcador de este punto" : "Poner un marcador en este punto"}
         title={marked ? "Quitar marcador" : "Poner marcador"}
@@ -128,6 +129,7 @@ export function ReaderTools({
 
       <a
         className={styles.barBtn}
+        data-tutorial="download"
         href={`/libros/bduem/leer/parte-${partNumber}/pdf`}
         download={`BDUEM-Parte-${partNumber}.pdf`}
         aria-label={`Descargar la Parte ${partNumber} en PDF`}

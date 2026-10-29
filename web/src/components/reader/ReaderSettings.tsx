@@ -15,11 +15,13 @@ interface ReaderSettingsProps {
   lineHeight: number;
   chapters: { index: number; title: string }[];
   onChapter: (index: number) => void;
+  /** Reabre la guía de primera visita */
+  onGuide: () => void;
   onChange: (patch: { readingMode?: "vertical" | "horizontal"; fontSize?: number; lineHeight?: number }) => void;
 }
 
 /** Botón "Aa" y panel pequeño con modo, tamaño de letra e interlineado */
-export function ReaderSettings({ mode, fontSize, lineHeight, chapters, onChapter, onChange }: ReaderSettingsProps) {
+export function ReaderSettings({ mode, fontSize, lineHeight, chapters, onChapter, onGuide, onChange }: ReaderSettingsProps) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -52,6 +54,7 @@ export function ReaderSettings({ mode, fontSize, lineHeight, chapters, onChapter
         ref={buttonRef}
         type="button"
         className={styles.barBtn}
+        data-tutorial="settings"
         aria-expanded={open}
         aria-controls={panelId}
         aria-label="Configuración de lectura"
@@ -146,6 +149,18 @@ export function ReaderSettings({ mode, fontSize, lineHeight, chapters, onChapter
               </li>
             ))}
           </ol>
+
+          <button
+            type="button"
+            className={styles.guideLink}
+            onClick={() => {
+              setOpen(false);
+              buttonRef.current?.focus();
+              onGuide();
+            }}
+          >
+            Ver la guía otra vez
+          </button>
         </div>
       )}
     </>

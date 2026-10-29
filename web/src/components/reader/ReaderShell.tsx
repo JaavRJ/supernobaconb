@@ -15,6 +15,7 @@ import { buildIndex, findRange } from "./anchoring";
 import { ReaderAnnotations } from "./ReaderAnnotations";
 import { ReaderBar } from "./ReaderBar";
 import { ReaderTools } from "./ReaderTools";
+import { ReaderTutorial } from "./ReaderTutorial";
 import { useHydrated } from "./useHydrated";
 import { FONT_STEPS, LINE_STEPS, ReaderSettings, type ReadMode } from "./ReaderSettings";
 import styles from "./Reader.module.css";
@@ -78,6 +79,14 @@ export function ReaderShell({
   const mode: ReadMode = hydrated && prefsReady && preferences.readingMode === "horizontal" ? "pages" : "continuous";
   const fontSize = nearest(FONT_STEPS, hydrated ? preferences.fontSize : 20);
   const lineHeight = nearest(LINE_STEPS, hydrated ? (preferences.lineHeight ?? DEFAULT_LINE_HEIGHT) : DEFAULT_LINE_HEIGHT);
+
+  // La guía de primera visita depende de la preferencia guardada: espera a hidratar y a tenerla
+  const [replayGuide, setReplayGuide] = useState(false);
+  const guideOpen = replayGuide || (hydrated && prefsReady && !preferences.hasSeenTutorial);
+  const closeGuide = () => {
+    setReplayGuide(false);
+    if (!preferences.hasSeenTutorial) void updatePreferences({ hasSeenTutorial: true });
+  };
 
   const [overall, setOverall] = useState(0);
   const [page, setPage] = useState(0);
@@ -468,7 +477,7 @@ export function ReaderShell({
   const progress = pages ? (pageCount > 1 ? page / (pageCount - 1) : 0) : overall;
 
   return (
-    <div ref={shellRef} className={styles.shell} data-mode={mode} style={style}>
+    <div ref={shellRef} className={styles.shell} data-reader data-mode={mode} style={style}>
       <ReaderBar partNumber={partNumber} partTitle={partTitle} totalMinutes={totalMinutes} progress={progress}>
         <ReaderSettings
           mode={mode}
@@ -476,6 +485,7 @@ export function ReaderShell({
           lineHeight={lineHeight}
           chapters={chapters}
           onChapter={goChapter}
+          onGuide={() => setReplayGuide(true)}
           onChange={(patch) => void updatePreferences(patch)}
         />
         <div id="controles-de-lectura" className={styles.controls}>
@@ -494,7 +504,9 @@ export function ReaderShell({
       {!pages && heading}
       {!pages && prelude}
 
-      {showNotice && (
+      {guideOpen && <ReaderTutorial onClose={closeGuide} />}
+
+      {showNotice && !guideOpen && (
         <div className={styles.resume} role="region" aria-label="Continuar lectura">
           <p>Tienes una lectura a medias en esta parte.</p>
           <div className={styles.resumeActions}>
