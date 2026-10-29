@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   // La raíz del repo tiene otro package-lock.json (el sitio viejo); fijamos web/ como raíz.
   turbopack: { root: __dirname },
   outputFileTracingRoot: __dirname,
+  // El PDF de cada parte lee sus fuentes del disco en el servidor
+  outputFileTracingIncludes: {
+    "/libros/bduem/leer/[parte]/pdf": ["./src/lib/book/fonts/**"],
+  },
   cacheComponents: true,
   partialPrefetching: true,
   images: {
