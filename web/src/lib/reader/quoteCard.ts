@@ -1,6 +1,6 @@
 /**
  * Tarjeta de cita para historias de Instagram (1080×1920), dibujada con canvas.
- * Solo corre en el navegador: usa `document`, las fuentes de `next/font` y la estrella-brújula.
+ * Solo corre en el navegador: usa `document` y las fuentes de `next/font`.
  */
 
 export const QUOTE_CARD_WIDTH = 1080;
@@ -27,12 +27,10 @@ interface Palette {
   muted: string;
   /** Color base del polvo de estrellas (se le agrega la opacidad) */
   dust: string;
-  /** Si el fondo es claro, la estrella se dibuja oscura */
-  light: boolean;
 }
 
-const NIGHT: Palette = { bg: "#000000", fg: "#ffffff", muted: "rgba(255,255,255,0.62)", dust: "255,255,255", light: false };
-const PAPER: Palette = { bg: "#f4f1ea", fg: "#000000", muted: "rgba(0,0,0,0.58)", dust: "70,70,70", light: true };
+const NIGHT: Palette = { bg: "#000000", fg: "#ffffff", muted: "rgba(255,255,255,0.62)", dust: "255,255,255" };
+const PAPER: Palette = { bg: "#f4f1ea", fg: "#000000", muted: "rgba(0,0,0,0.58)", dust: "70,70,70" };
 
 const MAX_LINES = 12;
 const MAX_SIZE = 64;
@@ -91,15 +89,6 @@ function drawDust(
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
   }
-}
-
-function loadImage(src: string): Promise<HTMLImageElement | null> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
-    img.src = src;
-  });
 }
 
 function setSpacing(ctx: CanvasRenderingContext2D, px: number) {
@@ -183,61 +172,17 @@ function drawCaption(
   setSpacing(ctx, 0);
 }
 
-/** BRILL✦ DE UNA ESTRELLA MUERTA, con la estrella-brújula en lugar de la O */
-function drawBrand(
-  ctx: CanvasRenderingContext2D,
-  family: string,
-  star: HTMLImageElement | null,
-  palette: Palette,
-  fg: string,
-  y: number,
-) {
-  const size = 40;
+/** Título del libro en dos líneas, sin la estrella (pedido del artista): se lee mejor en una historia */
+function drawBrand(ctx: CanvasRenderingContext2D, family: string, fg: string, y: number) {
+  const size = 46;
   ctx.font = `400 ${size}px ${family}`;
-  setSpacing(ctx, 5);
+  setSpacing(ctx, 6);
   ctx.textBaseline = "middle";
-  ctx.textAlign = "left";
-  const starSize = Math.round(size * 1.5);
-  const head = "BRILL";
-  const tail = " DE UNA ESTRELLA MUERTA";
-  const headW = ctx.measureText(head).width;
-  const tailW = ctx.measureText(tail).width;
-  const total = headW + starSize + tailW;
-  const x = (QUOTE_CARD_WIDTH - total) / 2;
-
+  ctx.textAlign = "center";
   ctx.fillStyle = fg;
-  ctx.fillText(head, x, y);
-  ctx.fillText(tail, x + headW + starSize, y);
+  ctx.fillText("BRILLO DE UNA", QUOTE_CARD_WIDTH / 2, y);
+  ctx.fillText("ESTRELLA MUERTA", QUOTE_CARD_WIDTH / 2, y + size * 1.25);
   setSpacing(ctx, 0);
-
-  if (!star) {
-    ctx.fillText("O", x + headW, y);
-    return;
-  }
-  // La imagen es blanca sobre negro: en fondo oscuro se suma ("lighter") y en claro se
-  // invierte y se multiplica, así el negro de la imagen no se ve en ningún caso
-  const sx = x + headW + 2;
-  const sy = y - starSize / 2;
-  if (!palette.light) {
-    ctx.save();
-    ctx.globalCompositeOperation = "lighter";
-    ctx.drawImage(star, sx, sy, starSize, starSize);
-    ctx.restore();
-    return;
-  }
-  const layer = document.createElement("canvas");
-  layer.width = starSize;
-  layer.height = starSize;
-  const lctx = layer.getContext("2d");
-  if (!lctx) return;
-  lctx.drawImage(star, 0, 0, starSize, starSize);
-  lctx.globalCompositeOperation = "difference";
-  lctx.fillStyle = "#fff";
-  lctx.fillRect(0, 0, starSize, starSize);
-  ctx.save();
-  ctx.globalCompositeOperation = "multiply";
-  ctx.drawImage(layer, sx, sy);
-  ctx.restore();
 }
 
 function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
@@ -255,10 +200,9 @@ export async function renderQuoteCard({ text, partNumber, partTitle, variant }: 
   const caption = `Parte ${partNumber} · ${partTitle}`.toLocaleUpperCase("es");
   await Promise.all([
     document.fonts.load(`italic 400 64px ${fam.quote}`, text),
-    document.fonts.load(`400 40px ${fam.title}`, "BRILL DE UNA ESTRELLA MUERTA"),
-    document.fonts.load(`400 26px ${fam.ui}`, `${caption} supernobaconb`),
+    document.fonts.load(`400 46px ${fam.title}`, "BRILLO DE UNA ESTRELLA MUERTA"),
+    document.fonts.load(`400 30px ${fam.ui}`, `${caption} @supernobaconb`),
   ]);
-  const star = await loadImage("/brand/estrella.jpg");
 
   const canvas = document.createElement("canvas");
   canvas.width = QUOTE_CARD_WIDTH;
@@ -296,13 +240,14 @@ export async function renderQuoteCard({ text, partNumber, partTitle, variant }: 
     drawCaption(ctx, fam.ui, caption, palette.muted, W / 2, 1540, W - 200);
   }
 
-  drawBrand(ctx, fam.title, star, palette, palette.fg, 1700);
-  ctx.font = `400 24px ${fam.ui}`;
-  setSpacing(ctx, 5);
+  drawBrand(ctx, fam.title, palette.fg, 1660);
+  // El Instagram del artista, para que quien vea la historia sepa de dónde viene
+  ctx.font = `500 30px ${fam.ui}`;
+  setSpacing(ctx, 3);
   ctx.fillStyle = palette.muted;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("supernobaconb", W / 2, 1810);
+  ctx.fillText("@supernobaconb", W / 2, 1815);
   setSpacing(ctx, 0);
 
   return new Promise((resolve, reject) => {
