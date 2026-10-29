@@ -46,7 +46,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
 | Ajustes del artista tras la fase 4 | 🔨 En curso | 13 / 14 (AJ-13 espera al Pase de movimiento) |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
-| 5 — Admin ampliado | ⏸️ En pausa | 9 / 12 |
+| 5 — Admin ampliado | ⏸️ En pausa | 9 / 12 + 4 correcciones (F5-C1 a F5-C4) |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
 
 ---
@@ -786,6 +786,49 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 ### F5-12 — Verificación final
 - **Terminado cuando:** tipos, lint y build sin errores; con un admin real: crear, editar y borrar algo en cada sección y verlo en el sitio; un usuario no admin no entra ni puede escribir (reglas); revisión a 1440 y 390 px; plan y tablero actualizados; push.
 
+
+### Correcciones de la Fase 5 (pedidas por el artista, 2026-10-29)
+
+El artista probó el admin y encontró tres problemas. Se anotan aquí para hacerlas al retomar la fase (en pausa); **todavía no se programan**.
+
+**Decisión: el admin se organiza por disciplina.** "Obras" deja de ser el lugar donde se crea todo: queda como **vista general** (todas las obras de las tres constelaciones, su estado y el **mapa del cielo** para acomodar estrellas). Cada obra se crea y se edita en el apartado de su disciplina, con todo lo que necesita en un mismo lugar:
+- **Música** (Supernoba): sencillos, EPs y álbumes junto con sus canciones (letra, créditos, audio) y videos. Reemplaza a "Canciones" como apartado aparte.
+- **Literatura** (noba): libros (con sus partes, texto y notas del autor) y escritos sueltos. Reemplaza a "Libro" (que hoy solo sirve para BDUEM).
+- **Proceso** (Jabi): entradas del diario y la web supernobaconb.web.
+- Lo transversal se queda aparte: Hilos y nebulosa, Fotos y tienda, Sobre mí y redes, Newsletter, Importar.
+
+| ID | Corrección | Depende de | Estado |
+|---|---|---|---|
+| F5-C1 | Las páginas de obras nuevas existen sin volver a compilar | — | ⬜ |
+| F5-C2 | Admin por disciplina: Obras como vista general y mapa; crear en Música, Literatura y Proceso | F5-C1 | ⬜ |
+| F5-C3 | Más de un libro: partes, texto y notas por libro | F5-C2 | ⬜ |
+| F5-C4 | Retomar F5-08 (fotos, tienda, Sobre mí y redes) y F5-09 (diario y escritos) dentro del nuevo orden | F5-C2 | ⬜ |
+
+#### F5-C1 — Las páginas de obras nuevas existen sin volver a compilar
+- **Problema:** se crea un sencillo en Obras y su canción en Canciones; la estrella aparece en el cielo, pero su página (`/musica/<id>`) dice que no existe.
+- **Causa:** las rutas dinámicas (`/musica/[slug]`, `/libros/escritos/[slug]`, `/proceso/[slug]`) solo aceptan los slugs que `generateStaticParams` conocía al compilar (`ensureStatic = "navigation"`). El cielo sí se actualiza porque lee `getContent()` en cada refresco, pero la ruta no acepta un slug nuevo hasta el siguiente build.
+- **Terminado cuando:** una obra creada en el admin tiene su página al momento (se genera la primera vez que alguien entra y se guarda en caché), un slug que no existe en el contenido sigue dando 404 real, y los slugs conocidos siguen prerenderizados. Revisar en la guía de Next 16 cómo combinar `generateStaticParams` con parámetros nuevos bajo Cache Components.
+
+#### F5-C2 — Admin por disciplina
+- **Terminado cuando:**
+  - "Obras" muestra todas las obras por constelación (con portada, tipo, fecha y estado), enlaza a su apartado para editarlas y conserva el mapa para mover estrellas; no tiene "Nueva obra".
+  - **Música**: crear y editar sencillo, EP o álbum (datos de la obra, portada, links) y, en la misma pantalla, sus canciones y videos; una obra musical nueva queda con su página, su lugar en `/musica` y su estrella.
+  - **Literatura**: crear y editar libros y escritos (lo de F5-C3 y F5-09).
+  - **Proceso**: entradas del diario y la web.
+  - Cada apartado solo ofrece los tipos de su disciplina (por ejemplo, Música no crea escritos) y sugiere la ruta correcta.
+  - Se reutiliza lo ya hecho en F5-05 (formulario de obra, mapa), F5-06 (canciones y videos) y F5-10 (libro), sin perder funciones.
+
+#### F5-C3 — Más de un libro
+- **Problema:** el apartado Libro solo edita BDUEM; un libro nuevo no deja editar partes, texto ni notas.
+- **Causa:** el admin del libro, el lector y el PDF están atados a BDUEM: leen `works/bduem`, el texto en `parts/{n}/chapters` (colección global del sitio viejo) y las rutas son `/libros/bduem/...`.
+- **Terminado cuando:**
+  - Cada libro tiene sus partes (título, subtítulo, fecha), su texto por parte y sus notas del autor, editables en Literatura.
+  - El texto de los libros nuevos vive en una ruta por libro (por ejemplo `books/{slug}/parts/{n}`) y BDUEM sigue usando sus colecciones de siempre (`parts`, `authorNotes`), así que el sitio viejo no se rompe.
+  - El lector, la antesala, la descarga en PDF y la publicación escalonada funcionan para cualquier libro (`/libros/<slug>`, `/libros/<slug>/leer/parte-N`), con redirecciones o compatibilidad para las rutas actuales de BDUEM.
+  - La estética de un libro nuevo: la base radiante hasta que tenga su propio tema (el tema por libro se decide con el artista).
+
+#### F5-C4 — Retomar F5-08 y F5-09
+- El avance que quedó a medias está en `web/materiales/pendiente-f5.zip` (14 archivos sin terminar ni revisar). Se retoma ya acomodado en el nuevo orden: diario en Proceso, escritos en Literatura, y "Fotos y tienda", "Sobre mí y redes" como apartados transversales.
 ---
 
 ## Fases siguientes (se detallan al empezar)
@@ -896,3 +939,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-29 | F5-05 | Worker hizo obras por constelación (crear, editar, borrar con aviso de referencias, portada chica por transformación de Cloudinary, partes del libro intactas) y el mapa para arrastrar la estrella con `layoutSky`. ✅ |
 | 2026-10-29 | F5-06 | Worker hizo canciones (letra como texto ida y vuelta idéntica, créditos, audio con duración sugerida) y videos extra. El orquestador hizo que "Conectado con" reconozca las canciones por su obra (las nuevas no siempre están en `trackIds`). ✅ |
 | 2026-10-29 | F5 | **Pausa pedida por el artista.** F5-08 (fotos, tienda, Sobre mí y redes) y F5-09 (diario y escritos) se cortaron a medias al cerrarse la sesión; su avance (14 archivos sin terminar ni revisar) quedó en `web/materiales/pendiente-f5.zip` (fuera de git) para retomarlo, y el sitio compila sin ellos. Faltan además la importación real del contenido a Firestore (el artista ya inició sesión en `/admin`) y F5-12. Hasta importar, el sitio sigue leyendo los archivos locales. |
+| 2026-10-29 | F5 | El artista probó el admin: una obra musical nueva aparece en el cielo pero su página da 404, y Libro solo sirve para BDUEM. Decide organizar el admin por disciplina (Obras solo como vista general y mapa del cielo; crear en Música, Literatura y Proceso). Se anotan F5-C1 a F5-C4, sin programar todavía. Además: la clave de Cloudinary con rol Media no puede subir ("missing permissions create"); hace falta una con rol Master. |

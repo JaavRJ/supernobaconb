@@ -213,6 +213,7 @@ Se hace cuando lleguen las portadas, fotos y la estética de cada era; si llegan
 - [ ] Revisar la portada, el cielo y las páginas de obra con imágenes reales, en escritorio y celular
 
 ### Fase 5 — Admin ampliado
+> En pausa (2026-10-29). Hecho: contenido en Firestore con respaldo local, reglas, base del admin con subidas firmadas a Cloudinary, importar, libro (solo BDUEM), newsletter, obras con mapa del cielo, canciones y videos, hilos y nebulosa. Correcciones pedidas por el artista (detalle en TAREAS.md, F5-C1 a F5-C4): el admin se organiza **por disciplina** —"Obras" queda como vista general y mapa del cielo, y cada obra se crea en Música, Literatura o Proceso—; las páginas de obras nuevas deben existir sin recompilar; y el sitio debe admitir **más de un libro** (partes, texto, notas, lector y PDF por libro), sin romper BDUEM ni el sitio viejo.
 - [ ] Gestión de obras, eras (con editor de tema) e hilos, y posición de cada estrella en el cielo
 - [ ] Gestión de canciones (subida de audio), videos y productos
 - [ ] Newsletter con intereses y exportación CSV
