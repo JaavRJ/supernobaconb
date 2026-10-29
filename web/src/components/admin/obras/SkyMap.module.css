@@ -1,0 +1,76 @@
+.root {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.map {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--era-line);
+  border-radius: var(--radius-md);
+  background: rgba(3, 4, 10, 0.7);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.area {
+  fill: none;
+  stroke: var(--era-line);
+  stroke-dasharray: 6 8;
+}
+
+.label {
+  fill: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: 22px;
+  opacity: 0.6;
+}
+
+.line {
+  stroke-width: 2;
+  opacity: 0.35;
+}
+
+.far {
+  opacity: 0.25;
+}
+
+.near {
+  opacity: 0.6;
+}
+
+.mine {
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+}
+
+.mineDragging {
+  cursor: grabbing;
+}
+
+.halo {
+  opacity: 0.3;
+}
+
+.mine:focus-visible .halo {
+  opacity: 0.7;
+  stroke: var(--era-accent);
+  stroke-width: 3;
+}
+
+.status,
+.help {
+  margin: 0;
+  color: var(--era-fg-muted);
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+.status {
+  color: var(--era-fg);
+  font-size: var(--text-sm);
+}
