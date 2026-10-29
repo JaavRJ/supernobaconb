@@ -45,7 +45,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
 | Ajustes del artista tras la fase 4 | 🔨 En curso | 13 / 14 (AJ-13 espera al Pase de movimiento) |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
-| 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
+| 5 — Admin ampliado | 🔨 En curso | 0 / 12 |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
 
 ---
@@ -706,6 +706,87 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 
 ---
 
+## Fase 5 — Admin ampliado
+
+**Decisiones de la fase 5 (con el artista, 2026-10-29)**
+- **El contenido pasa a Firestore con respaldo local.** El servidor lee las colecciones por la API REST (como el texto del libro) dentro de una sola función cacheada `getContent()` con `cacheTag("content")`. Si Firebase no responde o una colección está vacía, usa los archivos de `web/src/content/` (que se quedan como semilla y respaldo). Las constelaciones y los temas de era se quedan en código (son estructura, no contenido; las eras no se nombran en el sitio, así que no hay editor de temas).
+- **El admin es una zona privada en `/admin`** (noindex, fuera del menú), del lado del cliente, con inicio de sesión de Google. Solo entra quien tenga `adminUsers/{uid}` con `role: "admin"` (el mismo esquema del sitio viejo; la cuenta del artista ya es admin).
+- **Al guardar, el sitio se actualiza al momento**: una Server Action verifica que quien llama es admin (token de Firebase comprobado con Identity Toolkit + lectura de `adminUsers` con ese token) y expira el caché `content`. Sin dependencias nuevas.
+- **Archivos en Cloudinary** (cuenta `dgrhyyuef`, donde ya están las fotos): subidas **firmadas** desde una ruta del servidor que solo firma para admins; la clave secreta vive en `web/.env.local` (ignorado por git), nunca en el repo. Imágenes con `f_auto,q_auto` y tamaños por URL; audios y videos de señal como `resource_type: video`. Firebase Storage no está activo en el proyecto (pediría el plan Blaze).
+- **El libro también se edita en el admin nuevo**: partes (fechas y subtítulos), capítulos (texto) y notas del autor, en las mismas colecciones que usa el sitio viejo (`parts/{n}/chapters`, `authorNotes`).
+- **Reglas de Firebase**: el orquestador las prepara (contenido nuevo: lectura pública y escritura solo admin; `subscribers` legible por admin) y las publica con la CLI **con el OK del artista**.
+
+| ID | Tarea | Quién | Depende de | Estado |
+|---|---|---|---|---|
+| F5-01 | Capa de datos: contenido desde Firestore con respaldo local | Worker | — | ⬜ |
+| F5-02 | Reglas de Firestore para el contenido y el admin | Orquestador | — | ⬜ |
+| F5-03 | Base del admin: acceso, navegación, guardar y refrescar, subir a Cloudinary | Worker | — | ⬜ |
+| F5-04 | Importar el contenido local a Firestore | Worker | F5-01, F5-02, F5-03 | ⬜ |
+| F5-05 | Obras y su posición en el cielo | Worker | F5-04 | ⬜ |
+| F5-06 | Canciones (letra, créditos, audio) y videos | Worker | F5-04 | ⬜ |
+| F5-07 | Hilos y nebulosa (señales) | Worker | F5-04 | ⬜ |
+| F5-08 | Fotos, productos, Sobre mí y redes | Worker | F5-04 | ⬜ |
+| F5-09 | Diario del proceso y escritos | Worker | F5-04 | ⬜ |
+| F5-10 | Libro: partes, capítulos y notas del autor | Worker | F5-03 | ⬜ |
+| F5-11 | Newsletter: lista e intereses con exportación CSV | Worker | F5-02, F5-03 | ⬜ |
+| F5-12 | Verificación final de la fase | Orquestador | todas | ⬜ |
+
+**Orden y paralelo:** F5-01 y F5-03 en paralelo (no comparten archivos) mientras el orquestador hace F5-02. Luego F5-04. Después las secciones del admin (F5-05 a F5-11) de dos en dos o de tres en tres: cada una vive en su carpeta `web/src/components/admin/<sección>/` y su ruta `web/src/app/admin/<sección>/`, y solo usan las piezas comunes de F5-03 sin cambiarlas (si necesitan una pieza común nueva, la pide el orquestador). F5-10 y F5-11 no dependen de F5-04 y pueden ir antes. Solo un agente corre `npm run build` a la vez. No se toca `web/src/components/sky/` salvo lo que pida F5-05 para mover estrellas, y solo si el Pase de movimiento ya cerró.
+
+### F5-01 — Capa de datos: contenido desde Firestore con respaldo local
+- **Archivos:** `web/src/lib/content/` (nuevo, solo servidor), `web/src/content/index.ts` (las funciones de consulta pasan a operar sobre un "snapshot" de contenido), y todos los que hoy importan datos de `@/content` (páginas y componentes de servidor, `lib/connections.ts`, `lib/schedule.ts`, `lib/book/publication.ts`, el reproductor).
+- **Terminado cuando:**
+  - `getContent()` (servidor, `"use cache"`, `cacheTag("content")`, perfil de horas o el de `scheduledCacheLife` donde aplique) devuelve obras, hilos, canciones, señales, fotos, productos, diario, escritos, fichas de proyecto y el contenido de "Sobre mí" (bio y redes) leídos de Firestore por REST; por colección, si no hay datos o falla, usa la semilla local. Los videos siguen derivándose de las canciones (más los de una colección `videos` si existe).
+  - Las funciones de consulta (`getWork`, `getTracksForWork`, `getLatestRelease`, etc.) reciben o resuelven el snapshot; las páginas y componentes de servidor hacen `await` donde haga falta, sin cambiar lo que se ve.
+  - El reproductor (cliente) ya no importa datos: lo que necesita de la obra (título, portada, tema de la era) viaja con cada pista de la cola.
+  - `generateStaticParams` y los 404 reales siguen funcionando; sin desajustes de hidratación.
+  - Con Firestore vacío (hoy) el sitio se ve exactamente igual: verificado página por página con `curl` comparando el HTML de antes y después (salvo diferencias de orden no visibles).
+  - Tipos, lint y build sin errores.
+
+### F5-02 — Reglas de Firestore para el contenido y el admin
+- **Archivos:** `firestore.rules` (raíz).
+- **Terminado cuando:** las colecciones nuevas (`works`, `threads`, `tracks`, `signals`, `videos`, `photos`, `products`, `diary`, `writings`, `projectDetails`, `site`) se leen sin sesión y solo las escribe un admin; `subscribers` además la lee un admin; lo existente queda igual. El artista ve el cambio y da el OK; publicadas con `firebase deploy --only firestore:rules`; probado que un usuario sin sesión no puede escribir.
+
+### F5-03 — Base del admin
+- **Archivos:** `web/src/app/admin/` (layout y portada del admin), `web/src/components/admin/` (comunes), `web/src/lib/admin/` (nuevo), `web/src/app/api/admin/` (ruta de firma de Cloudinary), `web/.env.example` (variables nuevas sin valores), `web/next.config.ts` (si hace falta), `web/src/app/robots.ts` o metadatos para `noindex`.
+- **Terminado cuando:**
+  - `/admin` pide iniciar sesión con Google; si la cuenta no es admin, lo dice y no muestra nada más; si lo es, muestra un panel con las secciones (Obras, Canciones, Hilos y nebulosa, Fotos y tienda, Diario y escritos, Libro, Newsletter, Importar) y un botón para salir.
+  - Estética del sitio (base radiante, sobria), usable en celular, sin el menú ni el reproductor del sitio.
+  - Piezas comunes: formulario con campos (texto, área de texto, fecha, selector, lista editable), `useAdminCollection(nombre)` (leer, crear, editar, borrar con confirmación en Firestore por el SDK del cliente), aviso de guardado y de error.
+  - **Refrescar el sitio:** Server Action `refreshContent(idToken)` que verifica admin (Identity Toolkit `accounts:lookup` + `adminUsers/{uid}` por REST con ese token) y expira `content` según la guía de Next 16 (`updateTag`/`revalidateTag`); se llama sola después de cada guardado.
+  - **Subir a Cloudinary:** `POST /api/admin/cloudinary-signature` (verifica admin igual, firma `timestamp`, `folder` y `public_id` con `CLOUDINARY_API_SECRET`) y un componente `MediaUpload` (imagen, audio o video) que sube directo a Cloudinary con la firma, muestra el avance y devuelve URL, ancho y alto; imágenes de hasta 25 MB, audios hasta 20 MB.
+  - Variables en `web/.env.example`: `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` (los valores los pone el artista en `.env.local`).
+  - `robots: noindex` en todo `/admin`.
+
+### F5-04 — Importar el contenido local a Firestore
+- **Terminado cuando:** en el admin, "Importar" muestra qué hay local y qué hay en Firestore por colección, e importa la semilla local a Firestore (sin pisar documentos que ya existan, salvo que se pida); después del import y el refresco el sitio se ve igual que antes, ahora leyendo de Firestore.
+
+### F5-05 — Obras y su posición en el cielo
+- **Terminado cuando:** lista de obras por constelación; crear y editar (título, tipo, constelación, fecha y si es aproximada, resumen, portada y foto con `MediaUpload`, links por plataforma, oculta o no); borrar con confirmación; **posición en el cielo**: un mapa pequeño con las estrellas de la constelación donde se arrastra la estrella (guarda `skyPosition` normalizada) o se vuelve a automática. El cambio se ve en el sitio tras guardar.
+
+### F5-06 — Canciones y videos
+- **Terminado cuando:** por sencillo, sus canciones (número, título, duración, explícita, links), letra por estrofas (área de texto con líneas en blanco entre estrofas), créditos (persona y roles) y audio con `MediaUpload` (MP3; el reproductor lo toca desde Cloudinary). Videos: los de las canciones se ven derivados y se pueden agregar videos extra con su obra.
+
+### F5-07 — Hilos y nebulosa
+- **Terminado cuando:** hilos con origen, destino, tipo (inspira, continúa, comparte universo, guiño, construye), parte del libro opcional y nota; vista previa de la frase de "Conectado con". Señales de la nebulosa: frase, imagen o video (con `MediaUpload`), fecha y cuál está activa (solo una).
+
+### F5-08 — Fotos, productos, Sobre mí y redes
+- **Terminado cuando:** galería (subir, alt obligatorio, ordenar, quitar), productos (nombre, formato, descripción, imagen, precio opcional, link de compra), "Sobre mí" (texto en primera persona por partes, bio en tercera persona ES/EN para el kit) y redes/contacto (Instagram, TikTok, correo).
+
+### F5-09 — Diario del proceso y escritos
+- **Terminado cuando:** entradas del diario (fecha, título, párrafos, imágenes con `MediaUpload`, obra ligada) y escritos (letra, poema o texto; título, fecha, cuerpo por estrofas o párrafos, libro del que nacen) se crean, editan y borran, y aparecen en `/proceso` y `/libros` tras guardar.
+
+### F5-10 — Libro: partes, capítulos y notas del autor
+- **Terminado cuando:** fechas de publicación y subtítulos de las partes; editor del texto de cada parte (el documento `parts/{n}/chapters/0` del sitio viejo) con negritas para títulos de capítulo, cursivas y párrafos, que guarda HTML compatible con la limpieza de F2-01; notas del autor (`authorNotes`: parte, frase que la dispara, título y texto). Guardar refresca el caché del libro (`getBookPart`) además de `content`.
+
+### F5-11 — Newsletter
+- **Terminado cuando:** lista de `subscribers` (correo, nombre, fecha, intereses), filtro por interés (libro, música, novedades) y "Descargar CSV" con los filtrados (UTF-8 con BOM para Excel).
+
+### F5-12 — Verificación final
+- **Terminado cuando:** tipos, lint y build sin errores; con un admin real: crear, editar y borrar algo en cada sección y verlo en el sitio; un usuario no admin no entra ni puede escribir (reglas); revisión a 1440 y 390 px; plan y tablero actualizados; push.
+
+---
+
 ## Fases siguientes (se detallan al empezar)
 
 ### Pase de diseño con materiales reales
@@ -803,3 +884,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-28 | AJ-06 | El artista probó el lector con su cuenta de Google real (resaltados, citas, marcadores, avance y cerrar sesión) y confirmó que todo funciona. ✅ |
 | 2026-10-28 | AJ-14 | Verificación del orquestador: tipos, lint y build sin errores. En producción (`next start` en 3100, ya detenido) `/proceso`, `/proceso/supernobaconb-web`, `/libros`, el lector, `/musica`, `/videos`, `/tienda`, `/sobre-mi`, el PDF de la Parte 3 (con sus fuentes) y el kit dan 200; `/proyectos`, `/proyectos/aura`, `/proceso/nada`, `/libros/escritos/x` y `parte-9/pdf` 404; ningún rastro de los proyectos quitados; TikTok, "Literatura" y "Proceso" en todas las páginas; sin scroll horizontal a 390 px y consola limpia. Al detener los servidores de prueba se cayó también el `next dev` del 3000 (el filtro atrapó su proceso interno); se volvió a levantar con la configuración `web` de `.claude/launch.json`. Queda AJ-13 bloqueada por el Pase de movimiento. ✅ |
 | 2026-10-28 | — | Errores que encontró el artista: el reproductor tapaba "Tienes una lectura a medias" (también la guía y la nota del autor en celular): ahora se suben con `--player-height`. La portada de la tarjeta de estrella se estiraba (la tarjeta flex la alargaba): ahora es cuadrada. "supernobaconb.web" se salía de la tarjeta y no tenía imagen: el título pasa de línea y la obra tiene una portada con la estrella-brújula. Se tocó `sky/Sky.module.css` (dos reglas de la tarjeta) con permiso del artista, sin cambios pendientes del Pase de movimiento. |
+| 2026-10-29 | F5 | Artista: archivos en Cloudinary (Firebase Storage no está activo), el admin nuevo también edita el libro, su cuenta ya es admin y el orquestador publica las reglas con su OK. Se detallan F5-01 a F5-12. |
