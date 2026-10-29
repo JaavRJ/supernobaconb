@@ -81,6 +81,8 @@ export const works: Work[] = [
   },
   {
     id: "supernobaconb-web",
+    coverUrl: "/proceso/supernobaconb-web/portada-obra.jpg",
+    coverSmallUrl: "/proceso/supernobaconb-web/portada-obra-512.jpg",
     photoUrl:
       "https://res.cloudinary.com/dgrhyyuef/image/upload/q_auto/f_auto/v1763505974/supernoba/IMG_20251118_111352_m7qf2r.png",
     title: "supernobaconb.web",

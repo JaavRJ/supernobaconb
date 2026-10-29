@@ -113,9 +113,12 @@
 
 .cardCover {
   flex: none;
+  /* Cuadrada aunque el texto de la tarjeta sea más alto (la tarjeta es flex y la estiraba) */
+  align-self: flex-start;
   display: flex;
   align-items: flex-end;
   width: 4rem;
+  height: 4rem;
   aspect-ratio: 1;
   padding: 0;
   overflow: hidden;
@@ -150,6 +153,8 @@
   font-family: var(--era-font-display);
   font-weight: 600;
   line-height: 1.2;
+  /* Nombres largos sin espacios (supernobaconb.web) pasan de línea en vez de salirse */
+  overflow-wrap: anywhere;
 }
 
 .cardMeta,
