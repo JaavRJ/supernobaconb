@@ -43,7 +43,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 2 — Libro | ✅ Hecha | 9 / 9 |
 | 3 — Música | ✅ Hecha | 7 / 7 |
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
-| Ajustes del artista tras la fase 4 | 🔨 En curso | 11 / 14 |
+| Ajustes del artista tras la fase 4 | 🔨 En curso | 13 / 14 (AJ-13 espera al Pase de movimiento) |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
@@ -629,7 +629,7 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 | AJ-03 | TikTok en el pie y en Sobre mí | Worker | AJ-01 | ✅ |
 | AJ-04 | "Lo último" y las partes se actualizan a la hora exacta | Worker | — | ✅ |
 | AJ-05 | Kit de prensa ligero, sin software y con TikTok | Orquestador | AJ-01, AJ-03 | ✅ |
-| AJ-06 | Prueba del lector con cuenta de Google real | Orquestador + artista | — | ⬜ |
+| AJ-06 | Prueba del lector con cuenta de Google real | Orquestador + artista | — | ✅ |
 | AJ-07 | Resaltados del lector sin repintado innecesario | Worker | — | ✅ |
 | AJ-08 | Reacciones por capítulo | Worker | AJ-07 | ✅ |
 | AJ-09 | Tarjeta de cita para Instagram | Worker | AJ-08 | ✅ |
@@ -637,7 +637,7 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 | AJ-11 | Tutorial de primera visita en el lector | Worker | AJ-09, AJ-10 | ✅ |
 | AJ-12 | Aviso de newsletter en el lector | Worker | AJ-11 | ✅ |
 | AJ-13 | Cielo: etiqueta "Proceso", nebulosa y parpadeo optimizados | Worker | MV-03, AJ-01 | ⛔ |
-| AJ-14 | Verificación final | Orquestador | todas | ⬜ |
+| AJ-14 | Verificación final | Orquestador | todas | ✅ |
 
 **Orden y paralelo:** AJ-01, AJ-04, AJ-07 y AJ-10 arrancan juntos (no comparten archivos). AJ-02 y AJ-03 van después de AJ-01 (comparten `site.ts`, `types/content.ts` e `index.ts`). Los del lector (AJ-07 → AJ-08 → AJ-09 → AJ-11 → AJ-12) van en fila porque comparten `web/src/components/reader/`; el botón de PDF de AJ-10 se agrega al lector después de AJ-09. AJ-06 se hace con el artista en cuanto pueda iniciar sesión. Solo un agente corre `npm run build` a la vez.
 
@@ -800,3 +800,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-28 | AJ-09 | Worker hizo la tarjeta de cita en canvas (Noche, Papel y Polaroid) con vista previa, compartir como archivo y descargar. Orquestador la revisó en el navegador: fuentes reales y la estrella en BRILL✦. ✅ |
 | 2026-10-28 | AJ-11/12 | Worker hizo la guía de primera visita (5 pasos que señalan marcador, Aa y descarga; se marca con `hasSeenTutorial`; "Ver la guía otra vez" en Aa) y el aviso de novedades al final de cada parte (`subscribers/{uid}` con `merge`, compatible con el sitio viejo, más `interests`). Orquestador lo revisó en el navegador. ✅ |
 | 2026-10-28 | — | Pedido del artista: en la tarjeta de cita el título va en dos líneas sin la estrella y con @supernobaconb. El orquestador hizo además el header negro sólido en el lector (el texto se asomaba debajo del degradado). |
+| 2026-10-28 | AJ-06 | El artista probó el lector con su cuenta de Google real (resaltados, citas, marcadores, avance y cerrar sesión) y confirmó que todo funciona. ✅ |
+| 2026-10-28 | AJ-14 | Verificación del orquestador: tipos, lint y build sin errores. En producción (`next start` en 3100, ya detenido) `/proceso`, `/proceso/supernobaconb-web`, `/libros`, el lector, `/musica`, `/videos`, `/tienda`, `/sobre-mi`, el PDF de la Parte 3 (con sus fuentes) y el kit dan 200; `/proyectos`, `/proyectos/aura`, `/proceso/nada`, `/libros/escritos/x` y `parte-9/pdf` 404; ningún rastro de los proyectos quitados; TikTok, "Literatura" y "Proceso" en todas las páginas; sin scroll horizontal a 390 px y consola limpia. Al detener los servidores de prueba se cayó también el `next dev` del 3000 (el filtro atrapó su proceso interno); se volvió a levantar con la configuración `web` de `.claude/launch.json`. Queda AJ-13 bloqueada por el Pase de movimiento. ✅ |

@@ -27,7 +27,7 @@ El sitio se organiza en dos ejes que se cruzan:
 ### Las tres constelaciones (por ámbito)
 | Constelación | Faceta | Qué contiene |
 |---|---|---|
-| **Jabi** | el que piensa | Proyectos de software, herramientas, experimentos, puzzles y secretos (`/0618am`) |
+| **Jabi** | el que piensa | El proceso: diario de cómo nacen las obras, la web supernobaconb.web, puzzles y secretos (`/0618am`) |
 | **noba** | el que escribe | BDUEM y los libros o textos que vengan |
 | **Supernoba** | el que canta | Sencillos, EPs, discos y videos |
 
@@ -122,7 +122,7 @@ La portada es un **mapa del cielo** con las tres constelaciones.
 | `/libros` | Obras escritas |
 | `/libros/bduem` | Página del libro con su estética espacial actual |
 | `/libros/bduem/leer/[parte]` | El lector actual (KindleReader) migrado |
-| `/proyectos` y `/proyectos/[slug]` | Constelación Jabi: proyectos de software con stack, capturas, repositorio y demo |
+| `/proceso` y `/proceso/[slug]` | Constelación Jabi: diario del proceso y la web supernobaconb.web (los proyectos de software salieron del sitio, 2026-10-28) |
 | `/videos` | Videoclips y galería de fotos |
 | `/tienda` | Merch, libro físico, discos |
 | `/sobre-mi` | Biografía, fotos y kit de prensa descargable |
@@ -191,7 +191,7 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - [x] Página de la era BDUEM con su estética espacial
 - [x] Publicación escalonada y redirecciones de `/parteN`
 - [x] Migrar los puzzles
-- Quedan para después: reacciones, tarjeta de cita para Instagram, descarga en PDF, tutorial y aviso de newsletter del lector viejo
+- [x] Reacciones, tarjeta de cita para Instagram, descarga en PDF, tutorial y aviso de newsletter del lector viejo (hechos en los ajustes del 2026-10-28)
 
 ### Fase 3 — Música
 - [x] Discografía (constelación + lista)
@@ -200,7 +200,7 @@ Datos de usuario actuales (resaltados, citas, marcadores, progreso) se conservan
 - [x] Reproductor a pantalla completa con portada y letra
 
 ### Fase 4 — Jabi, videos, tienda y sobre mí
-- [x] Página de proyectos de software y detalle de cada proyecto
+- [x] Página de Jabi: hoy es Proceso (diario) con la web supernobaconb.web; los proyectos de software salieron (2026-10-28)
 - [x] Sección "Conectado con" en cada obra (las eras no tienen página propia)
 - [x] Galería de videos y fotos
 - [x] Tienda con links externos (pagos integrados más adelante si hace falta)
@@ -287,7 +287,7 @@ Las tres facetas son las tres constelaciones del cielo (ver sección 2). Jabi in
 - [ ] Colores o estética de cada era (si ya existe)
 - [x] Audios para el reproductor propio
 - [x] Productos de la tienda y dónde se compran (por ahora solo el libro impreso en Amazon)
-- [x] Proyectos de software para Jabi: AURA, Diablos AeroVision, RailSense y este sitio (AURA tiene repositorio privado)
+- [x] Jabi: los proyectos de software salieron del sitio (decisión del artista, 2026-10-28); queda la web supernobaconb.web y el diario del proceso, que espera sus primeras entradas
 - [ ] Primera señal de la era 2 (video glitch, frase o imagen)
 - [ ] Otros hilos entre obras (además de BDUEM Parte 3 → part3)
 
