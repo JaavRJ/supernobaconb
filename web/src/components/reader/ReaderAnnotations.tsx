@@ -237,14 +237,13 @@ export function ReaderAnnotations({
     const w = el.offsetWidth;
     const h = el.offsetHeight;
     const left = clamp((rect.left + rect.right) / 2 - w / 2, 8, window.innerWidth - w - 8);
-    let top: number;
-    if (narrow || menu.kind === "highlight") {
-      top = rect.bottom + (narrow && menu.kind === "selection" ? 28 : 12);
-    } else {
-      top = rect.top - h - 10;
-      if (top < bar + 6) top = rect.bottom + 12;
-    }
-    top = clamp(top, bar + 6, window.innerHeight - h - 8);
+    // Debajo de la selección: arriba suelen salir el menú del navegador (Edge, Chrome) y el del
+    // sistema en celular, que taparían este. Solo sube si abajo no cabe (por ejemplo, junto al reproductor)
+    const player = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--player-height")) || 0;
+    const floor = window.innerHeight - player - 8;
+    let top = rect.bottom + (narrow && menu.kind === "selection" ? 28 : 12);
+    if (top + h > floor && menu.kind === "selection") top = rect.top - h - 10;
+    top = clamp(top, bar + 6, floor - h);
     el.style.left = `${left}px`;
     el.style.top = `${top}px`;
   }, [menu, narrow]);
