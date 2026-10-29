@@ -43,6 +43,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 2 — Libro | ✅ Hecha | 9 / 9 |
 | 3 — Música | ✅ Hecha | 7 / 7 |
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
+| Ajustes del artista tras la fase 4 | 🔨 En curso | 0 / 14 |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
@@ -609,6 +610,102 @@ Reviewer sobre los dos diffs. El orquestador lo revisa en el navegador a 1440 y 
 
 ---
 
+## Ajustes del artista tras la fase 4
+
+Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los archivos del "Pase de movimiento" (`web/src/components/sky/`, `StarWord`, `web/src/components/home/HeroMotion.tsx`, `web/src/app/page.tsx` + `page.module.css`); lo que dependa de ellos espera a MV-03.
+
+**Decisiones**
+- **Jabi deja de ser un portafolio de software**: salen AURA, Diablos AeroVision y RailSense (datos, páginas y capturas). Jabi, "el que piensa", pasa a ser **Proceso**: un diario de cómo nacen las obras (notas, demos, bocetos, detrás de cámaras). La única obra de software que se queda es la web, que se llama **supernobaconb.web** (ya no "Este sitio"). El menú dice "Proceso" y la ruta es `/proceso`; `/proyectos` deja de existir (nunca se publicó). El diario empieza vacío: las entradas llegan con el material del artista o con el admin de la Fase 5.
+- **Literatura**: "Libros" en el menú pasa a "Literatura" (las rutas siguen en `/libros`). `/libros` muestra los libros y los **escritos** sueltos (letras, poemas, textos). Un escrito que nace de un libro toma su estética; los demás van en la base radiante.
+- **Tienda**: solo links externos, sin pagos propios (decidido).
+- **Redes**: TikTok `@supernobaconb` además de Instagram y el correo.
+- **Fotos y señal de la nebulosa**: las entrega el artista cuando las edite; se suben con el admin de la Fase 5 (hoy las imágenes se optimizan a WebP con ImageMagick y viven en `web/public/`).
+- **Lector viejo**: las funciones que quedaron fuera en la Fase 2 se hacen ahora, compatibles con los datos que ya existen en Firestore (`reactions`, `userReactions`, `subscribers`).
+
+| ID | Tarea | Quién | Depende de | Estado |
+|---|---|---|---|---|
+| AJ-01 | Jabi como Proceso y la web como supernobaconb.web | Worker | — | ⬜ |
+| AJ-02 | Literatura: libros y escritos | Worker | AJ-01 | ⬜ |
+| AJ-03 | TikTok en el pie y en Sobre mí | Worker | AJ-01 | ⬜ |
+| AJ-04 | "Lo último" y las partes se actualizan a la hora exacta | Worker | — | ⬜ |
+| AJ-05 | Kit de prensa ligero, sin software y con TikTok | Orquestador | AJ-01, AJ-03 | ⬜ |
+| AJ-06 | Prueba del lector con cuenta de Google real | Orquestador + artista | — | ⬜ |
+| AJ-07 | Resaltados del lector sin repintado innecesario | Worker | — | ⬜ |
+| AJ-08 | Reacciones por capítulo | Worker | AJ-07 | ⬜ |
+| AJ-09 | Tarjeta de cita para Instagram | Worker | AJ-08 | ⬜ |
+| AJ-10 | Descarga de cada parte en PDF | Worker | — | ⬜ |
+| AJ-11 | Tutorial de primera visita en el lector | Worker | AJ-09, AJ-10 | ⬜ |
+| AJ-12 | Aviso de newsletter en el lector | Worker | AJ-11 | ⬜ |
+| AJ-13 | Cielo: etiqueta "Proceso", nebulosa y parpadeo optimizados | Worker | MV-03, AJ-01 | ⛔ |
+| AJ-14 | Verificación final | Orquestador | todas | ⬜ |
+
+**Orden y paralelo:** AJ-01, AJ-04, AJ-07 y AJ-10 arrancan juntos (no comparten archivos). AJ-02 y AJ-03 van después de AJ-01 (comparten `site.ts`, `types/content.ts` e `index.ts`). Los del lector (AJ-07 → AJ-08 → AJ-09 → AJ-11 → AJ-12) van en fila porque comparten `web/src/components/reader/`; el botón de PDF de AJ-10 se agrega al lector después de AJ-09. AJ-06 se hace con el artista en cuanto pueda iniciar sesión. Solo un agente corre `npm run build` a la vez.
+
+### AJ-01 — Jabi como Proceso y la web como supernobaconb.web
+- **Archivos:** `web/src/types/content.ts`, `web/src/content/` (`works.ts`, `projects.ts`, `threads.ts`, `constellations.ts`, `site.ts`, `index.ts`, `diary.ts` nuevo), `web/src/app/proyectos/` → `web/src/app/proceso/`, `web/src/components/projects/`, `web/src/components/diary/` (nuevo), `web/src/app/sobre-mi/page.tsx`, `web/public/proyectos/`.
+- **Terminado cuando:**
+  - No queda rastro de AURA, Diablos AeroVision ni RailSense (obras, fichas, capturas).
+  - La obra web se llama "supernobaconb.web", con id y ruta `supernobaconb-web` (`/proceso/supernobaconb-web`), y sus hilos siguen funcionando ("construido para el libro…").
+  - Tipo `DiaryEntry` (fecha, título, cuerpo en párrafos, imágenes opcionales, obra ligada opcional) y `content/diary.ts` vacío; `/proceso/[slug]` sirve entradas del diario y la página de la web (que conserva capturas y "Conectado con").
+  - `/proceso`: faceta "el que piensa", la constelación Jabi sola, la web destacada y el diario; con el diario vacío, una línea honesta sin "Próximamente".
+  - Menú "Proceso"; Sobre mí enlaza Jabi a `/proceso`; descripción de la constelación sin "software".
+  - `/proyectos` y slugs desconocidos dan 404; tipos, lint y build sin errores.
+
+### AJ-02 — Literatura: libros y escritos
+- **Archivos:** `web/src/types/content.ts` (tipo `escrito`), `web/src/content/writings.ts` (nuevo), `web/src/content/index.ts`, `web/src/content/site.ts` (etiqueta del menú), `web/src/app/libros/page.tsx` (+ css), `web/src/app/libros/escritos/[slug]/` (nuevo), `web/src/components/literature/` (nuevo).
+- **Terminado cuando:**
+  - Menú "Literatura" → `/libros`, con encabezado "Literatura" y la faceta "el que escribe".
+  - `/libros` muestra los libros (hoy BDUEM, con su polaroid y enlace) y una sección "Escritos" que solo aparece si hay escritos.
+  - Un escrito (letra, poema o texto) tiene título, fecha, tipo y cuerpo (estrofas o párrafos), y su página `/libros/escritos/[slug]` con 404 real; si nace de un libro toma su estética, si no la radiante. Los escritos son obras de noba, así que aparecen solos en el cielo.
+  - Verificado con un escrito de prueba que **no** se queda en el repositorio.
+
+### AJ-03 — TikTok en el pie y en Sobre mí
+- **Archivos:** `web/src/content/site.ts`, `web/src/components/layout/SiteFooter.tsx`, `web/src/app/sobre-mi/page.tsx`.
+- **Terminado cuando:** TikTok (`https://www.tiktok.com/@supernobaconb`) aparece en el pie con un ícono de trazo fino como los demás y en el contacto de Sobre mí.
+
+### AJ-04 — "Lo último" y las partes se actualizan a la hora exacta
+- **Archivos:** `web/src/lib/schedule.ts` (nuevo) y los componentes que hoy usan `cacheLife("hours")` para decidir qué está publicado (`components/home/LatestRelease.tsx`, `components/era/BduemEra.tsx`, los del lector que leen la publicación, `components/music/Discography.tsx`).
+- **Terminado cuando:** el caché de esas piezas vence justo en la siguiente fecha de publicación conocida (o en horas si no hay ninguna próxima), según la guía de `cacheLife` de Next 16; una parte o un sencillo aparece como publicado en la primera visita después de su fecha. Probado con una fecha de prueba cercana que no se queda en el repositorio.
+
+### AJ-05 — Kit de prensa ligero, sin software y con TikTok
+- **Terminado cuando:** cada PDF pesa menos de 1.5 MB (imágenes reducidas al tamaño en que se imprimen), abre rápido, ya no lista proyectos de software (la web se menciona solo en la bio) y trae TikTok.
+
+### AJ-06 — Prueba del lector con cuenta de Google real
+- **Cómo:** el artista inicia sesión en el navegador integrado (la contraseña la escribe él). El orquestador prueba que resaltado, cita, marcador y progreso se guardan en la cuenta; que al recargar y en otra pestaña siguen; que lo guardado sin sesión se sube al entrar sin duplicarse; y que al cerrar sesión no queda nada del usuario en pantalla.
+- **Terminado cuando:** todo lo anterior funciona o sus fallas quedan corregidas (con worker y reviewer).
+
+### AJ-07 — Resaltados del lector sin repintado innecesario
+- **Archivos:** `web/src/components/reader/*` (resaltados).
+- **Terminado cuando:** cambiar letra, interlineado o modo no vuelve a calcular los rangos de todos los resaltados; solo se recalculan cuando cambia la lista o el texto. Medido antes y después.
+
+### AJ-08 — Reacciones por capítulo
+- **Archivos:** `web/src/lib/reader/reactions.ts` (nuevo), `web/src/components/reader/*`.
+- **Terminado cuando:** al final de cada capítulo hay cuatro reacciones (corazón, triste, mente volada, estrella) con su conteo, dibujadas con íconos de trazo fino en blanco; leen y escriben `reactions/{parte}_{capítulo}` y `userReactions/{id}_{parte}_{capítulo}` como el sitio viejo (mismo id local `userId`); una reacción por persona y capítulo, que se puede cambiar; conteos en vivo; sin errores si Firebase no responde.
+
+### AJ-09 — Tarjeta de cita para Instagram
+- **Archivos:** `web/src/components/reader/*` (menú de selección y panel de citas), `web/src/lib/reader/quoteCard.ts` (nuevo).
+- **Terminado cuando:** "Compartir" en una selección o en una cita guardada abre la vista previa de una imagen de 1080×1920 (negro, polvo de estrellas, la cita en Cormorant, el título de la parte en Uncial, BRILL✦ DE UNA ESTRELLA MUERTA y "supernobaconb") con dos o tres variantes monocromas; se comparte con la API del navegador (como archivo) o se descarga. Hecha con canvas, sin dependencias nuevas, esperando a que carguen las fuentes.
+
+### AJ-10 — Descarga de cada parte en PDF
+- **Archivos:** `web/src/app/libros/bduem/leer/[parte]/pdf/route.ts` (nuevo), `web/src/lib/book/pdf.ts` (nuevo), fuentes en `web/src/lib/book/fonts/` (licencia OFL), `web/package.json` (solo `pdf-lib` y `@pdf-lib/fontkit`), y el botón en el lector después de AJ-09.
+- **Terminado cuando:** cada parte publicada se descarga como PDF generado del mismo texto de Firestore (portada con el título, capítulos con títulos en Uncial y texto en Cormorant, números de página), en caché; una parte no publicada o inexistente da 404.
+
+### AJ-11 — Tutorial de primera visita en el lector
+- **Terminado cuando:** la primera vez que alguien abre el lector ve una guía corta (3–5 pasos: seleccionar para resaltar o citar, compartir, marcador, ajustes "Aa", descargar PDF) que se puede saltar, no vuelve a salir (guardado en el navegador, con `useHydrated` para no romper la hidratación) y se puede reabrir desde el panel "Aa".
+
+### AJ-12 — Aviso de newsletter en el lector
+- **Archivos:** `web/src/lib/newsletter.ts` (nuevo), `web/src/components/reader/*`.
+- **Terminado cuando:** al terminar una parte aparece un aviso discreto "¿Quieres enterarte cuando salga algo nuevo?" que pide iniciar sesión con Google y guarda `subscribers/{uid}` compatible con el sitio viejo (`email`, `displayName`, `subscribedAt`, `notifyFor`) más `interests: ["libro"]`; si ya está suscrito, lo dice; se puede cerrar y no insiste.
+
+### AJ-13 — Cielo: etiqueta "Proceso", nebulosa y parpadeo optimizados
+- **Bloqueada** hasta que termine el Pase de movimiento (MV-03), porque toca `web/src/components/sky/`.
+- **Terminado cuando:** la píldora de Jabi dice "Proceso"; la nebulosa no recalcula su filtro en cada cuadro (por ejemplo, con una imagen pre-renderizada o un filtro estático) y el parpadeo usa solo `opacity`/`transform`, se pausa fuera de pantalla y con la pestaña oculta; medido con el rendimiento del navegador con CPU ralentizada, antes y después.
+
+### AJ-14 — Verificación final
+- **Terminado cuando:** tipos, lint y build sin errores; en producción las rutas nuevas dan 200 y las quitadas 404; el lector y sus funciones nuevas probados en el navegador a 1440 y 390 px; plan y tablero actualizados.
+
+---
+
 ## Fases siguientes (se detallan al empezar)
 
 ### Pase de diseño con materiales reales
@@ -691,3 +788,4 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-25 | F4-09 | Worker hizo `/sobre-mi`: retrato en polaroid vertical, SUPERN✦BA, las tres facetas enlazadas, bio larga, fotos con el visor, descargas del kit (PDF español e inglés y ZIP, con tamaño) y contacto (Instagram; el correo aparece solo si existe `site.pressEmail`); Instagram en el pie. Verificado por el orquestador a 1440 y 390 px. ✅ |
 | 2026-10-25 | F4-10 | Verificación del orquestador: tipos, lint y build sin errores. En producción (`next start` en el puerto 3100, ya detenido) `/proyectos`, los cuatro proyectos, `/videos`, `/tienda`, `/sobre-mi` y los tres archivos de prensa dan 200; `/proyectos/nada` y `/proyectos/puzzles-0618am` 404; ninguna página nombra eras ni tiene `iframe` o correo en el HTML; en `/videos` antes del clic solo hay peticiones al propio sitio (miniaturas por el optimizador); consola limpia. Se detuvieron dos servidores de prueba que dejaron los workers (3123 y 3124). Pendiente del artista: aprobar la bio y el kit, dar el correo de prensa y decidir si el repositorio de AURA se hace público. **Fase 4 terminada.** ✅ |
 | 2026-10-28 | — | El artista dio el correo de prensa (supernoba.contacto@gmail.com) y escribió su biografía. Sobre mí usa su texto tal cual en primera persona (introducción, Literatura, Música, Desarrollo y cierre); el kit de prensa y los metadatos usan una versión en tercera persona en español e inglés hecha a partir de ese texto. Kit regenerado con el correo. Verificado en el navegador a 1440 y 390 px. |
+| 2026-10-28 | AJ | Revisión de pendientes con el artista: Jabi pasa de proyectos de software a Proceso (diario), la web se llama supernobaconb.web, Libros pasa a Literatura con escritos, tienda solo con links, TikTok, y se hacen las funciones del lector viejo, la prueba con Google y las optimizaciones. Se detallan AJ-01 a AJ-14. |
