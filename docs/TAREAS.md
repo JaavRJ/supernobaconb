@@ -43,7 +43,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 2 — Libro | ✅ Hecha | 9 / 9 |
 | 3 — Música | ✅ Hecha | 7 / 7 |
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
-| Ajustes del artista tras la fase 4 | 🔨 En curso | 9 / 14 |
+| Ajustes del artista tras la fase 4 | 🔨 En curso | 11 / 14 |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
 | 5 — Admin ampliado | ⬜ Pendiente | se detalla al empezar |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
@@ -634,8 +634,8 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 | AJ-08 | Reacciones por capítulo | Worker | AJ-07 | ✅ |
 | AJ-09 | Tarjeta de cita para Instagram | Worker | AJ-08 | ✅ |
 | AJ-10 | Descarga de cada parte en PDF | Worker | — | ✅ |
-| AJ-11 | Tutorial de primera visita en el lector | Worker | AJ-09, AJ-10 | ⬜ |
-| AJ-12 | Aviso de newsletter en el lector | Worker | AJ-11 | ⬜ |
+| AJ-11 | Tutorial de primera visita en el lector | Worker | AJ-09, AJ-10 | ✅ |
+| AJ-12 | Aviso de newsletter en el lector | Worker | AJ-11 | ✅ |
 | AJ-13 | Cielo: etiqueta "Proceso", nebulosa y parpadeo optimizados | Worker | MV-03, AJ-01 | ⛔ |
 | AJ-14 | Verificación final | Orquestador | todas | ⬜ |
 
@@ -798,3 +798,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-28 | AJ-08 | Worker hizo las reacciones (`reactions` / `userReactions` con el `userId` local del sitio viejo, transacción e `increment`, en vivo). Orquestador lo probó en el navegador con los conteos reales del sitio viejo (11 → 12 → 11). ✅ |
 | 2026-10-28 | AJ-05 | Orquestador: el kit bajó de 6 MB a 0.5 MB por PDF (imágenes al tamaño impreso y polaroids con marco y giro dibujados en JPEG, porque Chrome rasterizaba las giradas), sin la lista de software, con TikTok y etiquetas "Música · Literatura". ✅ |
 | 2026-10-28 | AJ-09 | Worker hizo la tarjeta de cita en canvas (Noche, Papel y Polaroid) con vista previa, compartir como archivo y descargar. Orquestador la revisó en el navegador: fuentes reales y la estrella en BRILL✦. ✅ |
+| 2026-10-28 | AJ-11/12 | Worker hizo la guía de primera visita (5 pasos que señalan marcador, Aa y descarga; se marca con `hasSeenTutorial`; "Ver la guía otra vez" en Aa) y el aviso de novedades al final de cada parte (`subscribers/{uid}` con `merge`, compatible con el sitio viejo, más `interests`). Orquestador lo revisó en el navegador. ✅ |
+| 2026-10-28 | — | Pedido del artista: en la tarjeta de cita el título va en dos líneas sin la estrella y con @supernobaconb. El orquestador hizo además el header negro sólido en el lector (el texto se asomaba debajo del degradado). |
