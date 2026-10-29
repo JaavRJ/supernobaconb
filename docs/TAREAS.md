@@ -45,7 +45,7 @@ Los agentes están definidos en [`.claude/agents/worker.md`](../.claude/agents/w
 | 4 — Jabi, videos, tienda y sobre mí | ✅ Hecha | 10 / 10 |
 | Ajustes del artista tras la fase 4 | 🔨 En curso | 13 / 14 (AJ-13 espera al Pase de movimiento) |
 | Pase de diseño con materiales reales | ⬜ Pendiente | se adelanta si llegan antes los materiales |
-| 5 — Admin ampliado | 🔨 En curso | 1 / 12 |
+| 5 — Admin ampliado | 🔨 En curso | 3 / 12 |
 | 6 — Publicación | ⬜ Pendiente | se detalla al empezar |
 
 ---
@@ -718,9 +718,9 @@ Revisión de pendientes con el artista (2026-10-28). Esta lista **no toca** los 
 
 | ID | Tarea | Quién | Depende de | Estado |
 |---|---|---|---|---|
-| F5-01 | Capa de datos: contenido desde Firestore con respaldo local | Worker | — | ⬜ |
+| F5-01 | Capa de datos: contenido desde Firestore con respaldo local | Worker | — | ✅ |
 | F5-02 | Reglas de Firestore para el contenido y el admin | Orquestador | — | ✅ |
-| F5-03 | Base del admin: acceso, navegación, guardar y refrescar, subir a Cloudinary | Worker | — | ⬜ |
+| F5-03 | Base del admin: acceso, navegación, guardar y refrescar, subir a Cloudinary | Worker | — | ✅ |
 | F5-04 | Importar el contenido local a Firestore | Worker | F5-01, F5-02, F5-03 | ⬜ |
 | F5-05 | Obras y su posición en el cielo | Worker | F5-04 | ⬜ |
 | F5-06 | Canciones (letra, créditos, audio) y videos | Worker | F5-04 | ⬜ |
@@ -886,3 +886,5 @@ Vistas previas al compartir y ajustes para Google · rendimiento y accesibilidad
 | 2026-10-28 | — | Errores que encontró el artista: el reproductor tapaba "Tienes una lectura a medias" (también la guía y la nota del autor en celular): ahora se suben con `--player-height`. La portada de la tarjeta de estrella se estiraba (la tarjeta flex la alargaba): ahora es cuadrada. "supernobaconb.web" se salía de la tarjeta y no tenía imagen: el título pasa de línea y la obra tiene una portada con la estrella-brújula. Se tocó `sky/Sky.module.css` (dos reglas de la tarjeta) con permiso del artista, sin cambios pendientes del Pase de movimiento. |
 | 2026-10-29 | F5 | Artista: archivos en Cloudinary (Firebase Storage no está activo), el admin nuevo también edita el libro, su cuenta ya es admin y el orquestador publica las reglas con su OK. Se detallan F5-01 a F5-12. |
 | 2026-10-29 | F5-02 | Orquestador: reglas con lectura pública y escritura solo admin para las colecciones nuevas, y lectura de `subscribers` para admin; publicadas con la CLI con el OK del artista (el archivo de reglas está fuera de git por decisión del repo). Probado por REST sin sesión: leer works 200, escribir works 403, leer subscribers 403, el libro sigue en 200. ✅ |
+| 2026-10-29 | F5-03 | Worker hizo la base del admin: acceso con Google y `adminUsers`, piezas comunes, `useAdminCollection`, `refreshContent` (verifica admin con Identity Toolkit + `adminUsers` por REST y usa `updateTag`) y la firma de Cloudinary en el servidor. Reviewer: aprobada sin problemas de seguridad; el orquestador aplicó sus mejoras menores (tiempo límite en verificaciones y subidas, estado "sin conexión" distinto de "sin acceso"). ✅ |
+| 2026-10-29 | F5-01 | Worker hizo `lib/content`: `getContent()` (REST, `cacheTag("content")`, respaldo local por colección), `content()` con las consultas, siembra para importar, letras y escritos como texto (Firestore no admite arreglos anidados), `order` en cada documento, y el reproductor recibe los datos de la obra con cada pista. Las 12 rutas comparadas contra un build de HEAD: mismo texto, enlaces e imágenes. Orquestador probó en el navegador que "Escuchar" suena con su portada. Incluye el `cacheTag("book")` que agregó F5-10 en `lib/book/index.ts`. ✅ |
